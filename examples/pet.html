@@ -1,0 +1,70 @@
+
+<style>
+  body {
+    padding: 50px;
+    font: 14px Helvetica, Arial;
+  }
+  form {
+    display: inline-block;
+    border: 1px solid #eee;
+    padding: 15px 20px;
+  }
+</style>
+
+<script src="../build/build.js"></script>
+
+<div id="pet">
+  <h2 class="name"></h2>
+  <p><span class="name">name</span> is a <span class="age">age</span> year old <span class="species"></span>, he has <span class="friendCount"></span> friends.</p>
+</div>
+
+<form id="edit-pet">
+  <legend>Edit</legend>
+  <p>
+    <input type="text" name="name" placeholder="Name" />
+  </p>
+  <p>
+    <input type="text" name="age" placeholder="Age" />
+  </p>
+  <p>
+    <input type="range" min="0" max="10" value="2" name="friends" />
+  </p>
+</form>
+
+<script>
+  var Emitter = require('component-emitter');
+  var reactive = require('reactive');
+
+  var pet = {
+    name: 'Tobi',
+    species: 'ferret',
+    age: 2,
+    friends: ['luna', 'manny'],
+    friendCount: function(){
+      return 0 == this.friends.length
+        ? 'no'
+        : this.friends.length;
+    }
+  };
+
+  Emitter(pet);
+
+  reactive(document.querySelector('#pet'), pet);
+  reactive(document.querySelector('#edit-pet'), pet);
+
+  document.querySelector('[name=name]').oninput = function(e){
+    pet.name = e.target.value;
+    pet.emit('change', 'name', e.target.value);
+  };
+
+  document.querySelector('[name=age]').onchange = function(e){
+    pet.age = parseInt(e.target.value, 10);
+    pet.emit('change', 'age', pet.age);
+  };
+
+  document.querySelector('[name=friends]').onchange = function(e){
+    var n = parseInt(e.target.value, 10);
+    pet.friends = Array(n);
+    pet.emit('change', 'friendCount');
+  };
+</script>

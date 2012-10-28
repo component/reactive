@@ -1,0 +1,16 @@
+{
+  "name": "reactive",
+  "repo": "component/reactive",
+  "description": "Reactive template engine",
+  "version": "0.0.1",
+  "keywords": ["reactive", "template", "engine"],
+  "dependencies": {
+    "component/classes": "*"
+  },
+  "development": {
+    "component/emitter": "*"
+  },
+  "scripts": [
+    "index.js"
+  ]
+}
