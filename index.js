@@ -25,20 +25,8 @@ function Reactive(el, obj) {
   this.obj = obj;
   this.els = [];
   this.els = el.querySelectorAll('[class], [name]');
-  obj.on('change', this.onchange.bind(this));
+  obj.on('change', this.set.bind(this));
 }
-
-/**
- * Handle change.
- *
- * @param {String} name
- * @param {String} val
- * @api private
- */
-
-Reactive.prototype.onchange = function(name, val) {
-  this.set(name, val);
-};
 
 /**
  * Return elements for property `name`.
