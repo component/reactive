@@ -19,6 +19,11 @@ var reactive = require('reactive');
 reactive(el, obj);
 ```
 
+## Todo
+
+  - composition of smaller templates instead of conditionals etc..
+  - moar docs / examples
+
 ## License
 
   MIT
