@@ -19,6 +19,18 @@ var reactive = require('reactive');
 reactive(el, obj);
 ```
 
+  You may also map custom callbacks for formatting or messing with an element
+  based on a change. The element, value, and object itself are passed as arguments.
+
+```js
+var reactive = require('reactive');
+reactive(el, user, {
+  birthdate: function(el, date, user){
+    el.textContent = date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate();
+  }
+});
+```
+
 ## Todo
 
   - composition of smaller templates instead of conditionals etc..
