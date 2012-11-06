@@ -16,16 +16,18 @@ module.exports = Reactive;
  *
  * @param {Element} el
  * @param {Element} obj
+ * @param {Object} options
  * @api public
  */
 
-function Reactive(el, obj) {
-  if (!(this instanceof Reactive)) return new Reactive(el, obj).render();
+function Reactive(el, obj, options) {
+  if (!(this instanceof Reactive)) return new Reactive(el, obj, options).render();
   this.el = el;
   this.obj = obj;
   this.els = [];
+  this.fns = options || {};
   this.els = el.querySelectorAll('[class], [name]');
-  obj.on('change', this.set.bind(this));
+  obj.on('change', this.onchange.bind(this));
 }
 
 /**
@@ -66,18 +68,44 @@ Reactive.prototype.elementsFor = function(name){
  * @api private
  */
 
-Reactive.prototype.set = function(name, val){
+Reactive.prototype.onchange = function(name, val){
   var obj = this.obj;
   var els = this.elementsFor(name);
+  var set = this.fns[name] || this.set.bind(this);
 
   if ('function' == typeof obj[name]) {
     for (var i = 0, len = els.length; i < len; ++i) {
-      els[i].textContent = obj[name]();
+      set(els[i], obj[name](), obj);
     }
   } else {
     for (var i = 0, len = els.length; i < len; ++i) {
-      els[i].textContent = val;
+      set(els[i], val, obj);
     }
+  }
+};
+
+/**
+ * Change `el`'s value to `val`.
+ *
+ * @param {Element} el
+ * @param {Mixed} val
+ * @api private
+ */
+
+Reactive.prototype.set = function(el, val){
+  switch (el.nodeName.toLowerCase()) {
+    case 'input':
+      switch (el.getAttribute('type')) {
+        case 'checkbox':
+          checkbox(el, val);
+          break;
+        default:
+          el.value = val;
+          break;
+      }
+      break;
+    default:
+      el.textContent = val;
   }
 };
 
@@ -88,8 +116,21 @@ Reactive.prototype.set = function(name, val){
  */
 
 Reactive.prototype.render = function(){
+  var self = this;
   var el = this.el;
   var obj = this.obj;
-  for (var key in obj) this.set(key, obj[key]);
+  for (var key in obj) this.onchange(key, obj[key]);
   return this;
 };
+
+/**
+ * Default checkbox handler.
+ */
+
+function checkbox(el, val) {
+  if (val) {
+    el.setAttribute('checked', 'checked');
+  } else {
+    el.removeAttribute('checked');
+  }
+}
