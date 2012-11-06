@@ -1,0 +1,41 @@
+
+<style>
+  body {
+    padding: 50px;
+    font: 14px Helvetica, Arial;
+  }
+  label {
+    display: block;
+    clear: both;
+  }
+</style>
+
+<script src="../build/build.js"></script>
+
+<div id="user">
+  <h2 class="first"></h2>
+  <p><span class="first"></span> was born on <span class="birthdate"></span>.</p>
+</div>
+
+<script>
+  var Emitter = require('component-emitter');
+  var reactive = require('reactive');
+
+  var user = {
+    first: 'Loki',
+    last: 'Ferret',
+    birthdate: new Date
+  };
+
+  Emitter(user);
+
+  var el = document.querySelector('#user');
+
+  reactive(el, user, {
+    birthdate: birthdate
+  });
+
+  function birthdate(el, date) {
+    el.textContent = date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate();
+  }
+</script>
