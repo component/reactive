@@ -34,6 +34,7 @@ reactive(el, user, {
 ## Todo
 
   - composition of smaller templates instead of conditionals etc..
+  - defer `.render()` and use `.change('birthdate', fn)` instead of object-literal
   - moar docs / examples
 
 ## License
