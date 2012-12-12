@@ -214,12 +214,30 @@ Reactive.prototype.bind = function(key, val){
       if (prop != key) continue;
 
       // formatter
-      if (fmt) val = fns[fmt](val);
+      if (fmt) val = this.format(fmt, val);
       
       // object value
       binding(el, val);
     }
   }
+};
+
+/**
+ * Parse and apply `fmt` with `val`.
+ *
+ * @param {String} fmt
+ * @param {Mixed} val
+ * @api private
+ */
+
+Reactive.prototype.format = function(fmt, val){
+  var parts = fmt.split(':');
+  var name = parts.shift();
+  var args = parts.join(':');
+  args = args.split(/ *, */);
+  args.unshift(val);
+  var fn = this.fns[name];
+  return fn.apply(this.fns, args);
 };
 
 /**
