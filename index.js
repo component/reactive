@@ -27,7 +27,7 @@ function Reactive(el, obj, options) {
   this.els = [];
   this.fns = options || {};
   this.els = el.querySelectorAll('[class], [name]');
-  this.conditionals = el.querySelectorAll('[data-show]');
+  this.conditionals = el.querySelectorAll('[data-show], [data-hide]');
   obj.on('change', this.onchange.bind(this));
 }
 
@@ -119,29 +119,26 @@ Reactive.prototype.set = function(el, val){
  */
 
 Reactive.prototype.checkConditionals = function(){
+  var fns = this.fns;
   var els = this.conditionals;
+  
   for (var i = 0; i < els.length; ++i) {
     var el = els[i];
+    
+    // data-show
     var cond = el.getAttribute('data-show');
-    this.checkConditional(el, cond);
-  }
-};
-
-/**
- * Check conditional.
- *
- * @param {Element} el
- * @param {String} cond
- * @api private
- */
-
-Reactive.prototype.checkConditional = function(el, cond){
-  var obj = this.obj;
-  var fns = this.fns;
-  
-  // options
-  if ('function' == typeof fns[cond]) {
-    this.show(el, fns[cond]());
+    if (cond) {
+      if ('function' == typeof fns[cond]) {
+        this.show(el, fns[cond]());
+      }
+      continue;
+    }
+    
+    // data-hide
+    var cond = el.getAttribute('data-hide');
+    if ('function' == typeof fns[cond]) {
+      this.show(el, !fns[cond]());
+    }
   }
 };
 
