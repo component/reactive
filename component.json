@@ -5,6 +5,7 @@
   "version": "0.2.0",
   "keywords": ["reactive", "template", "engine"],
   "dependencies": {
+    "visionmedia/debug": "*",
     "component/classes": "*"
   },
   "development": {

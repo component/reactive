@@ -4,7 +4,8 @@
   "version": "0.2.0",
   "keywords": ["reactive", "template", "engine"],
   "dependencies": {
-    "classes-component": "*"
+    "classes-component": "*",
+    "debug": "*"
   },
   "component": {
     "scripts": {

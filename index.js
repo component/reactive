@@ -3,7 +3,8 @@
  * Module dependencies.
  */
 
-var classes = require('classes');
+var classes = require('classes')
+  , debug = require('debug')('reactive');
 
 /**
  * Expose `Reactive`.
@@ -157,14 +158,17 @@ Reactive.prototype.addImplicitBinding = function(el){
     case 'INPUT':
       switch (el.getAttribute('type')) {
         case 'checkbox':
+          debug('add implicit data-checked to %s', name);
           el.setAttribute('data-checked', name);
           break;
         case 'text':
+          debug('add implicit data-value to %s', name);
           el.setAttribute('data-value', name);
           break;
       }
       break;
     default:
+      debug('add implicit data-text to %s', name);
       el.setAttribute('data-text', name);
   }
 };
@@ -206,7 +210,9 @@ Reactive.prototype.bind = function(key, val){
       // TODO: optimize with prop references,
       // otherwise this is called too often
       if ('function' == typeof fns[prop]) {
-        binding(el, fns[prop]());
+        var ret = fns[prop]();
+        debug('bind %s() => %s', prop, ret);
+        binding(el, ret);
         continue;
       }
       
@@ -214,7 +220,11 @@ Reactive.prototype.bind = function(key, val){
       if (prop != key) continue;
 
       // formatter
-      if (fmt) val = this.format(fmt, val);
+      debug('bind %s => %s', prop, val);
+      if (fmt) {
+        val = this.format(fmt, val);
+        debug('format %s as %s => %s', prop, fmt, val);
+      }
       
       // object value
       binding(el, val);
