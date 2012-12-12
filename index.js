@@ -247,8 +247,6 @@ Reactive.prototype.format = function(fmt, val){
  */
 
 Reactive.prototype.render = function(){
-  var self = this;
-  var el = this.el;
   var obj = this.obj;
   for (var key in obj) this.bind(key, obj[key]);
   return this;
