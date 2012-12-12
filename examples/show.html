@@ -19,8 +19,8 @@
 <div class="item">
   <h1 class="title">Item</h1>
   <p class="description"></p>
-  <p data-show='hasDownloads'>
-    Click here to <a href="#" class="filename">download</a>.
+  <p data-show="hasDownloads">
+    Click here to <a data-href="filename">Download</a>.
   </p>
 </div>
 
@@ -43,15 +43,8 @@
     reactive(this.el, item, this);
   }
 
-  ItemView.prototype = {
-    filename: function(link, url){
-      link.href = url;
-      link.textContent = 'Download';
-    },
-    
-    hasDownloads: function(){
-      return !! this.item.filename;
-    }
+  ItemView.prototype.hasDownloads = function(){
+    return this.item.filename;
   };
 
   var item = new Item('Maru', 'A PDF of the wonderful Maru');

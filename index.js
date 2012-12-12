@@ -9,7 +9,81 @@ var classes = require('classes');
  * Expose `Reactive`.
  */
 
-module.exports = Reactive;
+exports = module.exports = Reactive;
+
+/**
+ * Bindings.
+ */
+
+exports.bindings = {};
+
+/**
+ * Attributes supported.
+ */
+
+var attrs = [
+  'id',
+  'src',
+  'rel',
+  'cols',
+  'rows',
+  'name',
+  'href',
+  'title',
+  'style',
+  'width',
+  'height',
+  'tabindex',
+  'placeholder'
+];
+
+/**
+ * Generate attribute bindings.
+ */
+
+attrs.forEach(function(attr){
+  exports.bindings[attr] = function(el, val){
+    el.setAttribute(attr, val);
+  };
+});
+
+/**
+ * Show binding.
+ */
+
+exports.bindings.show = function(el, show){
+  if (show) {
+    classes(el).add('show').remove('hide');
+  } else {
+    classes(el).remove('show').add('hide');
+  }
+};
+
+/**
+ * Hide binding.
+ */
+
+exports.bindings.hide = function(el, show){
+  exports.bindings.show(el, !show);
+};
+
+
+/**
+ * Binding selector.
+ */
+
+var keys = Object.keys(exports.bindings);
+var bindingSelector = keys.map(function(name){
+  return '[data-' + name + ']';
+}).join(', ');
+
+/**
+ * Selector engine.
+ */
+
+exports.query = function(el, selector){
+  return el.querySelectorAll(selector);
+};
 
 /**
  * Initialize a reactive template for `el` and `obj`.
@@ -26,8 +100,8 @@ function Reactive(el, obj, options) {
   this.obj = obj;
   this.els = [];
   this.fns = options || {};
-  this.els = el.querySelectorAll('[class], [name]');
-  this.conditionals = el.querySelectorAll('[data-show], [data-hide]');
+  this.els = exports.query(el, '[class], [name]');
+  this.bindings = exports.query(el, bindingSelector);
   obj.on('change', this.onchange.bind(this));
 }
 
@@ -109,52 +183,43 @@ Reactive.prototype.set = function(el, val){
       el.textContent = val;
   }
   
-  this.checkConditionals();
+  this.bind();
 };
 
 /**
- * Check [data-show] elements.
+ * Handle [data-*] bindings.
  *
  * @api private
  */
 
-Reactive.prototype.checkConditionals = function(){
+Reactive.prototype.bind = function(){
   var fns = this.fns;
-  var els = this.conditionals;
+  var obj = this.obj;
+  var els = this.bindings;
   
   for (var i = 0; i < els.length; ++i) {
     var el = els[i];
-    
-    // data-show
-    var cond = el.getAttribute('data-show');
-    if (cond) {
-      if ('function' == typeof fns[cond]) {
-        this.show(el, fns[cond]());
+    for (var j = 0; j < el.attributes.length; ++j) {
+      var attr = el.attributes[j];
+      
+      // data-* attr
+      var m = /^data-(.*)/.exec(attr.name);
+      if (!m) continue;
+      
+      // values
+      var val = attr.value;
+      var name = m[1];
+      var binding = exports.bindings[name];
+      
+      // view function
+      if ('function' == typeof fns[val]) {
+        binding(el, fns[val]());
+        continue;
       }
-      continue;
+      
+      // object value
+      binding(el, obj[val]);
     }
-    
-    // data-hide
-    var cond = el.getAttribute('data-hide');
-    if ('function' == typeof fns[cond]) {
-      this.show(el, !fns[cond]());
-    }
-  }
-};
-
-/**
- * Toggle display of `el` based on `show`.
- *
- * @param {Element} el
- * @param {Boolean} show
- * @api private
- */
-
-Reactive.prototype.show = function(el, show){
-  if (show) {
-    classes(el).add('show').remove('hide');
-  } else {
-    classes(el).remove('show').add('hide');
   }
 };
 
