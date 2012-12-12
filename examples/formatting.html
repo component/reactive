@@ -14,7 +14,7 @@
 
 <div id="user">
   <h2 class="first"></h2>
-  <p><span class="first"></span> was born on <span class="birthdate"></span>.</p>
+  <p><span class="first"></span> was born on <span data-text="birthdate | date"></span>.</p>
 </div>
 
 <script>
@@ -32,10 +32,10 @@
   var el = document.querySelector('#user');
 
   reactive(el, user, {
-    birthdate: birthdate
+    date: date
   });
 
-  function birthdate(el, date) {
-    el.textContent = date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate();
+  function date(date) {
+    return date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate();
   }
 </script>

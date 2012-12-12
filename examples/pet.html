@@ -15,7 +15,7 @@
 
 <div id="pet">
   <h2 class="name"></h2>
-  <p><span class="name">name</span> is a <span class="age">age</span> year old <span class="species"></span>, he has <span class="friendCount"></span> friends.</p>
+  <p><span class="name">name</span> is a <span class="age">age</span> year old <span class="species"></span>, he has <span data-text="friendCount"></span> friends.</p>
 </div>
 
 <form id="edit-pet">
@@ -34,22 +34,29 @@
 <script>
   var Emitter = require('component-emitter');
   var reactive = require('reactive');
+  var tmpl = document.querySelector('#pet');
 
   var pet = {
     name: 'Tobi',
     species: 'ferret',
     age: 2,
-    friends: ['luna', 'manny'],
-    friendCount: function(){
-      return 0 == this.friends.length
-        ? 'no'
-        : this.friends.length;
-    }
+    friends: ['luna', 'manny', 'abby']
   };
 
   Emitter(pet);
 
-  reactive(document.querySelector('#pet'), pet);
+  function PetView(pet) {
+    this.pet = pet;
+    reactive(tmpl, pet, this);
+  }
+  
+  PetView.prototype.friendCount = function(){
+    var n = this.pet.friends.length;
+    return 0 == n ? 'no' : n;
+  };
+  
+  var view = new PetView(pet);
+
   reactive(document.querySelector('#edit-pet'), pet);
 
   document.querySelector('[name=name]').oninput = function(e){

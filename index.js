@@ -32,6 +32,7 @@ var attrs = [
   'title',
   'style',
   'width',
+  'value',
   'height',
   'tabindex',
   'placeholder'
@@ -67,6 +68,25 @@ exports.bindings.hide = function(el, show){
   exports.bindings.show(el, !show);
 };
 
+/**
+ * Checked binding.
+ */
+
+exports.bindings.checked = function(el, val){
+  if (val) {
+    el.setAttribute('checked', 'checked');
+  } else {
+    el.removeAttribute('checked');
+  }
+};
+
+/**
+ * Text binding.
+ */
+
+exports.bindings.text = function(el, val){
+  el.textContent = val;
+};
 
 /**
  * Binding selector.
@@ -100,99 +120,66 @@ function Reactive(el, obj, options) {
   this.obj = obj;
   this.els = [];
   this.fns = options || {};
-  this.els = exports.query(el, '[class], [name]');
+  this.addImplicitBindings();
   this.bindings = exports.query(el, bindingSelector);
-  obj.on('change', this.onchange.bind(this));
+  obj.on('change', this.bind.bind(this));
 }
 
 /**
- * Return elements for property `name`.
+ * Add implicit data bindings.
  *
- * TODO: could easily cache this
- *
- * @param {String} name
- * @return {Array}
  * @api private
  */
 
-Reactive.prototype.elementsFor = function(name){
-  var ret = [];
-
-  for (var i = 0, len = this.els.length; i < len; ++i) {
-    // name
-    if (name == this.els[i].getAttribute('name')) {
-      ret.push(this.els[i]);
-      continue;
-    }
-
-    // class
-    if (classes(this.els[i]).has(name)) {
-      ret.push(this.els[i]);
-      continue;
-    }
-  }
-
-  return ret;
-};
-
-/**
- * Set `name` to `val`.
- *
- * @param {String} name
- * @param {String} val
- * @api private
- */
-
-Reactive.prototype.onchange = function(name, val){
-  var obj = this.obj;
-  var els = this.elementsFor(name);
-  var set = this.fns[name] || this.set.bind(this);
-
-  if ('function' == typeof obj[name]) {
-    for (var i = 0, len = els.length; i < len; ++i) {
-      set(els[i], obj[name](), obj);
-    }
-  } else {
-    for (var i = 0, len = els.length; i < len; ++i) {
-      set(els[i], val, obj);
-    }
+Reactive.prototype.addImplicitBindings = function(){
+  var els = exports.query(this.el, '[class], [name]');
+  for (var i = 0; i < els.length; ++i) {
+    var el = els[i];
+    this.addImplicitBinding(el);
   }
 };
 
 /**
- * Change `el`'s value to `val`.
+ * Add implicit bindings to `el` based
+ * on the classname or name.
  *
  * @param {Element} el
- * @param {Mixed} val
  * @api private
  */
 
-Reactive.prototype.set = function(el, val){
-  switch (el.nodeName.toLowerCase()) {
-    case 'input':
+Reactive.prototype.addImplicitBinding = function(el){
+  var name = el.getAttribute('name') || el.className;
+  
+  // skip multiple classnames
+  if (/ /.test(name)) return;
+  
+  switch (el.nodeName) {
+    case 'INPUT':
       switch (el.getAttribute('type')) {
         case 'checkbox':
-          checkbox(el, val);
+          el.setAttribute('data-checked', name);
           break;
-        default:
-          el.value = val;
+        case 'text':
+          el.setAttribute('data-value', name);
           break;
       }
       break;
     default:
-      el.textContent = val;
+      el.setAttribute('data-text', name);
   }
-  
-  this.bind();
 };
 
 /**
  * Handle [data-*] bindings.
  *
+ * TODO: build a cache on the first hit
+ *
+ * @param {String} key
+ * @param {Mixed} val
  * @api private
  */
 
-Reactive.prototype.bind = function(){
+Reactive.prototype.bind = function(key, val){
   var fns = this.fns;
   var obj = this.obj;
   var els = this.bindings;
@@ -207,18 +194,30 @@ Reactive.prototype.bind = function(){
       if (!m) continue;
       
       // values
-      var val = attr.value;
+      var parts = attr.value.split(/ *\| */);
+      var prop = parts[0];
+      var fmt = parts[1];
       var name = m[1];
+
+      // binding
       var binding = exports.bindings[name];
-      
-      // view function
-      if ('function' == typeof fns[val]) {
-        binding(el, fns[val]());
+
+      // method defined for data-show etc
+      // TODO: optimize with prop references,
+      // otherwise this is called too often
+      if ('function' == typeof fns[prop]) {
+        binding(el, fns[prop]());
         continue;
       }
       
+      // wrong binding
+      if (prop != key) continue;
+
+      // formatter
+      if (fmt) val = fns[fmt](val);
+      
       // object value
-      binding(el, obj[val]);
+      binding(el, val);
     }
   }
 };
@@ -233,18 +232,6 @@ Reactive.prototype.render = function(){
   var self = this;
   var el = this.el;
   var obj = this.obj;
-  for (var key in obj) this.onchange(key, obj[key]);
+  for (var key in obj) this.bind(key, obj[key]);
   return this;
 };
-
-/**
- * Default checkbox handler.
- */
-
-function checkbox(el, val) {
-  if (val) {
-    el.setAttribute('checked', 'checked');
-  } else {
-    el.removeAttribute('checked');
-  }
-}
