@@ -31,6 +31,27 @@ reactive(el, user, {
 });
 ```
 
+  Typically the callbacks would be a reference to the view itself, for example:
+
+```js
+function ItemView(item) {
+  this.item = item;
+  this.el = tmpl.cloneNode(true);
+  reactive(this.el, item, this);
+}
+
+ItemView.prototype = {
+  filename: function(link, url){
+    link.href = url;
+    link.textContent = 'Download';
+  },
+  
+  hasDownloads: function(){
+    return !! this.item.filename;
+  }
+};
+```
+
 ## Todo
 
   - composition of smaller templates instead of conditionals etc..
