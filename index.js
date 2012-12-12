@@ -27,6 +27,7 @@ function Reactive(el, obj, options) {
   this.els = [];
   this.fns = options || {};
   this.els = el.querySelectorAll('[class], [name]');
+  this.conditionals = el.querySelectorAll('[data-show]');
   obj.on('change', this.onchange.bind(this));
 }
 
@@ -106,6 +107,57 @@ Reactive.prototype.set = function(el, val){
       break;
     default:
       el.textContent = val;
+  }
+  
+  this.checkConditionals();
+};
+
+/**
+ * Check [data-show] elements.
+ *
+ * @api private
+ */
+
+Reactive.prototype.checkConditionals = function(){
+  var els = this.conditionals;
+  for (var i = 0; i < els.length; ++i) {
+    var el = els[i];
+    var cond = el.getAttribute('data-show');
+    this.checkConditional(el, cond);
+  }
+};
+
+/**
+ * Check conditional.
+ *
+ * @param {Element} el
+ * @param {String} cond
+ * @api private
+ */
+
+Reactive.prototype.checkConditional = function(el, cond){
+  var obj = this.obj;
+  var fns = this.fns;
+  
+  // options
+  if ('function' == typeof fns[cond]) {
+    this.show(el, fns[cond]());
+  }
+};
+
+/**
+ * Toggle display of `el` based on `show`.
+ *
+ * @param {Element} el
+ * @param {Boolean} show
+ * @api private
+ */
+
+Reactive.prototype.show = function(el, show){
+  if (show) {
+    classes(el).add('show').remove('hide');
+  } else {
+    classes(el).remove('show').add('hide');
   }
 };
 
