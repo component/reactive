@@ -121,57 +121,9 @@ function Reactive(el, obj, options) {
   this.obj = obj;
   this.els = [];
   this.fns = options || {};
-  this.addImplicitBindings();
   this.bindings = exports.query(el, bindingSelector);
   obj.on('change', this.bind.bind(this));
 }
-
-/**
- * Add implicit data bindings.
- *
- * @api private
- */
-
-Reactive.prototype.addImplicitBindings = function(){
-  var els = exports.query(this.el, '[class], [name]');
-  for (var i = 0; i < els.length; ++i) {
-    var el = els[i];
-    this.addImplicitBinding(el);
-  }
-};
-
-/**
- * Add implicit bindings to `el` based
- * on the classname or name.
- *
- * @param {Element} el
- * @api private
- */
-
-Reactive.prototype.addImplicitBinding = function(el){
-  var name = el.getAttribute('name') || el.className;
-  
-  // skip multiple classnames
-  if (/ /.test(name)) return;
-  
-  switch (el.nodeName) {
-    case 'INPUT':
-      switch (el.getAttribute('type')) {
-        case 'checkbox':
-          debug('add implicit data-checked to %s', name);
-          el.setAttribute('data-checked', name);
-          break;
-        case 'text':
-          debug('add implicit data-value to %s', name);
-          el.setAttribute('data-value', name);
-          break;
-      }
-      break;
-    default:
-      debug('add implicit data-text to %s', name);
-      el.setAttribute('data-text', name);
-  }
-};
 
 /**
  * Handle [data-*] bindings.

@@ -14,17 +14,17 @@
 <script src="../build/build.js"></script>
 
 <div id="pet">
-  <h2 class="name"></h2>
-  <p><span class="name">name</span> is a <span class="age">age</span> year old <span class="species"></span>, he has <span data-text="friendCount"></span> friends.</p>
+  <h2 data-text="name"></h2>
+  <p><span data-text="name">name</span> is a <span data-text="age">age</span> year old <span data-text="species"></span>, he has <span data-text="friendCount"></span> friends.</p>
 </div>
 
 <form id="edit-pet">
   <legend>Edit</legend>
   <p>
-    <input type="text" name="name" placeholder="Name" />
+    <input type="text" name="name" data-value="name" placeholder="Name" />
   </p>
   <p>
-    <input type="text" name="age" placeholder="Age" />
+    <input type="text" name="age" data-value="age" placeholder="Age" />
   </p>
   <p>
     <input type="range" min="0" max="10" value="2" name="friends" />
