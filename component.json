@@ -2,7 +2,7 @@
   "name": "reactive",
   "repo": "component/reactive",
   "description": "Reactive template engine",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "keywords": ["reactive", "template", "engine"],
   "dependencies": {
     "visionmedia/debug": "*",
