@@ -164,6 +164,10 @@ Reactive.prototype.bind = function(key, val){
       if ('function' == typeof fns[prop]) {
         var ret = fns[prop]();
         debug('bind %s() => %s', prop, ret);
+        if (fmt) {
+          ret = this.format(fmt, ret);
+          debug('format %s as %s => %s', prop, fmt, ret);
+        }
         binding(el, ret);
         continue;
       }

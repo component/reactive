@@ -14,28 +14,45 @@
 
 <div id="user">
   <h2 data-text="first"></h2>
-  <p><span data-text="first"></span> was born on <span data-text="birthdate | date"></span>.</p>
+  <p><span data-text="fullname"></span> was born on <span data-text="birthdate | date:%Y %d"></span>. Check out his webpage at <a data-href="url" data-text="url | remove_protocol"></a></p>
 </div>
 
 <script>
   var Emitter = require('component-emitter');
   var reactive = require('reactive');
+  var tmpl = document.querySelector('#user');
 
   var user = {
     first: 'Loki',
     last: 'Ferret',
-    birthdate: new Date
+    birthdate: new Date,
+    slug: 'loki'
   };
 
   Emitter(user);
-
-  var el = document.querySelector('#user');
-
-  reactive(el, user, {
-    date: date
-  });
-
-  function date(date) {
-    return date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate();
+  
+  function UserView(user) {
+    this.user = user;
+    reactive(tmpl, user, this);
   }
+  
+  UserView.prototype.url = function(){
+    return 'http://myapp.com/user/' + this.user.slug;
+  };
+
+  UserView.prototype.date = function(date, fmt){
+    return fmt
+      .replace('%Y', date.getFullYear())
+      .replace('%d', date.getDate())
+  };
+
+  UserView.prototype.remove_protocol = function(url){
+    return url.replace(/^https?:\/\/(www\.)?/, '');
+  };
+
+  UserView.prototype.fullname = function(){
+    return this.user.first + ' ' + this.user.last;
+  };
+
+  var view = new UserView(user);
 </script>
