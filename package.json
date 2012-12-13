@@ -5,7 +5,12 @@
   "keywords": ["reactive", "template", "engine"],
   "dependencies": {
     "classes-component": "*",
+    "format-parser": "*",
     "debug": "*"
+  },
+  "devDependencies": {
+    "better-assert": "*",
+    "mocha": "*"
   },
   "component": {
     "scripts": {

@@ -5,6 +5,7 @@
   "version": "0.2.2",
   "keywords": ["reactive", "template", "engine"],
   "dependencies": {
+    "component/format-parser": "*",
     "visionmedia/debug": "*",
     "component/classes": "*"
   },

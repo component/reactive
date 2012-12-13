@@ -4,6 +4,7 @@
  */
 
 var classes = require('classes')
+  , parse = require('format-parser')
   , debug = require('debug')('reactive');
 
 /**
@@ -197,13 +198,16 @@ Reactive.prototype.bind = function(key, val){
  */
 
 Reactive.prototype.format = function(fmt, val){
-  var parts = fmt.split(':');
-  var name = parts.shift();
-  var args = parts.join(':');
-  args = args.split(/ *, */);
-  args.unshift(val);
-  var fn = this.fns[name];
-  return fn.apply(this.fns, args);
+  var calls = parse(fmt);
+  
+  for (var i = 0; i < calls.length; ++i) {
+    var call = calls[i];
+    call.args.unshift(val);
+    var fn = this.fns[call.name];
+    val = fn.apply(this.fns, call.args);
+  }
+
+  return val;
 };
 
 /**
