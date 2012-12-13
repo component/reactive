@@ -10,6 +10,8 @@
     "component/classes": "*"
   },
   "development": {
+    "component/assert": "*",
+    "component/domify": "*",
     "component/emitter": "*"
   },
   "scripts": [

@@ -123,7 +123,7 @@ function Reactive(el, obj, options) {
   this.els = [];
   this.fns = options || {};
   this.bindings = exports.query(el, bindingSelector);
-  obj.on('change', this.bind.bind(this));
+  if (obj.on) obj.on('change', this.bind.bind(this));
 }
 
 /**
@@ -140,6 +140,7 @@ Reactive.prototype.bind = function(key, val){
   var fns = this.fns;
   var obj = this.obj;
   var els = this.bindings;
+  debug('bind %s = %s', key, val);
   
   for (var i = 0; i < els.length; ++i) {
     var el = els[i];
@@ -164,7 +165,7 @@ Reactive.prototype.bind = function(key, val){
       // otherwise this is called too often
       if ('function' == typeof fns[prop]) {
         var ret = fns[prop]();
-        debug('bind %s() => %s', prop, ret);
+        debug('%s %s() = %s', name, prop, ret);
         if (fmt) {
           ret = this.format(fmt, ret);
           debug('format %s as %s => %s', prop, fmt, ret);
@@ -175,16 +176,17 @@ Reactive.prototype.bind = function(key, val){
       
       // wrong binding
       if (prop != key) continue;
+      var ret = val;
 
       // formatter
-      debug('bind %s => %s', prop, val);
+      debug('%s %s = %s', name, prop, val);
       if (fmt) {
-        val = this.format(fmt, val);
-        debug('format %s as %s => %s', prop, fmt, val);
+        ret = this.format(fmt, ret);
+        debug('format %s as %s => %s', prop, fmt, ret);
       }
       
       // object value
-      binding(el, val);
+      binding(el, ret);
     }
   }
 };
@@ -218,6 +220,8 @@ Reactive.prototype.format = function(fmt, val){
 
 Reactive.prototype.render = function(){
   var obj = this.obj;
-  for (var key in obj) this.bind(key, obj[key]);
+  for (var key in obj) {
+    this.bind(key, obj[key]);
+  }
   return this;
 };
