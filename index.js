@@ -5,7 +5,8 @@
 
 var classes = require('classes')
   , parse = require('format-parser')
-  , debug = require('debug')('reactive');
+  , debug = require('debug')('reactive')
+  , event = require('event');
 
 /**
  * Expose `Reactive`.
@@ -49,6 +50,21 @@ attrs.forEach(function(attr){
     el.setAttribute(attr, val);
   };
 });
+
+/**
+ * Events supported.
+ */
+
+var events = [
+  'change',
+  'click',
+  'blur',
+  'focus',
+  'input',
+  'keydown',
+  'keypress',
+  'keyup'
+];
 
 /**
  * Show binding.
@@ -100,6 +116,14 @@ var bindingSelector = keys.map(function(name){
 }).join(', ');
 
 /**
+ * Event selector.
+ */
+
+var eventSelector = events.map(function(name){
+  return '[on-' + name + ']';
+}).join(', ');
+
+/**
  * Selector engine.
  */
 
@@ -123,8 +147,54 @@ function Reactive(el, obj, options) {
   this.els = [];
   this.fns = options || {};
   this.bindings = exports.query(el, bindingSelector);
+  this.bindEvents();
   if (obj.on) obj.on('change', this.bind.bind(this));
 }
+
+/**
+ * Bind events.
+ *
+ * @api private
+ */
+
+Reactive.prototype.bindEvents = function(){
+  var els = exports.query(this.el, eventSelector);
+  
+  for (var i = 0; i < els.length; ++i) {
+    var el = els[i];
+    for (var j = 0; j < el.attributes.length; ++j) {
+      var attr = el.attributes[j];
+      
+      // on-* attr
+      var m = /^on-(.*)/.exec(attr.name);
+      if (!m) continue;
+      
+      // values
+      var event = m[1];
+      var method = attr.value;
+      debug('on %s .%s()', event, method);
+      this.bindEvent(el, event, method);
+    }
+  }
+};
+
+/**
+ * Bind event `name` to `method`.
+ *
+ * @param {Element} el
+ * @param {String} name
+ * @param {String} method
+ * @api private
+ */
+
+Reactive.prototype.bindEvent = function(el, name, method){
+  var fns = this.fns;
+  event.bind(el, name, function(e){
+    var fn = fns[method];
+    if (!fn) throw new Error('method .' + method + '() missing');
+    fns[method].call(fns, e);
+  });
+};
 
 /**
  * Handle [data-*] bindings.

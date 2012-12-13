@@ -21,13 +21,13 @@
 <form id="edit-pet">
   <legend>Edit</legend>
   <p>
-    <input type="text" name="name" data-value="name" placeholder="Name" />
+    <input type="text" name="name" data-value="name" placeholder="Name" on-input="updateName" />
   </p>
   <p>
-    <input type="text" name="age" data-value="age" placeholder="Age" />
+    <input type="text" name="age" data-value="age" placeholder="Age" on-change="updateAge" />
   </p>
   <p>
-    <input type="range" min="0" max="10" value="2" name="friends" />
+    <input type="range" min="0" max="10" value="2" name="friends" on-change="updateFriends" />
   </p>
 </form>
 
@@ -57,21 +57,21 @@
   
   var view = new PetView(pet);
 
-  reactive(document.querySelector('#edit-pet'), pet);
-
-  document.querySelector('[name=name]').oninput = function(e){
-    pet.name = e.target.value;
-    pet.emit('change', 'name', e.target.value);
-  };
-
-  document.querySelector('[name=age]').onchange = function(e){
-    pet.age = parseInt(e.target.value, 10);
-    pet.emit('change', 'age', pet.age);
-  };
-
-  document.querySelector('[name=friends]').onchange = function(e){
-    var n = parseInt(e.target.value, 10);
-    pet.friends = Array(n);
-    pet.emit('change', 'friendCount');
-  };
+  reactive(document.querySelector('#edit-pet'), pet, {
+    updateFriends: function(e){
+      var n = parseInt(e.target.value, 10);
+      pet.friends = Array(n);
+      pet.emit('change', 'friendCount');
+    },
+    
+    updateName: function(e){
+      pet.name = e.target.value;
+      pet.emit('change', 'name', e.target.value);
+    },
+    
+    updateAge: function(e){
+      pet.age = parseInt(e.target.value, 10);
+      pet.emit('change', 'age', pet.age);;
+    }
+  });
 </script>

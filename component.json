@@ -7,6 +7,7 @@
   "dependencies": {
     "component/format-parser": "*",
     "visionmedia/debug": "*",
+    "component/event": "*",
     "component/classes": "*"
   },
   "development": {

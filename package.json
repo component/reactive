@@ -5,6 +5,7 @@
   "keywords": ["reactive", "template", "engine"],
   "dependencies": {
     "classes-component": "*",
+    "event-component": "*",
     "format-parser": "*",
     "debug": "*"
   },
