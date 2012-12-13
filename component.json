@@ -2,8 +2,8 @@
   "name": "reactive",
   "repo": "component/reactive",
   "description": "Reactive template engine",
-  "version": "0.3.0",
-  "keywords": ["reactive", "template", "engine"],
+  "version": "0.4.0",
+  "keywords": ["reactive", "template", "engine", "binding", "bindings"],
   "dependencies": {
     "component/format-parser": "*",
     "visionmedia/debug": "*",
