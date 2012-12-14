@@ -36,14 +36,16 @@
   var reactive = require('reactive');
   var tmpl = document.querySelector('#pet');
 
-  var pet = {
-    name: 'Tobi',
-    species: 'ferret',
-    age: 2,
-    friends: ['luna', 'manny', 'abby']
-  };
+  function Pet(name, age, species) {
+    this.name = name;
+    this.age = age;
+    this.species = species;
+    this.friends = ['luna', 'manny', 'abby']
+  }
 
-  Emitter(pet);
+  Emitter(Pet.prototype);
+
+  var pet = new Pet('Tobi', 2, 'ferret');
 
   function PetView(pet) {
     this.pet = pet;
