@@ -27,15 +27,16 @@
   var Emitter = require('component-emitter');
   var reactive = require('reactive');
 
-  var item = {
-    title: 'Get groceries',
-    complete: true
-  };
+  function Item(title) {
+    this.title = title;
+    this.complete = true;
+  }
 
-  Emitter(item);
+  Emitter(Item.prototype);
 
+
+  var item = new Item('Get groceries');
   var el = document.querySelector('form');
-
   reactive(el, item);
 
   setTimeout(function(){
