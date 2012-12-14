@@ -20,7 +20,20 @@ describe('reactive(el, obj)', function(){
     assert('Tobi' == el.children[0].textContent);
     assert('Ferret' == el.children[1].textContent);
   })
-  
+
+  it('should support getter methods', function(){
+    var el = domify('<div><p data-text="first"></p></div>')[0];
+
+    var user = {
+      _first: 'Tobi',
+      first: function(){ return this._first }
+    };
+    
+    var view = reactive(el, user);
+    
+    assert('Tobi' == el.children[0].textContent);
+  });
+
   it('should support computed values');
   
   it('should support computed values on views', function(){
@@ -44,8 +57,14 @@ describe('reactive(el, obj)', function(){
 describe('on "change"', function(){
   it('should update bindings', function(){
     var el = domify('<div><p data-text="name"></p></div>')[0];
-    var user = { name: 'Tobi' };
-    Emitter(user);
+
+    function User(name) {
+      this.name = name;
+    }
+
+    Emitter(User.prototype);
+
+    var user = new User('Tobi');
     var view = reactive(el, user);
     
     assert('Tobi' == el.children[0].textContent);

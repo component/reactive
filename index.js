@@ -230,6 +230,9 @@ Reactive.prototype.bind = function(key, val){
       // binding
       var binding = exports.bindings[name];
 
+      // getter-style function
+      if ('function' == typeof val) val = val.call(obj);
+
       // method defined for data-show etc
       // TODO: optimize with prop references,
       // otherwise this is called too often
@@ -291,6 +294,7 @@ Reactive.prototype.format = function(fmt, val){
 Reactive.prototype.render = function(){
   var obj = this.obj;
   for (var key in obj) {
+    if (!obj.hasOwnProperty(key)) continue;
     this.bind(key, obj[key]);
   }
   return this;
