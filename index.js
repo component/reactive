@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -143,7 +142,7 @@ exports.query = function(el, selector){
 function Reactive(el, obj, options) {
   if (!(this instanceof Reactive)) return new Reactive(el, obj, options).render();
   this.el = el;
-  this.obj = obj;
+  this.obj = (obj.toJSON) ? obj.toJSON() : obj;
   this.els = [];
   this.fns = options || {};
   this.bindings = exports.query(el, bindingSelector);
