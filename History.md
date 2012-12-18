@@ -1,4 +1,12 @@
 
+0.5.0 2012-12-18 
+==================
+
+  * add mouseup / mousedown
+  * add getter-style function support
+  * fix form example
+  * fix checkbox example
+
 0.4.0 / 2012-12-13 
 ==================
 
