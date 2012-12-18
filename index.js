@@ -58,6 +58,8 @@ attrs.forEach(function(attr){
 var events = [
   'change',
   'click',
+  'mousedown',
+  'mouseup',
   'blur',
   'focus',
   'input',
@@ -159,16 +161,16 @@ function Reactive(el, obj, options) {
 
 Reactive.prototype.bindEvents = function(){
   var els = exports.query(this.el, eventSelector);
-  
+
   for (var i = 0; i < els.length; ++i) {
     var el = els[i];
     for (var j = 0; j < el.attributes.length; ++j) {
       var attr = el.attributes[j];
-      
+
       // on-* attr
       var m = /^on-(.*)/.exec(attr.name);
       if (!m) continue;
-      
+
       // values
       var event = m[1];
       var method = attr.value;
@@ -211,16 +213,16 @@ Reactive.prototype.bind = function(key, val){
   var obj = this.obj;
   var els = this.bindings;
   debug('bind %s = %s', key, val);
-  
+
   for (var i = 0; i < els.length; ++i) {
     var el = els[i];
     for (var j = 0; j < el.attributes.length; ++j) {
       var attr = el.attributes[j];
-      
+
       // data-* attr
       var m = /^data-(.*)/.exec(attr.name);
       if (!m) continue;
-      
+
       // values
       var parts = attr.value.split(/ *\| */);
       var prop = parts[0];
@@ -246,7 +248,7 @@ Reactive.prototype.bind = function(key, val){
         binding(el, ret);
         continue;
       }
-      
+
       // wrong binding
       if (prop != key) continue;
       var ret = val;
@@ -257,7 +259,7 @@ Reactive.prototype.bind = function(key, val){
         ret = this.format(fmt, ret);
         debug('format %s as %s => %s', prop, fmt, ret);
       }
-      
+
       // object value
       binding(el, ret);
     }
@@ -274,7 +276,7 @@ Reactive.prototype.bind = function(key, val){
 
 Reactive.prototype.format = function(fmt, val){
   var calls = parse(fmt);
-  
+
   for (var i = 0; i < calls.length; ++i) {
     var call = calls[i];
     call.args.unshift(val);
