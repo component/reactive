@@ -2,7 +2,7 @@
   "name": "reactive",
   "repo": "component/reactive",
   "description": "Reactive template engine",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "keywords": ["reactive", "template", "engine", "binding", "bindings"],
   "dependencies": {
     "component/format-parser": "*",
