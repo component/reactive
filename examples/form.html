@@ -51,29 +51,29 @@
     this.pet = pet;
     reactive(tmpl, pet, this);
   }
-  
+
   PetView.prototype.friendCount = function(){
     var n = this.pet.friends.length;
     return 0 == n ? 'no' : n;
   };
-  
+
   var view = new PetView(pet);
 
   reactive(document.querySelector('#edit-pet'), pet, {
     updateFriends: function(e){
       var n = parseInt(e.target.value, 10);
       pet.friends = Array(n);
-      pet.emit('change', 'friendCount');
+      pet.emit('change friendCount', n);
     },
-    
+
     updateName: function(e){
       pet.name = e.target.value;
-      pet.emit('change', 'name', e.target.value);
+      pet.emit('change name', e.target.value);
     },
-    
+
     updateAge: function(e){
       pet.age = parseInt(e.target.value, 10);
-      pet.emit('change', 'age', pet.age);;
+      pet.emit('change age', pet.age);;
     }
   });
 </script>

@@ -30,12 +30,12 @@
   };
 
   Emitter(user);
-  
+
   function UserView(user) {
     this.user = user;
     reactive(tmpl, user, this);
   }
-  
+
   UserView.prototype.url = function(){
     return 'http://myapp.com/user/' + this.user.slug;
   };

@@ -15,7 +15,9 @@
   },
   "component": {
     "scripts": {
-      "reactive": "index.js"
+      "reactive/index.js": "lib/index.js",
+      "reactive/bindings.js": "lib/bindings.js",
+      "reactive/binding.js": "lib/binding.js"
     }
   }
 }

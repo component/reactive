@@ -1,0 +1,43 @@
+
+<style>
+  body {
+    padding: 50px;
+    font: 14px Helvetica, Arial;
+  }
+  label {
+    display: block;
+    clear: both;
+  }
+</style>
+
+<script src="../build/build.js"></script>
+
+<h1>Editable</h1>
+
+<p>Click any of the items below to edit inline:</p>
+
+<ul>
+  <li data-editable='/item/1'>One</li>
+  <li data-editable='/item/2'>Two</li>
+  <li data-editable='/item/3'>Three</li>
+</ul>
+
+<script>
+  var Emitter = require('component-emitter');
+  var reactive = require('reactive');
+
+  // bind
+
+  var view = reactive(document.querySelector('ul'));
+
+  // custom binding
+
+  view.bind('data-editable', function(el, url){
+    el.setAttribute('contenteditable', 'true');
+    el.onblur = function(){
+      var str = el.textContent;
+      console.log('save "%s" to %s', str, url);
+    };
+  });
+
+</script>

@@ -16,6 +16,9 @@
     "component/emitter": "*"
   },
   "scripts": [
-    "index.js"
-  ]
+    "lib/index.js",
+    "lib/binding.js",
+    "lib/bindings.js"
+  ],
+  "main": ["lib/index.js"]
 }
