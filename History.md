@@ -1,4 +1,9 @@
 
+0.6.0 / 2012-12-18 
+==================
+
+  * rewrite to facilitate additional flexibility for bindings
+
 0.5.0 2012-12-18 
 ==================
 
