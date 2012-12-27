@@ -171,4 +171,27 @@ describe('data-[attr]', function(){
     assert('/link/' + url == el.children[0].getAttribute('href'));
     assert(link.url == el.children[0].textContent);
   })
+
+  it('should update bindings with formatters', function(){
+    var el = domify('<div><p data-text="name | toUpper"></p></div>')[0];
+
+    function User(name) {
+      this.name = name;
+    }
+
+    Emitter(User.prototype);
+
+    var user = new User('Tobi');
+    var view = reactive(el, user, {
+      toUpper: function(text) {
+        return text.toUpperCase();
+      }
+    });
+
+    assert('TOBI' == el.children[0].textContent);
+
+    user.name = 'Loki';
+    user.emit('change name');
+    assert('LOKI' == el.children[0].textContent);
+  })
 })
