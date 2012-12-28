@@ -1,0 +1,69 @@
+
+<style>
+  body {
+    padding: 50px;
+    font: 12px Helvetica, Arial;
+  }
+  table {
+    font-size: 12px;
+  }
+  table th {
+    text-align: left;
+  }
+  table td {
+    width: 100px;
+  }
+  .hide {
+    display: none;
+  }
+</style>
+
+<script src="../build/build.js"></script>
+
+<table>
+  <thead>
+    <tr>
+      <th>First</th>
+      <th>Last</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td data-text="first">Tobi</td>
+      <td data-text="last">Ferret</td>
+      <td data-text="email">tobi@gmail.com</td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+  var Emitter = require('component-emitter');
+  var reactive = require('reactive');
+  var table = document.querySelector('table tbody');
+  var tmpl = document.querySelector('table tbody tr');
+
+  var users = [
+    { first: 'Tobi', last: 'Ferret', email: 'tobi@gmail.com' },
+    { first: 'Loki', last: 'Ferret', email: 'loki@gmail.com' },
+    { first: 'Abby', last: 'Ferret', email: 'abby@gmail.com' },
+    { first: 'Manny', last: 'Cat', email: 'manny@gmail.com' },
+    { first: 'Luna', last: 'Cat', email: 'luna@gmail.com' }
+  ];
+
+  var man = users[3];
+  Emitter(man);
+
+  setInterval(function(){
+    man.first = 'Man';
+    man.emit('change first');
+  }, 3000);
+
+  setInterval(function(){
+    var user = users[Math.random() * users.length | 0];
+    var el = tmpl.cloneNode(true);
+    var view = reactive(el, user);
+    table.appendChild(el);
+  }, 20);
+
+</script>
