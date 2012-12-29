@@ -1,4 +1,10 @@
 
+0.7.1 / 2012-12-28 
+==================
+  
+  * fix 'formatter' property names for change listener.
+  * Update main script path in package.json
+
 0.7.0 / 2012-12-19 
 ==================
 
