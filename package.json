@@ -3,6 +3,7 @@
   "description": "Reactive template engine",
   "version": "0.7.0",
   "keywords": ["reactive", "template", "engine"],
+  "main": "lib/index.js",
   "dependencies": {
     "classes-component": "*",
     "event-component": "*",
