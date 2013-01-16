@@ -13,6 +13,8 @@ describe('interpolation', function(){
     };
 
     var view = reactive(el, item);
-    console.log(el);
+    var a = el.children[0];
+    assert('/downloads/1' == a.getAttribute('href'));
+    assert('Download Maru' == a.textContent);
   })
 })
