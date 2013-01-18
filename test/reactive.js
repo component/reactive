@@ -148,6 +148,24 @@ describe('data-checked', function(){
   })
 })
 
+describe('data-append', function(){
+  it('should append an element', function(){
+    var li = domify('<li>li</li>')[0];
+    var el = domify('<div><ul data-append="msg"></ul></div>')[0];
+    var view = reactive(el, {}, { msg: li });
+    assert(li == el.children[0].children[0]);
+  })
+})
+
+describe('data-replace', function(){
+  it('should replace an element', function(){
+    var canvas = document.createElement('canvas');
+    var el = domify('<div><div data-replace="canvas"></div></div>')[0];
+    var view = reactive(el, {}, { canvas: canvas });
+    assert(canvas == el.children[0]);
+  })
+})
+
 describe('data-[attr]', function(){
   it('should set attribute value', function(){
     var el = domify('<div><input type="text" data-value="name" /></div>')[0];
