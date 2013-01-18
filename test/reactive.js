@@ -100,7 +100,7 @@ describe('data-text', function(){
   })
 })
 
-describe('data-html', function() {
+describe('data-html', function(){
   it('should set element html', function(){
     var el = domify('<div><p data-html="name"></p></div>')[0];
     var user = { name: '<strong>Tobi</strong>' };
@@ -108,7 +108,7 @@ describe('data-html', function() {
     assert('<strong>Tobi</strong>' == el.children[0].innerHTML);
   });
 
-  it('should support computed values', function() {
+  it('should support computed values', function(){
     var el = domify('<div><ul data-html="fruits"></ul></div>')[0];
     var user = { diet : [ 'apples', 'pears', 'oranges' ] };
     var view = reactive(el, user, {
@@ -123,7 +123,6 @@ describe('data-html', function() {
     for (var i = 0, len = items.length; i < len; i++) {
       assert(user.diet[i] == items[i].textContent);
     }
-
   });
 })
 
