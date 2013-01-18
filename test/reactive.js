@@ -106,7 +106,7 @@ describe('data-html', function(){
     var user = { name: '<strong>Tobi</strong>' };
     var view = reactive(el, user);
     assert('<strong>Tobi</strong>' == el.children[0].innerHTML);
-  });
+  })
 
   it('should support computed values', function(){
     var el = domify('<div><ul data-html="fruits"></ul></div>')[0];
@@ -123,7 +123,7 @@ describe('data-html', function(){
     for (var i = 0, len = items.length; i < len; i++) {
       assert(user.diet[i] == items[i].textContent);
     }
-  });
+  })
 })
 
 describe('data-show', function(){
