@@ -20,5 +20,5 @@
     "lib/binding.js",
     "lib/bindings.js"
   ],
-  "main": ["lib/index.js"]
+  "main": "lib/index.js"
 }
