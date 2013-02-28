@@ -1,0 +1,95 @@
+
+<style>
+  body {
+    padding: 50px;
+    font: 14px Helvetica, Arial;
+  }
+  form {
+    display: inline-block;
+    border: 1px solid #eee;
+    padding: 15px 20px;
+  }
+</style>
+
+<script src="../build/build.js"></script>
+
+<div id="pet">
+  <h2 data-text="name"></h2>
+  <p><span data-text="name">name</span> is a <span data-text="age">age</span> year old <span data-text="species"></span>, he has <span data-text="friendCount"></span> friends:</p>
+  <ul>
+    <li each="friends">
+      <span data-text="name">Name</span>
+      (<span data-text="species">Species</span>)
+    </li>
+  </ul>
+
+  <p>Top friends:</p>
+  <ul>
+    <li each="friend in friends">
+      <span data-text="friend.name">Friend</span> has known
+      <span data-text="name">Name</span> for
+      <span data-text="friend.age">Age</span> years.
+    </li>
+  </ul>
+</div>
+
+<script>
+  var Emitter = require('component-emitter');
+  var reactive = require('reactive');
+  var tmpl = document.querySelector('#pet');
+
+  reactive.bind('each', function(el, val){
+    var self = this;
+    var val = val.split(/ +/);
+    el.removeAttribute('each');
+
+    if (val.length > 1) {
+      var name = val[0];
+      var prop = val[2];
+    } else {
+      var prop = val[0];
+    }
+
+    var arr = this.value(prop);
+
+    arr.forEach(function(obj){
+      var clone = el.cloneNode(true);
+      var view = reactive(clone, obj, {
+        parentView: self.view,
+        viewName: name
+      });
+      el.parentNode.appendChild(clone);
+    });
+
+    el.parentNode.removeChild(el);
+  });
+
+  function Pet(name, age, species) {
+    this.name = name;
+    this.age = age;
+    this.species = species;
+    this.friends = [];
+  }
+
+  Emitter(Pet.prototype);
+
+  function PetView(pet) {
+    this.pet = pet;
+    reactive(tmpl, pet, this);
+  }
+
+  PetView.prototype.friendCount = function(){
+    var n = this.pet.friends.length;
+    return 0 == n ? 'no' : n;
+  };
+
+  var tobi = new Pet('Tobi', 2, 'ferret');
+  var loki = new Pet('Loki', 2, 'ferret');
+  var jane = new Pet('Jane', 7, 'ferret');
+  var abby = new Pet('Abby', 2, 'ferret');
+  tobi.friends.push(loki)
+  tobi.friends.push(jane)
+  tobi.friends.push(abby)
+
+  var view = new PetView(tobi);
+</script>
