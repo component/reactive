@@ -55,3 +55,18 @@ describe('Reactive#bind(obj)', function(){
     });
   })
 })
+
+describe('view.unbind(name)', function(){
+  it('should remove an existing binding', function(done){
+    reactive.bind('data-editable', function(el, url){
+      assert('/item/12' == url);
+    });
+
+    var el = domify('<div><h1 data-editable="/item/12">Title</h1></div>')[0];
+    var view = reactive(el, {});
+    assert(1 == view.bindings['data-editable'].length)
+    view.unbind('data-editable');
+    assert(0 == view.bindings['data-editable'].length)
+    done();
+  })
+})
