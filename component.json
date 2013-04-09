@@ -8,7 +8,8 @@
     "component/format-parser": "*",
     "visionmedia/debug": "*",
     "component/event": "*",
-    "component/classes": "*"
+    "component/classes": "*",
+    "component/query": "*"
   },
   "development": {
     "component/assert": "*",
