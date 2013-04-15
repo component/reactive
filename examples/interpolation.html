@@ -53,4 +53,9 @@
   var view2 = new ItemView(item2);
   document.body.appendChild(view2.el);
 
+  setTimeout(function(){
+    item2.title = 'Colonel meow';
+    item2.emit('change title', 'Colonel meow');
+  }, 2000);
+
 </script>
