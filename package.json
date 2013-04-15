@@ -7,6 +7,7 @@
   "dependencies": {
     "classes-component": "*",
     "event-component": "*",
+    "query-component": "*",
     "format-parser": "*",
     "debug": "*"
   },
