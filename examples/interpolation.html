@@ -18,9 +18,9 @@
 
 <div class="item">
   <h1 data-text="title">Item</h1>
-  <p data-text="description"></p>
+  <p data-text="description">Description</p>
   <p>
-    Click here to <a data-href="/downloads/{id}" data-text="Download {title}"></a>.
+    Click here to <a data-href="/downloads/{id}" data-text="Download {title}: {description}"></a>.
   </p>
 </div>
 
@@ -55,7 +55,12 @@
 
   setTimeout(function(){
     item2.title = 'Colonel meow';
-    item2.emit('change title', 'Colonel meow');
+    item2.emit('change title', item2.title);
+
+    setTimeout(function(){
+      item2.description = 'A yeti cat';
+      item2.emit('change description', item2.description);
+    }, 2000);
   }, 2000);
 
 </script>
