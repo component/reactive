@@ -66,7 +66,7 @@ Typically a view object wraps a model to provide additional functionality, this 
 ```js
 function UserView(user) {
   this.user = user;
-  this.el = reactive(this, user, this);
+  this.el = reactive(tmpl, user, this);
 }
 
 UserView.prototype.name = function(){ ... }
