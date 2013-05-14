@@ -1,4 +1,3 @@
-
 # reactive
 
   Reactive template engine similar to [Rivets](http://rivetsjs.com/) minus the coffee script,
@@ -128,6 +127,16 @@ The `on-<event>` bindings allow you to listen on an event:
 </div>
 ```
 
+### data-replace
+
+  The `data-replace` binding allows you to replace an existing element:
+
+```html
+<div class="photo" data-replace="histogram">
+
+</div>
+```
+
 ### data-{show,hide}
 
   The `data-show` and `data-hide` bindings conditionally add "show" or "hide" classnames so that you may style an element as hidden or visible.
@@ -179,7 +188,7 @@ __NOTE__: in the future Reactive may support hinting of computed properties from
  <a data-href="/download/{id}" data-text="Download {filename}"></a>
  ```
 
- ## Notes
+## Notes
 
   Get creative! There's a lot of application-specific logic that can be converted to declarative Reactive bindings. For example here's a naive "auto-submit" form binding:
 
