@@ -1,8 +1,7 @@
 
 # reactive
 
-  Reactive template engine similar to [Rivets](http://rivetsjs.com/) minus the coffee script,
-  and Caustic which no longer exists.
+  Reactive template engine for robust real-time rendering of model data changes.
 
 ## Installation
 
