@@ -61,7 +61,7 @@
         </li>
 
         <li class="js js-2">
-          <input type="text" value="Tobi" />
+          <input type="text" value="" />
         </li>
 
         <li class="html">
@@ -69,13 +69,13 @@
         </li>
 
         <li class="demo demo-2">
-          <p>Hello { name || 'Nobody' }</p>
+          <p>Hello { name || 'Nobody' }</p>
         </li>
 
         <script>
           var Emitter = require('emitter');
           var reactive = require('reactive');
-          var user = { name: 'Tobi' };
+          var user = { name: '' };
           Emitter(user);
 
           var input = document.querySelector('.js-2 input');
