@@ -50,3 +50,11 @@ h1 + p {
 #examples code {
   font-size: 12px;
 }
+
+input[type=text] {
+  padding: 10px;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 0 2px #eee;
+  width: 100%;
+}
