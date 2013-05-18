@@ -27,9 +27,11 @@ h1 + p {
 }
 
 #examples li.desc {
+  margin-right: 25px;
   width: 25%;
   float: left;
   padding: 20px 0;
+  min-height: 300px;
 }
 
 #examples li.js,
@@ -42,7 +44,7 @@ h1 + p {
   background: white;
   border: 1px solid #d1d3d8;
   box-shadow: 0 0 0 5px #e7e9ee;
-  min-height: 200px;
+  min-height: 300px;
 }
 
 #examples code {
