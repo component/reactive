@@ -1,6 +1,7 @@
 {
   "name": "reactive-site",
   "dependencies": {
-    "component/reactive": "*"
+    "component/reactive": "*",
+    "component/emitter": "*"
   }
 }

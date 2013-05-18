@@ -14,15 +14,14 @@
 
 
     <ul id="examples">
-      <li class="desc">
+      <li class="desc" class="demo-1">
         <h3>Text bindings</h3>
         <p>Through interpolation you may bind to properties
           and Reactive will adjust the contents upon changes.</p>
       </li>
 
       <li class="js">
-        <code><pre>
-var user = { name: '' };</pre></code>
+        <code><pre>{ name: 'Tobi' }</pre></code>
       </li>
 
       <li class="html">
@@ -33,6 +32,13 @@ var user = { name: '' };</pre></code>
       <li class="demo">
         <p>Hello {name}</p>
       </li>
+
+      <script>
+        var Emitter = require('emitter');
+        var reactive = require('reactive');
+        var user = { name: 'Tobi' };
+
+      </script>
     </ul>
 
   </section>
