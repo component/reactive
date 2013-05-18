@@ -1,0 +1,13 @@
+
+body {
+  padding: 50px 90px;
+  background: #eff1f4;
+  font: 200 18px/1.6 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #83868c;
+}
+
+h1, h2, h3 {
+  font-weight: 300;
+  color: #181818;
+}
+
