@@ -17,6 +17,7 @@
 
 <script src="../build/build.js"></script>
 
+<input type="text" value="Reactive">
 <input type="range" min="0" max="100" value="0">
 
 <br>
@@ -30,7 +31,14 @@
   var Emitter = require('emitter');
   var reactive = require('reactive');
 
-  var input = document.querySelector('input');
+  var title = document.querySelector('[type=text]');
+
+  title.oninput = function(){
+    article.title = title.value;
+    article.emit('change title');
+  };
+
+  var input = document.querySelector('[type=range]');
 
   input.onchange = function(){
     article.views = ~~input.value;
@@ -55,9 +63,4 @@
   }
 
   el.parentNode.removeChild(el);
-
-  setTimeout(function(){
-    article.title = null;
-    article.emit('change title');
-  }, 2000);
 </script>
