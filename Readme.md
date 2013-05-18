@@ -91,7 +91,7 @@ reactive.unsubscribe(function(obj, prop, fn){
 ## Interpolation
 
   Bindings may be applied via interoplation on attributes or text. For example here
-  is a simple use of this feature to react to changes of an articles's `.name` property:
+  is a simple use of this feature to react to changes of an article's `.name` property:
 
 ```html
 <article>
