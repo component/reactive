@@ -51,6 +51,45 @@
       </ul>
     </section>
 
+    <section class="example">
+      <ul>
+        <li class="desc">
+          <h3>Complex expressions</h3>
+          <p>With Reactive the full range of JavaScript expressions are at your disposal.
+            This means no learning a new language or subset, it's just js! As you can see
+            Reactive still has no problem picking out which properties to bind.</p>
+        </li>
+
+        <li class="js js-2">
+          <input type="text" value="Tobi" />
+        </li>
+
+        <li class="html">
+          <code><pre><p>Hello { name || 'Nobody' }</p></pre></code>
+        </li>
+
+        <li class="demo demo-2">
+          <p>Hello { name || 'Nobody' }</p>
+        </li>
+
+        <script>
+          var Emitter = require('emitter');
+          var reactive = require('reactive');
+          var user = { name: 'Tobi' };
+          Emitter(user);
+
+          var input = document.querySelector('.js-2 input');
+          input.oninput = function(e){
+            user.name = input.value;
+            user.emit('change name');
+          };
+
+          var el = document.querySelector('.demo-2');
+          reactive(el, user);
+        </script>
+      </ul>
+    </section>
+
   </section>
 </body>
 </html>
