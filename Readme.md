@@ -88,7 +88,44 @@ reactive.unsubscribe(function(obj, prop, fn){
 });
 ```
 
-## Bindings
+## Interpolation
+
+  Bindings may be applied via interoplation on attributes or text. For example here
+  is a simple use of this feature to react to changes of an articles's `.name` property:
+
+```html
+<article>
+  <h2>{name}</h2>
+</article>
+```
+
+  Text interpolation may appear anywhere within the copy, and may contain complex JavaScript expressions
+  for defaulting values or other operations.
+
+```html
+<article>
+  <h2>{ name || 'Untitled' }</h2>
+  <p>Summary: { body.slice(0, 10) }</p>
+</article>
+```
+
+ Reactive is smart enough to pick out multiple properties that may be used, and
+ react to any of their changes:
+
+```html
+<p>Welcome { @first + ' ' + @last }.</p>
+```
+
+ Interpolation works for attributes as well, reacting to changes as you'd expect:
+
+```html
+<li class="file-{id}">
+  <h3>{filename}</h3>
+  <p><a href="/files/{id}/download">Download {filename}</a></p>
+<li>
+```
+
+## Declarative Bindings
 
   By default reactive supplies bindings for setting properties, listening to events, toggling visibility, appending and replacing elements. Most of these start with "data-*" however this is not required.
 

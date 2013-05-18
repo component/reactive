@@ -39,6 +39,19 @@ describe('text interpolation', function(){
     assert('tobi holowaychuk is a ferret' == el.children[0].textContent);
   })
 
+  it('should support multiple properties in a single expression', function(){
+    var el = domify('<p>{@first + " " + @last}</p>')[0];
+    var pet = { first: 'tobi', last: 'holowaychuk' };
+    Emitter(pet)
+
+    var view = reactive(el, pet);
+    assert('tobi holowaychuk' == el.textContent);
+
+    pet.last = 'ferret';
+    pet.emit('change last');
+    assert('tobi ferret' == el.textContent);
+  })
+
   it('should support model method calls', function(){
     var el = domify('<p>first: {@first()}</p>')[0];
 
