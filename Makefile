@@ -1,5 +1,7 @@
 
-build: components lib/index.js lib/bindings.js lib/binding.js
+SRC = $(wildcard lib/*.js)
+
+build: components $(SRC)
 	@component build --dev
 
 components: component.json

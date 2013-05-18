@@ -1,7 +1,7 @@
 
 var reactive = require('reactive');
-var domify = require('component-domify');
-var assert = require('component-assert');
+var domify = require('domify');
+var assert = require('assert');
 
 describe('reactive.bind(name, fn)', function(){
   it('should define a new binding', function(done){

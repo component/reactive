@@ -1,8 +1,8 @@
 
 var reactive = require('reactive');
-var Emitter = require('component-emitter');
-var domify = require('component-domify');
-var assert = require('component-assert');
+var Emitter = require('emitter');
+var domify = require('domify');
+var assert = require('assert');
 
 function User(first, last) {
   this.first = first;

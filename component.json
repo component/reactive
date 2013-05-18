@@ -18,6 +18,9 @@
   },
   "scripts": [
     "lib/index.js",
+    "lib/utils.js",
+    "lib/text-binding.js",
+    "lib/attr-binding.js",
     "lib/binding.js",
     "lib/bindings.js"
   ],

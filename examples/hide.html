@@ -17,15 +17,15 @@
 <script src="../build/build.js"></script>
 
 <div class="item">
-  <h1 class="title" data-text="title">Item</h1>
-  <p class="description" data-text="description"></p>
-  
+  <h1 class="title">{title}</h1>
+  <p class="description">{description}</p>
+
   <p data-show='hasDownloads'>
-    Click here to <a data-href="filename">Download</a>.
+    Click here to <a href="{filename}">Download</a>.
   </p>
-  
+
   <p data-hide='hasDownloads'>
-    No downloads available for <span data-text="title">name</span> at the moment!.
+    No downloads available for <span>{title}</span> at the moment!.
   </p>
 </div>
 

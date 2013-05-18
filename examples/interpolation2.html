@@ -1,0 +1,51 @@
+
+<style>
+  body {
+    padding: 50px;
+    font: 14px Helvetica, Arial;
+  }
+  form {
+    display: inline-block;
+    border: 1px solid #eee;
+    padding: 15px 20px;
+  }
+  .hide {
+    display: none;
+  }
+</style>
+
+<script src="../build/build.js"></script>
+
+<div class="user">
+  <h1>{name}</h1>
+  <p>{name} is a {age} year old {species} with {@siblings.length} siblings.</p>
+</div>
+
+<script>
+  var Emitter = require('emitter');
+  var reactive = require('reactive');
+  var tmpl = document.querySelector('.user');
+  document.body.removeChild(tmpl);
+
+  function Item(obj) {
+    for (var k in obj) this[k] = obj[k];
+  }
+
+  Emitter(Item.prototype);
+
+  function ItemView(item) {
+    this.item = item;
+    this.el = tmpl.cloneNode(true);
+    reactive(this.el, item, this);
+  }
+
+  var item = new Item({
+    name: 'Tobi',
+    age: 2,
+    species: 'ferret',
+    siblings: ['Loki', 'Jane', 'Abby']
+  });
+
+  var view = new ItemView(item);
+  document.body.appendChild(view.el);
+</script>

@@ -2,68 +2,62 @@
 <style>
   body {
     padding: 50px;
-    font: 12px Helvetica, Arial;
+    font: 9px Helvetica, Arial;
   }
-  table {
-    font-size: 12px;
+  label {
+    display: block;
+    clear: both;
   }
-  table th {
-    text-align: left;
-  }
-  table td {
-    width: 100px;
-  }
-  .hide {
-    display: none;
+  article {
+    float: left;
+    margin: 15px;
+    width: 150px;
   }
 </style>
 
 <script src="../build/build.js"></script>
 
-<table>
-  <thead>
-    <tr>
-      <th>First</th>
-      <th>Last</th>
-      <th>Email</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-text="first">Tobi</td>
-      <td data-text="last">Ferret</td>
-      <td data-text="email">tobi@gmail.com</td>
-    </tr>
-  </tbody>
-</table>
+<input type="range" min="0" max="100" value="0">
+
+<br>
+
+<article>
+  <h1>{ title || 'Untitled' }</h1>
+  <p>{ description } <strong>{views} views</strong></p>
+</article>
 
 <script>
-  var Emitter = require('component-emitter');
+  var Emitter = require('emitter');
   var reactive = require('reactive');
-  var table = document.querySelector('table tbody');
-  var tmpl = document.querySelector('table tbody tr');
 
-  var users = [
-    { first: 'Tobi', last: 'Ferret', email: 'tobi@gmail.com' },
-    { first: 'Loki', last: 'Ferret', email: 'loki@gmail.com' },
-    { first: 'Abby', last: 'Ferret', email: 'abby@gmail.com' },
-    { first: 'Manny', last: 'Cat', email: 'manny@gmail.com' },
-    { first: 'Luna', last: 'Cat', email: 'luna@gmail.com' }
-  ];
+  var input = document.querySelector('input');
 
-  var man = users[3];
-  Emitter(man);
+  input.onchange = function(){
+    article.views = ~~input.value;
+    article.emit('change views');
+  };
 
-  setInterval(function(){
-    man.first = 'Man';
-    man.emit('change first');
-  }, 3000);
+  var article = {
+    title: 'Reactive',
+    description: 'Some description here.',
+    views: 0
+  };
 
-  setInterval(function(){
-    var user = users[Math.random() * users.length | 0];
-    var el = tmpl.cloneNode(true);
-    var view = reactive(el, user);
-    table.appendChild(el);
-  }, 20);
+  Emitter(article);
 
+  var el = document.querySelector('article');
+  var n = 400;
+
+  while (n--) {
+    var clone = el.cloneNode(true);
+    reactive(clone, article);
+    document.body.appendChild(clone);
+  }
+
+  el.parentNode.removeChild(el);
+
+  setTimeout(function(){
+    article.title = null;
+    article.emit('change title');
+  }, 2000);
 </script>

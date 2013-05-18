@@ -1,7 +1,7 @@
 
 var reactive = require('reactive');
-var domify = require('component-domify');
-var assert = require('component-assert');
+var domify = require('domify');
+var assert = require('assert');
 
 var user = {};
 

@@ -1,9 +1,9 @@
 
 var reactive = require('reactive');
-var Emitter = require('component-emitter');
-var classes = require('component-classes');
-var domify = require('component-domify');
-var assert = require('component-assert');
+var Emitter = require('emitter');
+var classes = require('classes');
+var domify = require('domify');
+var assert = require('assert');
 
 describe('reactive(el, obj)', function(){
   it('should set values on initialization', function(){
@@ -34,8 +34,6 @@ describe('reactive(el, obj)', function(){
     assert('Tobi' == el.children[0].textContent);
   });
 
-  it('should support computed values');
-
   it('should support computed values on views', function(){
     var el = domify('<div><p data-text="name"></p></div>')[0];
 
@@ -52,6 +50,14 @@ describe('reactive(el, obj)', function(){
 
     assert('Tobi Ferret' == el.children[0].textContent);
   })
+
+  // it('should support the root element', function(){
+  //   var el = domify('<p data-text="name"></p>')[0];
+  //   var user = { name: 'Tobi' };
+  //   reactive(el, user);
+  //   console.log(el);
+  //   assert('Tobi' == el.textContent);
+  // })
 })
 
 describe('on "change <name>"', function(){
