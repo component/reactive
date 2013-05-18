@@ -1,0 +1,6 @@
+{
+  "name": "reactive-site",
+  "dependencies": {
+    "component/reactive": "*"
+  }
+}
