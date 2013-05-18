@@ -1,4 +1,10 @@
 
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 body {
   padding: 50px 90px;
   background: #eff1f4;
@@ -11,3 +17,13 @@ h1, h2, h3 {
   color: #181818;
 }
 
+#examples li.desc {
+  width: 30%;
+  float: left;
+}
+
+#examples li.demo {
+  width: 60%;
+  float: left;
+  background: white;
+}
