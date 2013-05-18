@@ -3,28 +3,38 @@
 <head>
   <title>Reactive - JavaScript template engine for realtime applications</title>
   <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="reactive.js"></script>
 </head>
 <body>
   <section id="content">
     <h1>Reactive</h1>
     <p>Reactive is a simple yet robust view engine for real-time "reactive" applications. Reactive views
-      are live DOM, no static compilation of strings involved, just fast, flexible, and robust DOm-based
+      are live DOM, no static compilation of strings involved, just fast, flexible, and robust DOM-based
       views that react to your models.</p>
 
 
     <ul id="examples">
-      <li class="desc">foo</li>
-      <li class="demo">bar</li>
+      <li class="desc">
+        <h3>Text bindings</h3>
+        <p>Through interpolation you may bind to properties
+          and Reactive will adjust the contents upon changes.</p>
+      </li>
 
-      <li class="desc">foo</li>
-      <li class="demo">bar</li>
+      <li class="js">
+        <code><pre>
+var user = { name: '' };</pre></code>
+      </li>
 
-      <li class="desc">foo</li>
-      <li class="demo">bar</li>
+      <li class="html">
+        <code><pre>
+<p>Hello {name}</p></code></pre>
+      </li>
+
+      <li class="demo">
+        <p>Hello {name}</p>
+      </li>
     </ul>
 
   </section>
-  <script src="reactive.js"></script>
-  <script src="app.js"></script>
 </body>
 </html>

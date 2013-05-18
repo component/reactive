@@ -17,21 +17,34 @@ h1, h2, h3 {
   color: #181818;
 }
 
+h1 + p {
+  width: 500px;
+}
+
 #examples li {
   margin: 20px 0;
-  padding: 20px;
   border-radius: 6px;
 }
 
 #examples li.desc {
-  width: 30%;
+  width: 25%;
   float: left;
+  padding: 20px 0;
 }
 
+#examples li.js,
+#examples li.html,
 #examples li.demo {
-  width: 60%;
+  margin: 0 15px;
+  width: 20%;
   float: left;
+  padding: 20px;
   background: white;
   border: 1px solid #d1d3d8;
   box-shadow: 0 0 0 5px #e7e9ee;
+  min-height: 200px;
+}
+
+#examples code {
+  font-size: 12px;
 }
