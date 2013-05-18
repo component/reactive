@@ -20,8 +20,8 @@
           and Reactive will adjust the contents upon changes.</p>
       </li>
 
-      <li class="js">
-        <code><pre>{ name: 'Tobi' }</pre></code>
+      <li class="js js-1">
+        <input type="text" value="Tobi" />
       </li>
 
       <li class="html">
@@ -37,6 +37,12 @@
         var reactive = require('reactive');
         var user = { name: 'Tobi' };
         Emitter(user);
+
+        var input = document.querySelector('.js-1 input');
+        input.oninput = function(e){
+          user.name = input.value;
+          user.emit('change name');
+        };
 
         var el = document.querySelector('.demo-1');
         reactive(el, user);
