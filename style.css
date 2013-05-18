@@ -27,6 +27,10 @@ h1 + p {
   float: left;
 }
 
+.example p {
+  font-size: .9em;
+}
+
 .example li {
   margin: 20px 0;
   border-radius: 6px;
