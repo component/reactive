@@ -21,12 +21,12 @@ h1 + p {
   width: 500px;
 }
 
-#examples li {
+.example li {
   margin: 20px 0;
   border-radius: 6px;
 }
 
-#examples li.desc {
+.example li.desc {
   margin-right: 25px;
   width: 25%;
   float: left;
@@ -34,9 +34,9 @@ h1 + p {
   min-height: 300px;
 }
 
-#examples li.js,
-#examples li.html,
-#examples li.demo {
+.example li.js,
+.example li.html,
+.example li.demo {
   margin: 0 15px;
   width: 20%;
   float: left;
@@ -47,7 +47,7 @@ h1 + p {
   min-height: 300px;
 }
 
-#examples code {
+.example code {
   font-size: 12px;
 }
 

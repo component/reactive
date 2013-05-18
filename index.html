@@ -13,41 +13,43 @@
       views that react to your models.</p>
 
 
-    <ul id="examples">
-      <li class="desc">
-        <h3>Text bindings</h3>
-        <p>Through interpolation you may bind to properties
-          and Reactive will adjust the contents upon changes.</p>
-      </li>
+    <section class="example">
+      <ul>
+        <li class="desc">
+          <h3>Text bindings</h3>
+          <p>Through interpolation you may bind to properties
+            and Reactive will adjust the contents upon changes.</p>
+        </li>
 
-      <li class="js js-1">
-        <input type="text" value="Tobi" />
-      </li>
+        <li class="js js-1">
+          <input type="text" value="Tobi" />
+        </li>
 
-      <li class="html">
-        <code><pre><p>Hello {name}</p></pre></code>
-      </li>
+        <li class="html">
+          <code><pre><p>Hello {name}</p></pre></code>
+        </li>
 
-      <li class="demo demo-1">
-        <p>Hello {name}</p>
-      </li>
+        <li class="demo demo-1">
+          <p>Hello {name}</p>
+        </li>
 
-      <script>
-        var Emitter = require('emitter');
-        var reactive = require('reactive');
-        var user = { name: 'Tobi' };
-        Emitter(user);
+        <script>
+          var Emitter = require('emitter');
+          var reactive = require('reactive');
+          var user = { name: 'Tobi' };
+          Emitter(user);
 
-        var input = document.querySelector('.js-1 input');
-        input.oninput = function(e){
-          user.name = input.value;
-          user.emit('change name');
-        };
+          var input = document.querySelector('.js-1 input');
+          input.oninput = function(e){
+            user.name = input.value;
+            user.emit('change name');
+          };
 
-        var el = document.querySelector('.demo-1');
-        reactive(el, user);
-      </script>
-    </ul>
+          var el = document.querySelector('.demo-1');
+          reactive(el, user);
+        </script>
+      </ul>
+    </section>
 
   </section>
 </body>
