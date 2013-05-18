@@ -20,7 +20,7 @@ h1, h2, h3 {
 #examples li {
   margin: 20px 0;
   padding: 20px;
-  border-radius: 3px;
+  border-radius: 6px;
 }
 
 #examples li.desc {
@@ -32,5 +32,6 @@ h1, h2, h3 {
   width: 60%;
   float: left;
   background: white;
-  box-shadow: 0 1px 1px #d1d3d8;
+  border: 1px solid #d1d3d8;
+  box-shadow: 0 0 0 5px #e7e9ee;
 }
