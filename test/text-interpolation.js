@@ -40,7 +40,7 @@ describe('text interpolation', function(){
   })
 
   it('should support multiple properties in a single expression', function(){
-    var el = domify('<p>{@first + " " + @last}</p>')[0];
+    var el = domify('<p>{first + " " + last}</p>')[0];
     var pet = { first: 'tobi', last: 'holowaychuk' };
     Emitter(pet)
 
@@ -53,20 +53,7 @@ describe('text interpolation', function(){
   })
 
   it('should support model method calls', function(){
-    var el = domify('<p>first: {@first()}</p>')[0];
-
-    var pet = {
-      first: function(){
-        return 'Loki'
-      }
-    };
-
-    reactive(el, pet);
-    assert('first: Loki' == el.textContent);
-  })
-
-  it('should support a single method call without leading @', function(){
-    var el = domify('<p>first: {first("something")}</p>')[0];
+    var el = domify('<p>first: {first()}</p>')[0];
 
     var pet = {
       first: function(){
@@ -79,7 +66,7 @@ describe('text interpolation', function(){
   })
 
   it('should support complex expressions', function(){
-    var el = domify('<p>first: {@siblings[0]}, last: {@siblings[@siblings.length - 1]}</p>')[0];
+    var el = domify('<p>first: {siblings[0]}, last: {siblings[siblings.length - 1]}</p>')[0];
 
     var pet = {
       siblings: [

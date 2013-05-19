@@ -5,7 +5,8 @@
   "version": "0.12.0",
   "keywords": ["reactive", "template", "engine", "binding", "bindings"],
   "dependencies": {
-    "component/format-parser": "*",
+    "component/format-parser": "0.0.2",
+    "component/props": "1.0.2",
     "visionmedia/debug": "*",
     "component/event": "*",
     "component/classes": "*",
