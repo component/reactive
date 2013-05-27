@@ -5,10 +5,10 @@
   "keywords": ["reactive", "template", "engine", "data", "bind", "bindings"],
   "main": "lib/index.js",
   "dependencies": {
-    "classes-component": "*",
-    "event-component": "*",
+    "classes-component": "1.1.1",
+    "event-component": "0.1.0",
     "query-component": "*",
-    "format-parser": "*",
+    "format-parser": "0.0.2",
     "debug": "*"
   },
   "devDependencies": {
