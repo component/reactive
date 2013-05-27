@@ -1,4 +1,14 @@
 
+0.12.1 / 2013-05-27 
+==================
+
+ * add attribute and text interpolation support. Closes #45
+ * add props-component to package.json
+ * add Object.observe() example
+ * add dblclick binding
+ * pin deps
+ * remove the need for @. Closes #47
+
 0.12.0 / 2013-05-11 
 ==================
 
