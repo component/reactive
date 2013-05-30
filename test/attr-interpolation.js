@@ -66,8 +66,8 @@ describe('attr interpolation', function(){
 
   it('should escape html', function(){
     var el = domify('<a href="/download/{id}"></a>')[0];
-    var user = { id: '>fail<' };
+    var user = { id: '">fail<' };
     var view = reactive(el, user);
-    assert('/download/&gt;fail&lt;' == el.getAttribute('href'));
+    assert('/download/&quot;&gt;fail&lt;' == el.getAttribute('href'));
   })
 })

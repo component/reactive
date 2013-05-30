@@ -104,6 +104,13 @@ describe('data-text', function(){
 
     assert('formatted date' == el.children[0].textContent);
   })
+
+  it('should escape html', function(){
+    var el = domify('<div><p data-text="name"></p></div>')[0];
+    var user = { name: '<foo>' };
+    var view = reactive(el, user);
+    assert('&lt;foo&gt;' == el.children[0].textContent);
+  })
 })
 
 describe('data-html', function(){
