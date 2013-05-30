@@ -10,6 +10,7 @@
     "query-component": "*",
     "props-component": "1.0.3",
     "format-parser": "0.0.2",
+    "escape-html": "1.0.0",
     "debug": "*"
   },
   "devDependencies": {

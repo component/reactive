@@ -93,4 +93,11 @@ describe('text interpolation', function(){
     reactive(el, user);
     assert('Hello Tobi' == el.textContent);
   })
+
+  it('should escape html', function(){
+    var el = domify('<a>Download {file}</a>')[0];
+    var user = { file: '<script>fail</script>' };
+    var view = reactive(el, user);
+    assert('Download &lt;script&gt;fail&lt;/script&gt;' == el.textContent);
+  })
 })

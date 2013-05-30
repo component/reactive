@@ -63,4 +63,11 @@ describe('attr interpolation', function(){
     user.emit('change file');
     assert('/download/4321-whoop' == el.getAttribute('href'));
   })
+
+  it('should escape html', function(){
+    var el = domify('<a href="/download/{id}"></a>')[0];
+    var user = { id: '>fail<' };
+    var view = reactive(el, user);
+    assert('/download/&gt;fail&lt;' == el.getAttribute('href'));
+  })
 })
