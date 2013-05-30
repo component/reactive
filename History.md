@@ -1,4 +1,10 @@
 
+0.12.3 / 2013-05-30 
+==================
+
+ * fix: escape data-text html
+ * fix: escape html in attr and text interpolation bindings
+
 0.12.2 / 2013-05-27 
 ==================
 

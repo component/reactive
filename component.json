@@ -2,7 +2,7 @@
   "name": "reactive",
   "repo": "component/reactive",
   "description": "Reactive template engine",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "keywords": [
     "reactive",
     "template",

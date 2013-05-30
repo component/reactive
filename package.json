@@ -1,7 +1,7 @@
 {
   "name": "reactive-component",
   "description": "Reactive template engine with data bindings",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "keywords": ["reactive", "template", "engine", "data", "bind", "bindings"],
   "main": "lib/index.js",
   "dependencies": {
