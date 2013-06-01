@@ -10,7 +10,8 @@
     "visionmedia/debug": "*",
     "component/event": "0.1.0",
     "component/classes": "1.1.1",
-    "component/query": "*"
+    "component/query": "*",
+    "jkroso/tree-each": "0.1.0"
   },
   "development": {
     "component/assert": "*",
