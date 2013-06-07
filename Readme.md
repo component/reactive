@@ -4,7 +4,13 @@
 
 ## Installation
 
+ With component:
+
     $ component install component/reactive
+
+ With the stand-alone browser build:
+
+    <script src="reactive.js"></script>
 
 ## API
 
