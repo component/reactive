@@ -60,4 +60,13 @@ describe('computed properties', function(){
     user.emit('change removed_at');
     assert('hide' == em.className);
   })
+
+  it('should track dependencies', function(){
+    var el = domify('<p><em data-hide="removed < removed_at"></em></p>')[0];
+    var user = new User('Tobi', 'Ferret');
+    var view = reactive(el, user);
+    var binding = view.bindings['data-hide'][0];
+    assert(2 == binding.deps.length);
+    assert('removed,removed_at' == binding.deps.join(','));
+  })
 })
