@@ -11,7 +11,7 @@ describe('reactive.bind(name, fn)', function(){
       done();
     });
 
-    var el = domify('<div><h1 data-editable="/item/12">Title</h1></div>')[0];
+    var el = domify('<div><h1 data-editable="/item/12">Title</h1></div>');
     reactive(el, {});
   })
 })
@@ -25,14 +25,14 @@ describe('reactive.bind(obj)', function(){
       }
     });
 
-    var el = domify('<div><h1 hello="world">Title</h1></div>')[0];
+    var el = domify('<div><h1 hello="world">Title</h1></div>');
     reactive(el, {});
   })
 })
 
 describe('Reactive#bind(name, fn)', function(){
   it('should define a view-specific binding', function(done){
-    var el = domify('<ul><li removable></li></ul>')[0];
+    var el = domify('<ul><li removable></li></ul>');
     var view = reactive(el, {});
 
     view.bind('removable', function(el){
@@ -44,7 +44,7 @@ describe('Reactive#bind(name, fn)', function(){
 
 describe('Reactive#bind(obj)', function(){
   it('should define several view-specific bindings', function(done){
-    var el = domify('<div><form action="/login" autosubmit></form></div>')[0];
+    var el = domify('<div><form action="/login" autosubmit></form></div>');
     var view = reactive(el, {});
 
     view.bind({

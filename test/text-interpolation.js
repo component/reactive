@@ -6,21 +6,21 @@ var assert = require('assert');
 
 describe('text interpolation', function(){
   it('should support initialization', function(){
-    var el = domify('<div><a href="/download/{id}"><strong>Download</strong> {file}</a></div>')[0];
+    var el = domify('<div><a href="/download/{id}"><strong>Download</strong> {file}</a></div>');
     var user = { id: '1234', file: 'tobi.png' };
     var view = reactive(el, user);
     assert('Download tobi.png' == el.children[0].textContent);
   })
 
   it('should ignore whitespace', function(){
-    var el = domify('<div><a href="/download/{ id }"><strong>Download</strong> { file }</a></div>')[0];
+    var el = domify('<div><a href="/download/{ id }"><strong>Download</strong> { file }</a></div>');
     var user = { id: '1234', file: 'tobi.png' };
     var view = reactive(el, user);
     assert('Download tobi.png' == el.children[0].textContent);
   })
 
   it('should react to changes', function(){
-    var el = domify('<div><a href="/download/{id}"><strong>Download</strong> {file}</a></div>')[0];
+    var el = domify('<div><a href="/download/{id}"><strong>Download</strong> {file}</a></div>');
     var user = { id: '1234', file: 'tobi.png' };
     Emitter(user);
 
@@ -33,14 +33,14 @@ describe('text interpolation', function(){
   })
 
   it('should support multiple properties', function(){
-    var el = domify('<div><p>{first} {last} is a {species}</p></div>')[0];
+    var el = domify('<div><p>{first} {last} is a {species}</p></div>');
     var pet = { first: 'tobi', last: 'holowaychuk', species: 'ferret' };
     var view = reactive(el, pet);
     assert('tobi holowaychuk is a ferret' == el.children[0].textContent);
   })
 
   it('should support multiple properties in a single expression', function(){
-    var el = domify('<p>{first + " " + last}</p>')[0];
+    var el = domify('<p>{first + " " + last}</p>');
     var pet = { first: 'tobi', last: 'holowaychuk' };
     Emitter(pet)
 
@@ -53,7 +53,7 @@ describe('text interpolation', function(){
   })
 
   it('should support model method calls', function(){
-    var el = domify('<p>first: {first()}</p>')[0];
+    var el = domify('<p>first: {first()}</p>');
 
     var pet = {
       first: function(){
@@ -66,7 +66,7 @@ describe('text interpolation', function(){
   })
 
   it('should support complex expressions', function(){
-    var el = domify('<p>first: {siblings[0]}, last: {siblings[siblings.length - 1]}</p>')[0];
+    var el = domify('<p>first: {siblings[0]}, last: {siblings[siblings.length - 1]}</p>');
 
     var pet = {
       siblings: [
@@ -88,7 +88,7 @@ describe('text interpolation', function(){
   })
 
   it('should support the root element', function(){
-    var el = domify('<p>Hello {name}</a>')[0];
+    var el = domify('<p>Hello {name}</a>');
     var user = { name: 'Tobi' };
     reactive(el, user);
     assert('Hello Tobi' == el.textContent);
