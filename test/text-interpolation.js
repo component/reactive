@@ -126,6 +126,25 @@ describe('text interpolation', function(){
     assert('name: Loki the Pet' == el.textContent);
   })
 
+  it('should support complex model method calls as properties on the view', function(){
+    var el = domify('<p>name: {casual ? first : first + " " + last}</p>');
+
+    var pet = {
+      casual: function(){ return false },
+      first: function(){ return 'Loki' },
+      last: function(){ return 'the Pet' }
+    };
+
+    var view = {
+      first: function(){ return 'Tobi' },
+      last: function(){ return 'Ferret' }
+    }
+
+    reactive(el, pet, view);
+
+    assert('name: Tobi Ferret' == el.textContent);
+  })
+
   it('should support the root element', function(){
     var el = domify('<p>Hello {name}</a>');
     var user = { name: 'Tobi' };
