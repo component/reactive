@@ -14,8 +14,8 @@
   },
   "development": {
     "component/assert": "*",
-    "component/domify": "*",
-    "component/emitter": "*"
+    "component/domify": "1.0.0",
+    "component/emitter": "1.0.0"
   },
   "scripts": [
     "lib/index.js",
