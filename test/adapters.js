@@ -23,7 +23,7 @@ describe('reactive.subscribe(fn)', function(){
       obj.unbind('change ' + prop);
     });
 
-    var el = domify('<div><h1 data-text="name"></h1></div>')[0];
+    var el = domify('<div><h1 data-text="name"></h1></div>');
     reactive(el, user);
     user.name = 'Tobi';
     user.trigger('change name');

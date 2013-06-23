@@ -23,7 +23,7 @@ var user = new User('Tobi', 'Ferret');
 
 describe('computed properties', function(){
   it('should work with multiple properties', function(){
-    var el = domify('<p><em data-text="fullname < first last"></em></p>')[0];
+    var el = domify('<p><em data-text="fullname < first last"></em></p>');
     var user = new User('Tobi', 'Ferret');
     var view = reactive(el, user);
     var em = el.children[0];
@@ -32,7 +32,7 @@ describe('computed properties', function(){
   })
 
   it('should react to changes', function(){
-    var el = domify('<p><em data-text="fullname < first last"></em></p>')[0];
+    var el = domify('<p><em data-text="fullname < first last"></em></p>');
     var user = new User('Tobi', 'Ferret');
     var view = reactive(el, user);
     var em = el.children[0];
@@ -49,7 +49,7 @@ describe('computed properties', function(){
   })
 
   it('should work with .value() only', function(){
-    var el = domify('<p><em data-hide="removed < removed_at"></em></p>')[0];
+    var el = domify('<p><em data-hide="removed < removed_at"></em></p>');
     var user = new User('Tobi', 'Ferret');
     var view = reactive(el, user);
     var em = el.children[0];
