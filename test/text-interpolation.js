@@ -65,6 +65,19 @@ describe('text interpolation', function(){
     assert('first: Loki' == el.textContent);
   })
 
+  it('should support model method calls as properties', function(){
+    var el = domify('<p>first: {first}</p>');
+
+    var pet = {
+      first: function(){
+        return 'Loki'
+      }
+    };
+
+    reactive(el, pet);
+    assert('first: Loki' == el.textContent);
+  })
+
   it('should support complex expressions', function(){
     var el = domify('<p>first: {siblings[0]}, last: {siblings[siblings.length - 1]}</p>');
 
