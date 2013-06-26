@@ -119,7 +119,7 @@ reactive.unsubscribe(function(obj, prop, fn){
  react to any of their changes:
 
 ```html
-<p>Welcome { @first + ' ' + @last }.</p>
+<p>Welcome { first + ' ' + last }.</p>
 ```
 
  Interpolation works for attributes as well, reacting to changes as you'd expect:
