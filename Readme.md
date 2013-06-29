@@ -78,9 +78,11 @@ UserView.prototype.name = function(){ ... }
 
 Often a higher-level API is built on top of this pattern to keep things DRY but this is left to your application / other libraries.
 
-## Subscriptions
+## Adapters
 
- Subscriptions allow reactive to know when an object's data has changed, updating the DOM appropriately _without_ re-rendering a static template. This means if you make manual DOM adjustments, append canvases etc they will remain intact.
+### Subscriptions
+
+ Subscriptions allow reactive to know when an object's data has changed updating the DOM appropriately _without_ re-rendering a static template. This means if you make manual DOM adjustments, append canvases etc they will remain intact.
 
   By default reactive subscribes using `.on("change <name>", callback)` however it's easy to define your own subscription methods:
 
@@ -91,6 +93,22 @@ reactive.subscribe(function(obj, prop, fn){
 
 reactive.unsubscribe(function(obj, prop, fn){
   obj.unbind(prop, fn);
+});
+```
+
+### Getting and Setting
+
+You can make reactive compatible with your favorite framework by defining how reactive gets and sets the model.
+
+By default reactive supports `obj[prop] = val` and `obj[prop](val)`, but these can be changed with `reactive.get(fn)` and `reactive.set(fn)`. Here's how to make reactive compatible with backbone:
+
+```js
+reactive.get(function(obj, prop) {
+  return obj.get(prop);
+});
+
+reactive.set(function(obj, prop, val) {
+  obj.set(prop, val);
 });
 ```
 
