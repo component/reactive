@@ -23,7 +23,8 @@
     "lib/text-binding.js",
     "lib/attr-binding.js",
     "lib/binding.js",
-    "lib/bindings.js"
+    "lib/bindings.js",
+    "lib/adapter.js"
   ],
   "main": "lib/index.js"
 }
