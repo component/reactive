@@ -1,4 +1,13 @@
 
+0.13.0 / 2013-07-01 
+==================
+
+ * add backbone example
+ * add get/set support to adapters 
+ * add ./reactive.js stand-alone build
+ * fix interpolation for model methods
+ * fix IE8 support
+
 0.12.2 / 2013-05-27 
 ==================
 
