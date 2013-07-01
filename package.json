@@ -23,7 +23,8 @@
       "reactive/attr-binding.js": "lib/attr-binding.js",
       "reactive/text-binding.js": "lib/text-binding.js",
       "reactive/bindings.js": "lib/bindings.js",
-      "reactive/binding.js": "lib/binding.js"
+      "reactive/binding.js": "lib/binding.js",
+      "reactive/adapter.js": "lib/adapter.js"
     }
   }
 }
