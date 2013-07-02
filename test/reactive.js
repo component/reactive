@@ -198,6 +198,14 @@ describe('data-replace', function(){
   })
 })
 
+describe('data-if', function(){
+  it('should conditionally remove an element', function(){
+    var el = domify('<ul><li data-if="needed"></li></ul>');
+    var view = reactive(el, {}, { needed: false });
+    assert(0 == el.children.length);
+  })
+})
+
 describe('data-[attr]', function(){
   it('should set attribute value', function(){
     var el = domify('<div><input type="text" data-value="name" /></div>');
