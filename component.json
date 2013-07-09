@@ -3,19 +3,26 @@
   "repo": "component/reactive",
   "description": "Reactive template engine",
   "version": "0.13.0",
-  "keywords": ["reactive", "template", "engine", "binding", "bindings"],
+  "keywords": [
+    "reactive",
+    "template",
+    "engine",
+    "binding",
+    "bindings"
+  ],
   "dependencies": {
     "component/format-parser": "0.0.2",
-    "component/props": "1.0.2",
+    "component/props": "1.1.0",
     "visionmedia/debug": "*",
     "component/event": "0.1.0",
-    "component/classes": "1.1.1",
-    "component/query": "*"
+    "component/classes": "1.1.2",
+    "component/query": "*",
+    "jkroso/unique": "0.0.1"
   },
   "development": {
     "component/assert": "*",
     "component/domify": "1.0.0",
-    "component/emitter": "1.0.0",
+    "component/emitter": "1.0.1",
     "component/clone": "0.1.0"
   },
   "scripts": [
