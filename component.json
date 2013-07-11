@@ -17,7 +17,8 @@
     "component/event": "0.1.0",
     "component/classes": "1.1.2",
     "component/query": "*",
-    "jkroso/unique": "0.0.1"
+    "jkroso/unique": "0.0.1",
+    "component/inherit": "0.0.2"
   },
   "development": {
     "component/assert": "*",
@@ -28,9 +29,9 @@
   "scripts": [
     "lib/index.js",
     "lib/utils.js",
-    "lib/text-binding.js",
-    "lib/attr-binding.js",
-    "lib/binding.js",
+    "lib/binding/index.js",
+    "lib/binding/attr.js",
+    "lib/binding/text.js",
     "lib/bindings.js",
     "lib/adapter.js"
   ],
