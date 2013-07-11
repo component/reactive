@@ -196,6 +196,29 @@ describe('data-replace', function(){
     var view = reactive(el, {}, { canvas: canvas });
     assert(canvas == el.children[0]);
   })
+
+  it('should carryover attributes', function(){
+    var input = document.createElement('input');
+    var el = domify('<div><div type="email" data-replace="input"></div>');
+    var view = reactive(el, {}, { input: input });
+    assert('email' == input.type);
+  })
+
+  it('shouldnt wipe out existing attributes', function(){
+    var input = document.createElement('input');
+    input.type = 'url'
+    var el = domify('<div><div type="email" data-replace="input"></div>');
+    var view = reactive(el, {}, { input: input });
+    assert('url' == input.type);
+  })
+
+  it('should carryover classes', function(){
+    var toggle = document.createElement('toggle');
+    toggle.className = 'toggle';
+    var el = domify('<div><div class="integration-toggle" data-replace="toggle"></div></div>');
+    var view = reactive(el, {}, { toggle: toggle });
+    assert('toggle integration-toggle' == toggle.className);
+  })
 })
 
 describe('data-if', function(){

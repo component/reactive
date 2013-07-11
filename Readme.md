@@ -189,12 +189,10 @@ The `on-<event>` bindings allow you to listen on an event:
 
 ### data-replace
 
-  The `data-replace` binding allows you to replace an existing element:
+  The `data-replace` binding allows you to replace an existing element, and carryover its attributes:
 
 ```html
-<div class="photo" data-replace="histogram">
-
-</div>
+<div class="photo" data-replace="histogram"></div>
 ```
 
 ### data-{show,hide}
