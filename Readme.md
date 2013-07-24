@@ -161,7 +161,7 @@ The `data-text` binding sets the text content of an element.
 
 The `data-html` binding sets the inner html of an element.
 
-### data-<attr>
+### data-&lt;attr&gt;
 
 The `data-<attr>` bindings allows you to set an attribute:
 
@@ -169,7 +169,7 @@ The `data-<attr>` bindings allows you to set an attribute:
 <a data-href="download_url">Download</a>
 ```
 
-### on-<event>
+### on-&lt;event&gt;
 
 The `on-<event>` bindings allow you to listen on an event:
 
