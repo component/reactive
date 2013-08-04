@@ -12,6 +12,12 @@
     "format-parser": "0.0.2",
     "debug": "*"
   },
+  "browser": {
+    "classes": "classes-component",
+    "event": "event-component",
+    "query": "query-component",
+    "props": "props-component"
+  },
   "devDependencies": {
     "better-assert": "*",
     "mocha": "*"
