@@ -1,4 +1,12 @@
 
+0.13.2 / 2013-08-21 
+==================
+
+ * add support for root-level bindings
+ * add 'browser' field to package.json
+ * update classes-component to latest version
+ * support document fragments
+
 0.13.1 / 2013-07-31 
 ==================
 
