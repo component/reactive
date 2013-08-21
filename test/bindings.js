@@ -31,7 +31,7 @@ describe('reactive.bind(obj)', function(){
 })
 
 describe('Reactive#bind(name, fn)', function(){
-  it('should define a view-specific binding', function(done){
+  it('should initialize a view-specific binding', function(done){
     var el = domify('<ul><li removable></li></ul>');
     var view = reactive(el, {});
 
@@ -40,10 +40,20 @@ describe('Reactive#bind(name, fn)', function(){
       done();
     });
   })
+
+  it('should support root-level bindings', function(done){
+    var el = domify('<ul removable><li></li></ul>');
+    var view = reactive(el, {});
+
+    view.bind('removable', function(el){
+      assert('UL' == el.nodeName);
+      done();
+    });
+  })
 })
 
 describe('Reactive#bind(obj)', function(){
-  it('should define several view-specific bindings', function(done){
+  it('should initialize several view-specific bindings', function(done){
     var el = domify('<div><form action="/login" autosubmit></form></div>');
     var view = reactive(el, {});
 
