@@ -2,7 +2,14 @@
   "name": "reactive-component",
   "description": "Reactive template engine with data bindings",
   "version": "0.13.1",
-  "keywords": ["reactive", "template", "engine", "data", "bind", "bindings"],
+  "keywords": [
+    "reactive",
+    "template",
+    "engine",
+    "data",
+    "bind",
+    "bindings"
+  ],
   "main": "lib/index.js",
   "dependencies": {
     "classes-component": "1.1.3",
@@ -32,5 +39,9 @@
       "reactive/binding.js": "lib/binding.js",
       "reactive/adapter.js": "lib/adapter.js"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/component/reactive.git"
   }
 }
