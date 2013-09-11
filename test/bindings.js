@@ -2,6 +2,7 @@
 var reactive = require('reactive');
 var domify = require('domify');
 var assert = require('assert');
+var trigger = require('trigger-event');
 
 describe('reactive.bind(name, fn)', function(){
   it('should define a new binding', function(done){
@@ -49,6 +50,19 @@ describe('Reactive#bind(name, fn)', function(){
       assert('UL' == el.nodeName);
       done();
     });
+  })
+
+  it('should support event arguments', function(done){
+    var el = domify('<span on-click="show:1,2,3"></span>');
+    var view = reactive(el, {}, {
+      show: function(e, one, two, three) {
+        assert("1" === one);
+        assert("2" === two);
+        assert("3" === three);
+        done();
+      }
+    });
+    trigger(el, 'click');
   })
 })
 

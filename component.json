@@ -16,7 +16,8 @@
     "component/assert": "*",
     "component/domify": "1.0.0",
     "component/emitter": "1.0.0",
-    "component/clone": "0.1.0"
+    "component/clone": "0.1.0",
+    "adamsanderson/trigger-event": "*"
   },
   "scripts": [
     "lib/index.js",
