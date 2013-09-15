@@ -39,6 +39,8 @@ describe('Reactive#bind(name, fn)', function(){
       assert('LI' == el.nodeName);
       done();
     });
+
+    view.render();
   })
 
   it('should support root-level bindings', function(done){
@@ -49,6 +51,8 @@ describe('Reactive#bind(name, fn)', function(){
       assert('UL' == el.nodeName);
       done();
     });
+
+    view.render();
   })
 })
 
@@ -63,5 +67,7 @@ describe('Reactive#bind(obj)', function(){
         done();
       }
     });
+
+    view.render();
   })
 })

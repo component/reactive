@@ -1,0 +1,77 @@
+
+<style>
+  body {
+    padding: 50px;
+    font: 14px Helvetica, Arial;
+  }
+  label {
+    display: block;
+    clear: both;
+  }
+  .hide {
+    display: none;
+  }
+  .show {
+    display: block;
+  }
+</style>
+
+<script src="../build/build.js"></script>
+
+<h1>Iteration</h1>
+<p>Loop over all objects in an array:</p>
+
+<ul id="list" data-each="people < family">
+  <li>
+    {name}
+    <ul data-each="children">
+      <li>{name}</li>
+    </ul>
+    <span data-hide="children">They have no children</span>
+  </li>
+</ul>
+
+<script>
+  var reactive = require('reactive');
+  var Emitter = require('component-emitter');
+  var domify = require('component-domify');
+
+  var model = new Emitter();
+
+  model.people = [
+    {
+      name: "Tedd",
+      children: [{name:"one"},{name:"two"}]
+    },
+    {
+      name: "Marshal & Lily",
+      children: [{name:"one"}]
+    },
+    {
+      name: "Robin & Barney"
+    }
+  ];
+
+  reactive.bind('data-each', function(el, attr){
+    var template = domify(el.innerHTML);
+
+    this.change(function(){
+      el.innerHTML = "";
+      var items = this.value(attr);
+      if(!items) return;
+      items.forEach(function(item){
+        var itemEl = template.cloneNode(true);
+        reactive(itemEl, item).render();
+        el.appendChild(itemEl);
+      });
+    });
+
+    // This makes reactive skip parsing any
+    // child nodes passed this element
+    this.skip = true;
+  });
+
+  var view = reactive(document.querySelector('#list'), model);
+  view.render();
+
+</script>
