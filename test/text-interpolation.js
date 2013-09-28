@@ -19,6 +19,13 @@ describe('text interpolation', function(){
     assert('Download tobi.png' == el.children[0].textContent);
   })
 
+  it('should ignore null values', function(){
+    var el = domify('<div>{ id }</div>');
+    var user = { id: null };
+    var view = reactive(el, user);
+    assert('' === el.textContent);
+  })
+
   it('should react to changes', function(){
     var el = domify('<div><a href="/download/{id}"><strong>Download</strong> {file}</a></div>');
     var user = { id: '1234', file: 'tobi.png' };
