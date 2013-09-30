@@ -10,7 +10,8 @@
     "visionmedia/debug": "*",
     "component/event": "0.1.0",
     "component/classes": "1.1.1",
-    "component/query": "*"
+    "component/query": "*",
+    "anthonyshort/dom-walk": "*"
   },
   "development": {
     "component/assert": "*",
