@@ -108,16 +108,34 @@ describe('text interpolation', function(){
   })
 
   it('should support complex model method calls', function(){
-    var el = domify('<p>name: {casual() ? first() : first() + " " + last()}</p>');
+    var el = domify('<p>name: {casual() ? first() : first() + " " + last("the")}</p>');
 
     var pet = {
       casual: function(){ return false },
       first: function(){ return 'Loki' },
-      last: function(){ return 'the Pet' }
+      last: function(prefix){ return prefix + ' Pet' }
     };
 
     reactive(el, pet);
     assert('name: Loki the Pet' == el.textContent);
+  })
+
+  it('should support complex view method calls', function(){
+    var el = domify('<p>name: {casual() ? first() : first() + " " + last("the")}</p>');
+
+    var pet = {
+      casual: function(){ return false },
+      first: function(){ return 'Loki' },
+      last: function(prefix){ return prefix + ' Pet' }
+    };
+
+    var view = {
+      first: function(){ return 'Tobi' },
+      last: function(prefix){ return prefix + ' Ferret' }
+    };
+
+    reactive(el, pet, view);
+    assert('name: Tobi the Ferret' == el.textContent);
   })
 
   it('should support complex model method calls as properties', function(){
