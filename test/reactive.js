@@ -1,11 +1,12 @@
 
-var reactive = require('reactive');
+var reactive = require('reactive')();
 var Emitter = require('emitter');
 var classes = require('classes');
 var domify = require('domify');
 var assert = require('assert');
 
 describe('reactive(el, obj)', function(){
+
   it('should set values on initialization', function(){
     var el = domify('<div><p data-text="name"></p></div>');
     var user = { name: 'Tobi' };
@@ -23,6 +24,7 @@ describe('reactive(el, obj)', function(){
 
   it('should support getter methods', function(){
     var el = domify('<div><p data-text="first"></p></div>');
+
 
     var user = {
       _first: 'Tobi',
