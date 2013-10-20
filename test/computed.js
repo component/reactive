@@ -1,5 +1,5 @@
 
-var reactive = require('reactive');
+var reactive = require('reactive')();
 var Emitter = require('emitter');
 var domify = require('domify');
 var assert = require('assert');
