@@ -132,35 +132,35 @@ describe('data-html', function(){
   })
 })
 
-describe('data-show', function(){
-  it('should add .show when truthy', function(){
-    var el = domify('<div><p data-show="file">Has a file</p></div>');
+describe('data-visible', function(){
+  it('should add .visible when truthy', function(){
+    var el = domify('<div><p data-visible="file">Has a file</p></div>');
     var item = { file: 'some.png' };
     var view = reactive(el, item);
-    assert('show' == el.children[0].className);
+    assert('visible' == el.children[0].className);
   })
 
-  it('should remove .hide when truthy', function(){
-    var el = domify('<div><p data-show="file" class="file hide">Has a file</p></div>');
+  it('should remove .hidden when truthy', function(){
+    var el = domify('<div><p data-visible="file" class="file hidden">Has a file</p></div>');
     var item = { file: 'some.png' };
     var view = reactive(el, item);
-    assert('file show' == el.children[0].className);
+    assert('file visible' == el.children[0].className);
   })
 })
 
-describe('data-hide', function(){
-  it('should add .hide when truthy', function(){
-    var el = domify('<div><p data-hide="file">Has a file</p></div>');
+describe('data-hidden', function(){
+  it('should add .hidden when truthy', function(){
+    var el = domify('<div><p data-hidden="file">Has a file</p></div>');
     var item = { file: 'some.png' };
     var view = reactive(el, item);
-    assert('hide' == el.children[0].className);
+    assert('hidden' == el.children[0].className);
   })
 
-  it('should remove .show when truthy', function(){
-    var el = domify('<div><p data-hide="file" class="file show">Has a file</p></div>');
+  it('should remove .visible when truthy', function(){
+    var el = domify('<div><p data-hidden="file" class="file visible">Has a file</p></div>');
     var item = { file: 'some.png' };
     var view = reactive(el, item);
-    assert('file hide' == el.children[0].className);
+    assert('file hidden' == el.children[0].className);
   })
 })
 

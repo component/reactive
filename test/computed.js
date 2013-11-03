@@ -49,15 +49,15 @@ describe('computed properties', function(){
   })
 
   it('should work with .value() only', function(){
-    var el = domify('<p><em data-hide="removed < removed_at"></em></p>');
+    var el = domify('<p><em data-hidden="removed < removed_at"></em></p>');
     var user = new User('Tobi', 'Ferret');
     var view = reactive(el, user);
     var em = el.children[0];
 
-    assert('show' == em.className);
+    assert('visible' == em.className);
 
     user.removed_at = new Date;
     user.emit('change removed_at');
-    assert('hide' == em.className);
+    assert('hidden' == em.className);
   })
 })
