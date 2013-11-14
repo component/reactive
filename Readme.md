@@ -195,12 +195,12 @@ The `on-<event>` bindings allow you to listen on an event:
 <div class="photo" data-replace="histogram"></div>
 ```
 
-### data-{show,hide}
+### data-{visible,hidden}
 
-  The `data-show` and `data-hide` bindings conditionally add "show" or "hide" classnames so that you may style an element as hidden or visible.
+  The `data-visible` and `data-hidden` bindings conditionally add "visible" or "hidden" classnames so that you may style an element as hidden or visible.
 
 ```html
-<p data-show="hasDescription" data-text="truncatedDescription"></p>
+<p data-visible="hasDescription" data-text="truncatedDescription"></p>
 ```
 
 ### data-checked
