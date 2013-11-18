@@ -14,9 +14,54 @@
 
 ## API
 
-### reactive(element, object, [view])
+The `reactive` function returns an object that can be used to bind DOM elements, models and views together.
+
+```js
+var reactive = require('reactive');
+var bind = reactive();
+bind(el, model);
+```
+
+This is often
+
+### bind(element, object, [view])
 
   Bind `object` to the given `element` with optional `view` object. When a `view` object is present it will be checked first for overrides, which otherwise delegate to the model `object`.
+
+The `bind` function takes 3 parameters: `el`, `model`, `view`.
+
+`el` is any DOM node and is required. The `model` is a simple object of data that emits `change` events. The `view` is an optional parameter that allows you to add an additional object that handles any business logic that doesn't belong in a model. 
+
+Each `bind` function returned by `reactive` is self-contained, so you can safely share your reactive bindings across an application or within your library.
+
+## .use(fn)
+
+You can add extra functionality to reactive via the `use` method:
+
+```js
+bind.use(plugin);
+```
+
+This method takes a function that is passed the reactive instance. Here is an example that will add an additional `autosubmit` binding:
+
+```
+function plugin(reactive) {
+  reactive.bind('autosubmit', function(){
+    // do something
+  });
+}
+```
+
+The `use` method can also be chained:
+
+```js
+bind
+  .use(filters)
+  .use(bindings)
+  .use(plugin);
+```
+
+## Example 
 
 For example if you have the following HTML:
 
@@ -261,15 +306,11 @@ __NOTE__: in the future Reactive may support hinting of computed properties from
 ```
 
 ```js
-var reactive = require('reactive');
-
-// bind
-
-var view = reactive(document.querySelector('.login'));
+var reactive = require('reactive')();
 
 // custom binding available to this view only
 
-view.bind('autosubmit', function(el){
+reactive.bind('autosubmit', function(el){
   el.onsubmit = function(e){
     e.preventDefault();
     var path = el.getAttribute('action');
@@ -277,6 +318,11 @@ view.bind('autosubmit', function(el){
     console.log('submit to %s %s', method, path);
   }
 });
+
+// bind
+
+var view = reactive(document.querySelector('.login'));
+
 ```
 
 For more examples view the ./examples directory.
