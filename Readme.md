@@ -22,6 +22,12 @@ var bind = reactive();
 bind(el, model);
 ```
 
+This is often called in a single line:
+
+```js
+var bind = require('reactive')();
+```
+
 ### bind(element, object, [view])
 
   Bind `object` to the given `element` with optional `view` object. When a `view` object is present it will be checked first for overrides, which otherwise delegate to the model `object`.
@@ -133,11 +139,11 @@ Often a higher-level API is built on top of this pattern to keep things DRY but 
   By default reactive subscribes using `.on("change <name>", callback)` however it's easy to define your own subscription methods:
 
 ```js
-reactive.subscribe(function(obj, prop, fn){
+bind.subscribe(function(obj, prop, fn){
   obj.bind(prop, fn);
 });
 
-reactive.unsubscribe(function(obj, prop, fn){
+bind.unsubscribe(function(obj, prop, fn){
   obj.unbind(prop, fn);
 });
 ```
@@ -146,14 +152,14 @@ reactive.unsubscribe(function(obj, prop, fn){
 
 You can make reactive compatible with your favorite framework by defining how reactive gets and sets the model.
 
-By default reactive supports `obj[prop] = val` and `obj[prop](val)`, but these can be changed with `reactive.get(fn)` and `reactive.set(fn)`. Here's how to make reactive compatible with backbone:
+By default reactive supports `obj[prop] = val`, `obj.get(prop)` and `obj[prop](val)`, but these can be changed with `reactive.get(fn)` and `reactive.set(fn)`. Here's how to make reactive compatible with backbone:
 
 ```js
-reactive.get(function(obj, prop) {
+bind.get(function(obj, prop) {
   return obj.get(prop);
 });
 
-reactive.set(function(obj, prop, val) {
+bind.set(function(obj, prop, val) {
   obj.set(prop, val);
 });
 ```
@@ -262,7 +268,7 @@ The `on-<event>` bindings allow you to listen on an event:
 To author bindings simply call the `reactive.bind(name, fn)` method, passing the binding name and a callback which is invoked with the element itself and the value. For example here is a binding which removes an element when truthy:
 
 ```js
-reactive.bind('remove-if', function(el, name){
+bind.bind('remove-if', function(el, name){
   el = $(el);
   var parent = el.parent();
   this.change(function(){
