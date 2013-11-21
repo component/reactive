@@ -14,15 +14,13 @@
 
 ## API
 
-The `reactive` function returns an object that can be used to bind DOM elements, models and views together.
+`reactive` returns a function that can be used to bind DOM elements, models and views together.
 
 ```js
 var reactive = require('reactive');
 var bind = reactive();
 bind(el, model);
 ```
-
-This is often
 
 ### bind(element, object, [view])
 
@@ -34,7 +32,7 @@ The `bind` function takes 3 parameters: `el`, `model`, `view`.
 
 Each `bind` function returned by `reactive` is self-contained, so you can safely share your reactive bindings across an application or within your library.
 
-## .use(fn)
+### .use(fn)
 
 You can add extra functionality to reactive via the `use` method:
 
@@ -72,9 +70,13 @@ For example if you have the following HTML:
 And pass the following `object` as the _second_ argument:
 
 ```js
-{
+var reactive = require('reactive');
+var bind = reactive();
+
+bind(el, {
   name: 'Tobi'
-}
+});
+
 ```
 
 The output will become:
@@ -86,15 +88,7 @@ The output will become:
 However if you wish to manipulate the output or provided computed properties thae `view` object may be passed. For example an `object` of:
 
 ```js
-{
-  first_name: "Tobi",
-  last_name: "Ferret"
-}
-```
 
-And a `view` of:
-
-```js
 function UserView(user) {
   this.user = user;
 }
@@ -102,6 +96,13 @@ function UserView(user) {
 UserView.prototype.name = function(){
   return this.user.first_name + ' ' + this.user.last_name;
 }
+
+var user = new UserView({
+  first_name: "Tobi",
+  last_name: "Ferret"
+});
+
+bind(el, {}, user);
 ```
 
 Would produce:
