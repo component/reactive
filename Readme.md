@@ -25,7 +25,7 @@ bind(el, model);
 This is often called in a single line:
 
 ```js
-var bind = require('reactive')();
+var reactive = require('reactive')();
 ```
 
 ### bind(element, object, [view])
