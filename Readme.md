@@ -112,6 +112,17 @@ reactive.set(function(obj, prop, val) {
 });
 ```
 
+### Interpolation
+
+Depending on other template engines you may want to change the tags which enable interpolation.
+
+```
+// detects {{ foobar }}
+reactive.interpolate('{{', '}}');
+// detects default {foobar}
+reactive.interpolate(/\{([^}]+)\}/g);
+```
+
 ## Interpolation
 
   Bindings may be applied via interoplation on attributes or text. For example here
