@@ -27,10 +27,14 @@ function require(path, parent, orig) {
   // perform real require()
   // by invoking the module's
   // registered function
-  if (!module.exports) {
-    module.exports = {};
-    module.client = module.component = true;
-    module.call(this, module.exports, require.relative(resolved), module);
+  if (!module._resolving && !module.exports) {
+    var mod = {};
+    mod.exports = {};
+    mod.client = mod.component = true;
+    module._resolving = true;
+    module.call(this, mod.exports, require.relative(resolved), mod);
+    delete module._resolving;
+    module.exports = mod.exports;
   }
 
   return module.exports;
@@ -453,7 +457,9 @@ function coerce(val) {
 
 // persist
 
-if (window.localStorage) debug.enable(localStorage.debug);
+try {
+  if (window.localStorage) debug.enable(localStorage.debug);
+} catch(e){}
 
 });
 require.register("component-event/index.js", function(exports, require, module){
@@ -500,11 +506,8 @@ exports.unbind = function(el, type, fn, capture){
 
 });
 require.register("component-indexof/index.js", function(exports, require, module){
-
-var indexOf = [].indexOf;
-
 module.exports = function(arr, obj){
-  if (indexOf) return arr.indexOf(obj);
+  if (arr.indexOf) return arr.indexOf(obj);
   for (var i = 0; i < arr.length; ++i) {
     if (arr[i] === obj) return i;
   }
@@ -679,7 +682,6 @@ ClassList.prototype.contains = function(name){
 
 });
 require.register("component-query/index.js", function(exports, require, module){
-
 function one(selector, el) {
   return el.querySelector(selector);
 }
@@ -699,15 +701,160 @@ exports.engine = function(obj){
   if (!obj.all) throw new Error('.all callback required');
   one = obj.one;
   exports.all = obj.all;
+  return exports;
+};
+
+});
+require.register("yields-merge-attrs/index.js", function(exports, require, module){
+
+/**
+ * Export `merge`
+ */
+
+module.exports = merge;
+
+/**
+ * Merge `b`'s attrs into `a`.
+ *
+ * @param {Element} a
+ * @param {Element} b
+ * @api public
+ */
+
+function merge(a, b){
+  for (var i = 0; i < b.attributes.length; ++i) {
+    var attr = b.attributes[i];
+    if (ignore(a, attr)) continue;
+    a.setAttribute(attr.name, attr.value);
+  }
+}
+
+/**
+ * Check if `attr` should be ignored.
+ *
+ * @param {Element} a
+ * @param {Attr} attr
+ * @return {Boolean}
+ * @api private
+ */
+
+function ignore(a, attr){
+  return !attr.specified
+    || 'class' == attr.name
+    || 'id' == attr.name
+    || a.hasAttribute(attr.name);
+}
+
+});
+require.register("yields-uniq/index.js", function(exports, require, module){
+
+/**
+ * dependencies
+ */
+
+try {
+  var indexOf = require('indexof');
+} catch(e){
+  var indexOf = require('indexof-component');
+}
+
+/**
+ * Create duplicate free array
+ * from the provided `arr`.
+ *
+ * @param {Array} arr
+ * @param {Array} select
+ * @return {Array}
+ */
+
+module.exports = function (arr, select) {
+  var len = arr.length, ret = [], v;
+  select = select ? (select instanceof Array ? select : [select]) : false;
+
+  for (var i = 0; i < len; i++) {
+    v = arr[i];
+    if (select && !~indexOf(select, v)) {
+      ret.push(v);
+    } else if (!~indexOf(ret, v)) {
+      ret.push(v);
+    }
+  }
+  return ret;
+};
+
+});
+require.register("yields-carry/index.js", function(exports, require, module){
+
+/**
+ * dependencies
+ */
+
+var merge = require('merge-attrs')
+  , classes = require('classes')
+  , uniq = require('uniq');
+
+/**
+ * Export `carry`
+ */
+
+module.exports = carry;
+
+/**
+ * Carry over attrs and classes
+ * from `b` to `a`.
+ *
+ * @param {Element} a
+ * @param {Element} b
+ * @return {Element}
+ * @api public
+ */
+
+function carry(a, b){
+  if (!a) return b.cloneNode();
+  carry.attrs(a, b);
+  carry.classes(a, b);
+  return a;
+}
+
+/**
+ * Carry attributes.
+ *
+ * @param {Element} a
+ * @param {Element} b
+ * @return {Element} a
+ * @api public
+ */
+
+carry.attrs = function(a, b){
+  merge(a, b);
+  return a;
+};
+
+/**
+ * Carry over classes.
+ *
+ * @param {Element} a
+ * @param {Element} b
+ * @return {Element} a
+ * @api public
+ */
+
+carry.classes = function(a, b){
+  if (a.className == b.className) return a;
+  var blist = classes(b).array();
+  var alist = classes(a).array();
+  var list = alist.concat(blist);
+  a.className = uniq(list).join(' ');
+  return a;
 };
 
 });
 require.register("reactive/lib/index.js", function(exports, require, module){
-
 /**
  * Module dependencies.
  */
 
+var adapter = require('./adapter');
 var AttrBinding = require('./attr-binding');
 var TextBinding = require('./text-binding');
 var debug = require('debug')('reactive');
@@ -729,24 +876,6 @@ exports = module.exports = Reactive;
 exports.bindings = {};
 
 /**
- * Default subscription method.
- */
-
-function subscribe(obj, prop, fn) {
-  if (!obj.on) return;
-  obj.on('change ' + prop, fn);
-};
-
-/**
- * Default unsubscription method.
- */
-
-function unsubscribe(obj, prop, fn) {
-  if (!obj.off) return;
-  obj.off('change ' + prop, fn);
-};
-
-/**
  * Define subscription function.
  *
  * @param {Function} fn
@@ -754,8 +883,7 @@ function unsubscribe(obj, prop, fn) {
  */
 
 exports.subscribe = function(fn){
-  subscribe = fn;
-  Binding.subscribe = fn;
+  adapter.subscribe = fn;
 };
 
 /**
@@ -766,9 +894,36 @@ exports.subscribe = function(fn){
  */
 
 exports.unsubscribe = function(fn){
-  unsubscribe = fn;
-  Binding.unsubscribe = fn;
+  adapter.unsubscribe = fn;
 };
+
+/**
+ * Define a get function.
+ *
+ * @param {Function} fn
+ * @api public
+ */
+
+exports.get = function(fn) {
+  adapter.get = fn;
+};
+
+/**
+ * Define a set function.
+ *
+ * @param {Function} fn
+ * @api public
+ */
+
+exports.set = function(fn) {
+  adapter.set = fn;
+};
+
+/**
+ * Expose adapter
+ */
+
+exports.adapter = adapter;
 
 /**
  * Define binding `name` with callback `fn(el, val)`.
@@ -791,6 +946,17 @@ exports.bind = function(name, fn){
 };
 
 /**
+ * Middleware
+ * @param {Function} fn
+ * @api public
+ */
+
+exports.use = function(fn) {
+  fn(exports);
+  return this;
+};
+
+/**
  * Initialize a reactive template for `el` and `obj`.
  *
  * @param {Element} el
@@ -799,12 +965,13 @@ exports.bind = function(name, fn){
  * @api public
  */
 
-function Reactive(el, obj, options) {
-  if (!(this instanceof Reactive)) return new Reactive(el, obj, options);
+function Reactive(el, model, view) {
+  if (!(this instanceof Reactive)) return new Reactive(el, model, view);
+  this.adapter = exports.adapter;
   this.el = el;
-  this.obj = obj;
+  this.model = model;
   this.els = [];
-  this.fns = options || {};
+  this.view = view || {};
   this.bindAll();
   this.bindInterpolation(this.el, []);
 }
@@ -814,11 +981,13 @@ function Reactive(el, obj, options) {
  *
  * @param {String} prop
  * @param {Function} fn
+ * @return {Reactive}
  * @api private
  */
 
 Reactive.prototype.sub = function(prop, fn){
-  subscribe(this.obj, prop, fn);
+  this.adapter.subscribe(this.model, prop, fn);
+  return this;
 };
 
 /**
@@ -826,11 +995,40 @@ Reactive.prototype.sub = function(prop, fn){
  *
  * @param {String} prop
  * @param {Function} fn
- * @api public
+ * @return {Reactive}
+ * @api private
  */
 
 Reactive.prototype.unsub = function(prop, fn){
-  unsubscribe(this.obj, prop, fn);
+  this.adapter.unsubscribe(this.model, prop, fn);
+  return this;
+};
+
+/**
+ * Get a `prop`
+ *
+ * @param {String} prop
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
+ */
+
+Reactive.prototype.get = function(prop) {
+  return this.adapter.get(this.model, prop);
+};
+
+/**
+ * Set a `prop`
+ *
+ * @param {String} prop
+ * @param {Mixed} val
+ * @return {Reactive}
+ * @api private
+ */
+
+Reactive.prototype.set = function(prop, val) {
+  this.adapter.set(this.model, prop, val);
+  return this;
 };
 
 /**
@@ -843,7 +1041,7 @@ Reactive.prototype.unsub = function(prop, fn){
 Reactive.prototype.bindInterpolation = function(el, els){
 
   // element
-  if (Node.ELEMENT_NODE == el.nodeType) {
+  if (el.nodeType == 1) {
     for (var i = 0; i < el.attributes.length; i++) {
       var attr = el.attributes[i];
       if (utils.hasInterpolation(attr.value)) {
@@ -853,7 +1051,7 @@ Reactive.prototype.bindInterpolation = function(el, els){
   }
 
   // text node
-  if (Node.TEXT_NODE == el.nodeType) {
+  if (el.nodeType == 3) {
     if (utils.hasInterpolation(el.data)) {
       debug('bind text "%s"', el.data);
       new TextBinding(this, el);
@@ -895,8 +1093,11 @@ Reactive.prototype.bind = function(name, fn) {
     return;
   }
 
-  var obj = this.obj;
   var els = query.all('[' + name + ']', this.el);
+  if (this.el.hasAttribute && this.el.hasAttribute(name)) {
+    els = [].slice.call(els);
+    els.unshift(this.el);
+  }
   if (!els.length) return;
 
   debug('bind [%s] (%d elements)', name, els.length);
@@ -906,9 +1107,20 @@ Reactive.prototype.bind = function(name, fn) {
   }
 };
 
+/**
+ * Use middleware
+ *
+ * @api public
+ */
+
+Reactive.prototype.use = function(fn) {
+  fn(this);
+  return this;
+};
+
 // bundled bindings
 
-bindings(exports.bind);
+exports.use(bindings);
 
 });
 require.register("reactive/lib/utils.js", function(exports, require, module){
@@ -919,6 +1131,7 @@ require.register("reactive/lib/utils.js", function(exports, require, module){
 
 var debug = require('debug')('reactive:utils');
 var props = require('props');
+var adapter = require('./adapter');
 
 /**
  * Function cache.
@@ -943,11 +1156,7 @@ exports.interpolationProps = function(str) {
 
   while (m = re.exec(str)) {
     var expr = m[1];
-    if (isSimple(expr)) {
-      arr.push(expr);
-    } else {
-      arr = arr.concat(props(expr));
-    }
+    arr = arr.concat(props(expr));
   }
 
   return unique(arr);
@@ -955,8 +1164,6 @@ exports.interpolationProps = function(str) {
 
 /**
  * Interpolate `str` with the given `fn`.
- *
- * TODO: cache compiled function
  *
  * @param {String} str
  * @param {Function} fn
@@ -966,13 +1173,10 @@ exports.interpolationProps = function(str) {
 
 exports.interpolate = function(str, fn){
   return str.replace(/\{([^}]+)\}/g, function(_, expr){
-    var callback;
-
-    if (!isSimple(expr)) {
-      callback = cache[expr] || (cache[expr] = compile(expr));
-    }
-
-    return fn(expr.trim(), callback);
+    var cb = cache[expr];
+    if (!cb) cb = cache[expr] = compile(expr);
+    var val = fn(expr.trim(), cb);
+    return val == null ? '' : val;
   });
 };
 
@@ -1001,6 +1205,31 @@ exports.clean = function(str) {
 };
 
 /**
+ * Call `prop` on `model` or `view`.
+ *
+ * @param {Object} model
+ * @param {Object} view
+ * @param {String} prop
+ * @return {Mixed}
+ * @api private
+ */
+
+exports.call = function(model, view, prop){
+  // view method
+  if ('function' == typeof view[prop]) {
+    return view[prop]();
+  }
+
+  // view value
+  if (view.hasOwnProperty(prop)) {
+    return view[prop];
+  }
+
+  // get property from model
+  return adapter.get(model, prop);
+};
+
+/**
  * Compile `expr` to a `Function`.
  *
  * @param {String} expr
@@ -1009,9 +1238,45 @@ exports.clean = function(str) {
  */
 
 function compile(expr) {
-  expr = 'return ' + props(expr, 'model.');
-  debug('compile `%s`', expr);
-  return new Function('model', expr);
+  // TODO: use props() callback instead
+  var re = /\.\w+|\w+ *\(|"[^"]*"|'[^']*'|\/([^/]+)\/|[a-zA-Z_]\w*/g;
+  var p = props(expr);
+
+  var body = expr.replace(re, function(_) {
+    if ('(' == _[_.length - 1]) return access(_);
+    if (!~p.indexOf(_)) return _;
+    return call(_);
+  });
+
+  debug('compile `%s`', body);
+  return new Function('model', 'view', 'call', 'return ' + body);
+}
+
+/**
+ * Access a method `prop` with dot notation.
+ *
+ * @param {String} prop
+ * @return {String}
+ * @api private
+ */
+
+function access(prop) {
+  prop = prop.replace('(', '');
+  return '(view.' + prop + ' '
+    + '? view '
+    + ': model).' + prop + '(';
+}
+
+/**
+ * Call `prop` on view, model, or access the model's property.
+ *
+ * @param {String} prop
+ * @return {String}
+ * @api private
+ */
+
+function call(prop) {
+  return 'call(model, view, "' + prop + '")';
 }
 
 /**
@@ -1031,19 +1296,6 @@ function unique(arr) {
   }
 
   return ret;
-}
-
-/**
- * Check if `expr` is "simple" and
- * may be optimized to reduce compiled functions.
- *
- * @param {String} expr
- * @return {Boolean}
- * @api private
- */
-
-function isSimple(expr) {
-  return expr.match(/^ *\w+ *$/);
 }
 
 });
@@ -1071,9 +1323,8 @@ module.exports = TextBinding;
  * @api private
  */
 
-function TextBinding(view, node) {
-  var self = this;
-  this.view = view;
+function TextBinding(reactive, node) {
+  this.reactive = reactive;
   this.text = node.data;
   this.node = node;
   this.props = utils.interpolationProps(this.text);
@@ -1087,9 +1338,9 @@ function TextBinding(view, node) {
 
 TextBinding.prototype.subscribe = function(){
   var self = this;
-  var view = this.view;
+  var reactive = this.reactive;
   this.props.forEach(function(prop){
-    view.sub(prop, function(){
+    reactive.sub(prop, function(){
       self.render();
     });
   });
@@ -1102,12 +1353,17 @@ TextBinding.prototype.subscribe = function(){
 TextBinding.prototype.render = function(){
   var node = this.node;
   var text = this.text;
-  var obj = this.view.obj;
+  var reactive = this.reactive;
+  var model = reactive.model;
+
+  // TODO: delegate most of this to `Reactive`
   debug('render "%s"', text);
   node.data = utils.interpolate(text, function(prop, fn){
-    return fn
-      ? fn(obj)
-      : obj[prop];
+    if (fn) {
+      return fn(model, reactive.view, utils.call);
+    } else {
+      return reactive.get(model, prop);
+    }
   });
 };
 
@@ -1136,9 +1392,9 @@ module.exports = AttrBinding;
  * @api private
  */
 
-function AttrBinding(view, node, attr) {
+function AttrBinding(reactive, node, attr) {
   var self = this;
-  this.view = view;
+  this.reactive = reactive;
   this.node = node;
   this.attr = attr;
   this.text = attr.value;
@@ -1153,9 +1409,9 @@ function AttrBinding(view, node, attr) {
 
 AttrBinding.prototype.subscribe = function(){
   var self = this;
-  var view = this.view;
+  var reactive = this.reactive;
   this.props.forEach(function(prop){
-    view.sub(prop, function(){
+    reactive.sub(prop, function(){
       self.render();
     });
   });
@@ -1168,12 +1424,17 @@ AttrBinding.prototype.subscribe = function(){
 AttrBinding.prototype.render = function(){
   var attr = this.attr;
   var text = this.text;
-  var obj = this.view.obj;
+  var reactive = this.reactive;
+  var model = reactive.model;
+
+  // TODO: delegate most of this to `Reactive`
   debug('render %s "%s"', attr.name, text);
   attr.value = utils.interpolate(text, function(prop, fn){
-    return fn
-      ? fn(obj)
-      : obj[prop];
+    if (fn) {
+      return fn(model, reactive.view, utils.call);
+    } else {
+      return reactive.get(model, prop);
+    }
   });
 };
 
@@ -1198,11 +1459,11 @@ module.exports = Binding;
  * @api private
  */
 
-function Binding(name, view, el, fn) {
+function Binding(name, reactive, el, fn) {
   this.name = name;
-  this.view = view;
-  this.obj = view.obj;
-  this.fns = view.fns;
+  this.reactive = reactive;
+  this.model = reactive.model;
+  this.view = reactive.view;
   this.el = el;
   this.fn = fn;
 }
@@ -1215,7 +1476,7 @@ function Binding(name, view, el, fn) {
 
 Binding.prototype.bind = function() {
   var val = this.el.getAttribute(this.name);
-  this.fn(this.el, val, this.obj);
+  this.fn(this.el, val, this.model);
 };
 
 /**
@@ -1252,9 +1513,7 @@ Binding.prototype.interpolate = function(name) {
  */
 
 Binding.prototype.value = function(name) {
-  var self = this;
-  var obj = this.obj;
-  var view = this.view.fns;
+  var view = this.view;
   name = clean(name);
 
   // view method
@@ -1267,13 +1526,7 @@ Binding.prototype.value = function(name) {
     return view[name];
   }
 
-  // getter-style method
-  if ('function' == typeof obj[name]) {
-    return obj[name]();
-  }
-
-  // value
-  return obj[name];
+  return this.reactive.get(name);
 };
 
 /**
@@ -1292,33 +1545,11 @@ Binding.prototype.formatted = function(fmt) {
   for (var i = 1; i < calls.length; ++i) {
     var call = calls[i];
     call.args.unshift(val);
-    var fn = this.fns[call.name];
-    val = fn.apply(this.fns, call.args);
+    var fn = this.view[call.name];
+    val = fn.apply(this.view, call.args);
   }
 
   return val;
-};
-
-/**
- * Define subscription `fn`.
- *
- * @param {Function} fn
- * @api public
- */
-
-Binding.prototype.subscribe = function(fn){
-  this._subscribe = fn;
-};
-
-/**
- * Define unsubscribe `fn`.
- *
- * @param {Function} fn
- * @api public
- */
-
-Binding.prototype.unsubscribe = function(fn){
-  this._unsubscribe = fn;
 };
 
 /**
@@ -1332,8 +1563,7 @@ Binding.prototype.change = function(fn) {
   fn.call(this);
 
   var self = this;
-  var obj = this.obj;
-  var sub = this._subscribe || Binding.subscribe;
+  var reactive = this.reactive;
   var val = this.el.getAttribute(this.name);
 
   // computed props
@@ -1346,7 +1576,7 @@ Binding.prototype.change = function(fn) {
   if (hasInterpolation(val)) {
     var props = interpolationProps(val);
     props.forEach(function(prop){
-      sub(obj, prop, fn.bind(self));
+      reactive.sub(prop, fn.bind(self));
     });
     return;
   }
@@ -1358,31 +1588,13 @@ Binding.prototype.change = function(fn) {
   // computed props
   if (computed) {
     computed.forEach(function(prop){
-      sub(obj, prop, fn.bind(self));
+      reactive.sub(prop, fn.bind(self));
     });
     return;
   }
 
   // bind to prop
-  sub(obj, prop, fn.bind(this));
-};
-
-/**
- * Default subscription method.
- */
-
-Binding.subscribe = function(obj, prop, fn) {
-  if (!obj.on) return;
-  obj.on('change ' + prop, fn);
-};
-
-/**
- * Default unsubscription method.
- */
-
-Binding.unsubscribe = function(obj, prop, fn) {
-  if (!obj.off) return;
-  obj.off('change ' + prop, fn);
+  reactive.sub(prop, fn.bind(this));
 };
 
 /**
@@ -1435,6 +1647,7 @@ require.register("reactive/lib/bindings.js", function(exports, require, module){
  * Module dependencies.
  */
 
+var carry = require('carry');
 var classes = require('classes');
 var event = require('event');
 
@@ -1473,6 +1686,7 @@ var events = [
   'blur',
   'focus',
   'input',
+  'submit',
   'keydown',
   'keypress',
   'keyup'
@@ -1482,14 +1696,14 @@ var events = [
  * Apply bindings.
  */
 
-module.exports = function(bind){
+module.exports = function(reactive){
 
   /**
    * Generate attribute bindings.
    */
 
   attrs.forEach(function(attr){
-    bind('data-' + attr, function(el, name, obj){
+    reactive.bind('data-' + attr, function(el, name, obj){
       this.change(function(){
         el.setAttribute(attr, this.interpolate(name));
       });
@@ -1500,17 +1714,17 @@ module.exports = function(bind){
  * Append child element.
  */
 
-  bind('data-append', function(el, name){
+  reactive.bind('data-append', function(el, name){
     var other = this.value(name);
     el.appendChild(other);
   });
 
 /**
- * Replace element.
+ * Replace element, carrying over its attributes.
  */
 
-  bind('data-replace', function(el, name){
-    var other = this.value(name);
+  reactive.bind('data-replace', function(el, name){
+    var other = carry(this.value(name), el);
     el.parentNode.replaceChild(other, el);
   });
 
@@ -1518,12 +1732,12 @@ module.exports = function(bind){
    * Show binding.
    */
 
-  bind('data-show', function(el, name){
+  reactive.bind('data-visible', function(el, name){
     this.change(function(){
       if (this.value(name)) {
-        classes(el).add('show').remove('hide');
+        classes(el).add('visible').remove('hidden');
       } else {
-        classes(el).remove('show').add('hide');
+        classes(el).remove('visible').add('hidden');
       }
     });
   });
@@ -1532,12 +1746,12 @@ module.exports = function(bind){
    * Hide binding.
    */
 
-  bind('data-hide', function(el, name){
+  reactive.bind('data-hidden', function(el, name){
     this.change(function(){
       if (this.value(name)) {
-        classes(el).remove('show').add('hide');
+        classes(el).remove('visible').add('hidden');
       } else {
-        classes(el).add('show').remove('hide');
+        classes(el).add('visible').remove('hidden');
       }
     });
   });
@@ -1546,7 +1760,7 @@ module.exports = function(bind){
    * Checked binding.
    */
 
-  bind('data-checked', function(el, name){
+  reactive.bind('data-checked', function(el, name){
     this.change(function(){
       if (this.value(name)) {
         el.setAttribute('checked', 'checked');
@@ -1560,7 +1774,7 @@ module.exports = function(bind){
    * Text binding.
    */
 
-  bind('data-text', function(el, name){
+  reactive.bind('data-text', function(el, name){
     this.change(function(){
       el.textContent = this.interpolate(name);
     });
@@ -1570,7 +1784,7 @@ module.exports = function(bind){
    * HTML binding.
    */
 
-  bind('data-html', function(el, name){
+  reactive.bind('data-html', function(el, name){
     this.change(function(){
       el.innerHTML = this.formatted(name);
     });
@@ -1581,18 +1795,102 @@ module.exports = function(bind){
    */
 
   events.forEach(function(name){
-    bind('on-' + name, function(el, method){
-      var fns = this.view.fns
+    reactive.bind('on-' + name, function(el, method){
+      var view = this.reactive.view;
       event.bind(el, name, function(e){
-        var fn = fns[method];
+        var fn = view[method];
         if (!fn) throw new Error('method .' + method + '() missing');
-        fns[method](e);
+        view[method](e);
       });
     });
   });
 };
 
 });
+require.register("reactive/lib/adapter.js", function(exports, require, module){
+/**
+ * Default subscription method.
+ * Subscribe to changes on the model.
+ *
+ * @param {Object} obj
+ * @param {String} prop
+ * @param {Function} fn
+ */
+
+exports.subscribe = function(obj, prop, fn) {
+  if (!obj.on) return;
+  obj.on('change ' + prop, fn);
+};
+
+/**
+ * Default unsubscription method.
+ * Unsubscribe from changes on the model.
+ */
+
+exports.unsubscribe = function(obj, prop, fn) {
+  if (!obj.off) return;
+  obj.off('change ' + prop, fn);
+};
+
+/**
+ * Default setter method.
+ * Set a property on the model.
+ *
+ * @param {Object} obj
+ * @param {String} prop
+ * @param {Mixed} val
+ */
+
+exports.set = function(obj, prop, val) {
+  if ('function' == typeof obj[prop]) {
+    obj[prop](val);
+  }
+  else if ('function' == typeof obj.set) {
+    obj.set(prop, val);
+  }
+  else {
+    obj[prop] = val;
+  }
+};
+
+/**
+ * Default getter method.
+ * Get a property from the model.
+ *
+ * @param {Object} obj
+ * @param {String} prop
+ * @return {Mixed}
+ */
+
+exports.get = function(obj, prop) {
+  if ('function' == typeof obj[prop]) {
+    return obj[prop]();
+  }
+  else if ('function' == typeof obj.get) {
+    return obj.get(prop);
+  }
+  else {
+    return obj[prop];
+  }
+};
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 require.alias("component-format-parser/index.js", "reactive/deps/format-parser/index.js");
 require.alias("component-format-parser/index.js", "format-parser/index.js");
 
@@ -1600,7 +1898,6 @@ require.alias("component-props/index.js", "reactive/deps/props/index.js");
 require.alias("component-props/index.js", "reactive/deps/props/index.js");
 require.alias("component-props/index.js", "props/index.js");
 require.alias("component-props/index.js", "component-props/index.js");
-
 require.alias("visionmedia-debug/index.js", "reactive/deps/debug/index.js");
 require.alias("visionmedia-debug/debug.js", "reactive/deps/debug/debug.js");
 require.alias("visionmedia-debug/index.js", "debug/index.js");
@@ -1615,9 +1912,20 @@ require.alias("component-indexof/index.js", "component-classes/deps/indexof/inde
 require.alias("component-query/index.js", "reactive/deps/query/index.js");
 require.alias("component-query/index.js", "query/index.js");
 
-require.alias("reactive/lib/index.js", "reactive/index.js");
+require.alias("yields-carry/index.js", "reactive/deps/carry/index.js");
+require.alias("yields-carry/index.js", "reactive/deps/carry/index.js");
+require.alias("yields-carry/index.js", "carry/index.js");
+require.alias("yields-merge-attrs/index.js", "yields-carry/deps/merge-attrs/index.js");
+require.alias("yields-merge-attrs/index.js", "yields-carry/deps/merge-attrs/index.js");
+require.alias("yields-merge-attrs/index.js", "yields-merge-attrs/index.js");
+require.alias("component-classes/index.js", "yields-carry/deps/classes/index.js");
+require.alias("component-indexof/index.js", "component-classes/deps/indexof/index.js");
 
-if (typeof exports == "object") {
+require.alias("yields-uniq/index.js", "yields-carry/deps/uniq/index.js");
+require.alias("component-indexof/index.js", "yields-uniq/deps/indexof/index.js");
+
+require.alias("yields-carry/index.js", "yields-carry/index.js");
+require.alias("reactive/lib/index.js", "reactive/index.js");if (typeof exports == "object") {
   module.exports = require("reactive");
 } else if (typeof define == "function" && define.amd) {
   define(function(){ return require("reactive"); });
