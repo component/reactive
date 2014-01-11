@@ -14,9 +14,58 @@
 
 ## API
 
-### reactive(element, object, [view])
+`reactive` returns a function that can be used to bind DOM elements, models and views together.
+
+```js
+var reactive = require('reactive');
+var bind = reactive();
+bind(el, model);
+```
+
+This is often called in a single line:
+
+```js
+var reactive = require('reactive')();
+```
+
+### bind(element, object, [view])
 
   Bind `object` to the given `element` with optional `view` object. When a `view` object is present it will be checked first for overrides, which otherwise delegate to the model `object`.
+
+The `bind` function takes 3 parameters: `el`, `model`, `view`.
+
+`el` is any DOM node and is required. The `model` is a simple object of data that emits `change` events. The `view` is an optional parameter that allows you to add an additional object that handles any business logic that doesn't belong in a model. 
+
+Each `bind` function returned by `reactive` is self-contained, so you can safely share your reactive bindings across an application or within your library.
+
+### .use(fn)
+
+You can add extra functionality to reactive via the `use` method:
+
+```js
+bind.use(plugin);
+```
+
+This method takes a function that is passed the reactive instance. Here is an example that will add an additional `autosubmit` binding:
+
+```
+function plugin(reactive) {
+  reactive.bind('autosubmit', function(){
+    // do something
+  });
+}
+```
+
+The `use` method can also be chained:
+
+```js
+bind
+  .use(filters)
+  .use(bindings)
+  .use(plugin);
+```
+
+## Example 
 
 For example if you have the following HTML:
 
@@ -27,9 +76,13 @@ For example if you have the following HTML:
 And pass the following `object` as the _second_ argument:
 
 ```js
-{
+var reactive = require('reactive');
+var bind = reactive();
+
+bind(el, {
   name: 'Tobi'
-}
+});
+
 ```
 
 The output will become:
@@ -41,15 +94,7 @@ The output will become:
 However if you wish to manipulate the output or provided computed properties thae `view` object may be passed. For example an `object` of:
 
 ```js
-{
-  first_name: "Tobi",
-  last_name: "Ferret"
-}
-```
 
-And a `view` of:
-
-```js
 function UserView(user) {
   this.user = user;
 }
@@ -57,6 +102,13 @@ function UserView(user) {
 UserView.prototype.name = function(){
   return this.user.first_name + ' ' + this.user.last_name;
 }
+
+var user = new UserView({
+  first_name: "Tobi",
+  last_name: "Ferret"
+});
+
+bind(el, {}, user);
 ```
 
 Would produce:
@@ -87,11 +139,11 @@ Often a higher-level API is built on top of this pattern to keep things DRY but 
   By default reactive subscribes using `.on("change <name>", callback)` however it's easy to define your own subscription methods:
 
 ```js
-reactive.subscribe(function(obj, prop, fn){
+bind.subscribe(function(obj, prop, fn){
   obj.bind(prop, fn);
 });
 
-reactive.unsubscribe(function(obj, prop, fn){
+bind.unsubscribe(function(obj, prop, fn){
   obj.unbind(prop, fn);
 });
 ```
@@ -100,14 +152,14 @@ reactive.unsubscribe(function(obj, prop, fn){
 
 You can make reactive compatible with your favorite framework by defining how reactive gets and sets the model.
 
-By default reactive supports `obj[prop] = val` and `obj[prop](val)`, but these can be changed with `reactive.get(fn)` and `reactive.set(fn)`. Here's how to make reactive compatible with backbone:
+By default reactive supports `obj[prop] = val`, `obj.get(prop)` and `obj[prop](val)`, but these can be changed with `reactive.get(fn)` and `reactive.set(fn)`. Here's how to make reactive compatible with backbone:
 
 ```js
-reactive.get(function(obj, prop) {
+bind.get(function(obj, prop) {
   return obj.get(prop);
 });
 
-reactive.set(function(obj, prop, val) {
+bind.set(function(obj, prop, val) {
   obj.set(prop, val);
 });
 ```
@@ -216,7 +268,7 @@ The `on-<event>` bindings allow you to listen on an event:
 To author bindings simply call the `reactive.bind(name, fn)` method, passing the binding name and a callback which is invoked with the element itself and the value. For example here is a binding which removes an element when truthy:
 
 ```js
-reactive.bind('remove-if', function(el, name){
+bind.bind('remove-if', function(el, name){
   el = $(el);
   var parent = el.parent();
   this.change(function(){
@@ -261,15 +313,11 @@ __NOTE__: in the future Reactive may support hinting of computed properties from
 ```
 
 ```js
-var reactive = require('reactive');
-
-// bind
-
-var view = reactive(document.querySelector('.login'));
+var reactive = require('reactive')();
 
 // custom binding available to this view only
 
-view.bind('autosubmit', function(el){
+reactive.bind('autosubmit', function(el){
   el.onsubmit = function(e){
     e.preventDefault();
     var path = el.getAttribute('action');
@@ -277,6 +325,11 @@ view.bind('autosubmit', function(el){
     console.log('submit to %s %s', method, path);
   }
 });
+
+// bind
+
+var view = reactive(document.querySelector('.login'));
+
 ```
 
 For more examples view the ./examples directory.
