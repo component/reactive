@@ -1,9 +1,9 @@
-
-var reactive = require('reactive');
 var Emitter = require('emitter');
 var classes = require('classes');
 var domify = require('domify');
 var assert = require('assert');
+
+var reactive = require('../');
 
 describe('reactive(el, obj)', function(){
   it('should set values on initialization', function(){

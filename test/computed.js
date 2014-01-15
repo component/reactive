@@ -1,8 +1,8 @@
-
-var reactive = require('reactive');
 var Emitter = require('emitter');
 var domify = require('domify');
 var assert = require('assert');
+
+var reactive = require('../');
 
 function User(first, last) {
   this.first = first;
