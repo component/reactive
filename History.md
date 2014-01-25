@@ -1,3 +1,7 @@
+unreleased
+==========
+ * contain adapter within an Adapter class to allow per-instance adapters
+
 0.14.1 / 2014-01-09
 ===================
  * fix binding to replace and update last

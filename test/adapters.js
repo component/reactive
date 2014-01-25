@@ -7,12 +7,22 @@ var reactive = require('../');
 var adapter = clone(reactive.adapter);
 
 // simplified backbone adapter
+var BackboneAdapter = function(model) {
+  if (!(this instanceof BackboneAdapter)) {
+    return new BackboneAdapter(model);
+  }
 
-function subscribe(obj, prop, fn) {
+  var self = this;
+  self.obj = model;
+};
+
+BackboneAdapter.prototype.subscribe = function(prop, fn) {
+  var obj = this.obj;
   obj.on('change:' + prop, fn);
 }
 
-function unsubscribe(obj, prop, fn) {
+BackboneAdapter.prototype.unsubscribe = function(prop, fn) {
+  var obj = this.obj;
   // TODO: remove check when emitter updated
   // https://github.com/component/emitter/pull/25
   if (!fn) {
@@ -22,11 +32,13 @@ function unsubscribe(obj, prop, fn) {
   }
 }
 
-function set(obj, prop, val) {
+BackboneAdapter.prototype.set = function(prop, val) {
+  var obj = this.obj;
   obj.set(prop, val);
 }
 
-function get(obj, prop) {
+BackboneAdapter.prototype.get = function(prop) {
+  var obj = this.obj;
   return obj.get(prop);
 }
 
@@ -53,41 +65,32 @@ Person.prototype.get = function(prop) {
 describe('custom adapter', function() {
   var el, person;
 
-  before(function() {
-    reactive.subscribe(subscribe);
-    reactive.unsubscribe(unsubscribe);
-    reactive.set(set);
-    reactive.get(get);
-  });
-
-  // go back to defaults to prevent leaking
-  after(function() {
-    reactive.subscribe(adapter.subscribe);
-    reactive.unsubscribe(adapter.unsubscribe);
-    reactive.set(adapter.set);
-    reactive.get(adapter.get);
-  });
-
   beforeEach(function() {
     person = Person({ name: 'Matt' });
     el = domify('<div><h1 data-text="name"></h1></div>');
   });
 
   it('setting obj[prop] should update view', function() {
-    reactive(el, person);
+    reactive(el, person, null, {
+      adapter: BackboneAdapter
+    });
     person.set('name', 'TJ');
     assert('TJ' == el.children[0].textContent);
   });
 
   it('shouldnt update view after being unsubscribed', function() {
-    var react = reactive(el, person);
+    var react = reactive(el, person, null, {
+      adapter: BackboneAdapter
+    });
     react.unsub('name');
     person.set('name', 'TJ');
     assert('Matt' == el.children[0].textContent);
   });
 
   it('setting view should update object', function() {
-    var react = reactive(el, person);
+    var react = reactive(el, person, null, {
+      adapter: BackboneAdapter
+    });
     react.set('name', 'TJ');
     assert('TJ' == el.children[0].textContent);
     assert('TJ' == person.get('name'));
