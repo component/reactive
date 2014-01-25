@@ -1,4 +1,4 @@
-# reactive
+# reactive [![Build Status](https://travis-ci.org/component/reactive.png?branch=next)](https://travis-ci.org/component/reactive)
 
   Reactive template engine for robust real-time rendering of model data changes.
 
