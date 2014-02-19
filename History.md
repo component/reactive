@@ -3,6 +3,7 @@ unreleased
  * contain adapter within an Adapter class to allow per-instance adapters
  * remove formatting support (bindings are a better alternative)
  * remove explicit model method calls and view method calls in interpolation bindings
+ * remove global `bindings` and `use`. Set on instances instead
 
 0.14.1 / 2014-01-09
 ===================

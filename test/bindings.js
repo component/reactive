@@ -5,28 +5,28 @@ var reactive = require('../');
 
 describe('reactive.bind(name, fn)', function(){
   it('should define a new binding', function(done){
-    reactive.bind('data-editable', function(el, url){
+    var el = domify('<div><h1 data-editable="/item/12">Title</h1></div>');
+    var react = reactive(el, {});
+    react.bind('data-editable', function(el, url){
       el.setAttribute('contenteditable', 'true');
       assert('/item/12' == url);
-      done();
     });
 
-    var el = domify('<div><h1 data-editable="/item/12">Title</h1></div>');
-    reactive(el, {});
+    assert(el.children[0].getAttribute('contenteditable'));
+    done();
   })
 })
 
 describe('reactive.bind(obj)', function(){
   it('should define several bindings', function(done){
-    reactive.bind({
+    var el = domify('<div><h1 hello="world">Title</h1></div>');
+    var react = reactive(el, {});
+    react.bind({
       hello: function(el, val){
         assert('world' == val);
         done();
       }
     });
-
-    var el = domify('<div><h1 hello="world">Title</h1></div>');
-    reactive(el, {});
   })
 })
 
