@@ -88,22 +88,6 @@ describe('data-text', function(){
     var view = reactive(el, user);
     assert('Tobi' == el.children[0].textContent);
   })
-
-  it('should support formatters', function(){
-    var el = domify('<div><p data-text="created_at | date:\'%Y/%M/%d\'"></p></div>');
-    var now = new Date;
-    var user = { created_at: now };
-
-    var view = reactive(el, user, {
-      date: function(date, fmt){
-        assert(now == date);
-        assert(fmt == '%Y/%M/%d');
-        return 'formatted date';
-      }
-    });
-
-    assert('formatted date' == el.children[0].textContent);
-  })
 })
 
 describe('data-html', function(){
@@ -227,44 +211,5 @@ describe('data-[attr]', function(){
     var user = { name: 'Tobi' };
     var view = reactive(el, user);
     assert('Tobi' == el.children[0].value);
-  })
-
-  it('should support formatters', function(){
-    var el = domify('<div><a data-href="url | proxied" data-text="url"></a></div>');
-    var now = new Date;
-    var link = { url: 'http://google.com' };
-
-    var view = reactive(el, link, {
-      proxied: function(url){
-        return '/link/' + encodeURIComponent(url);
-      }
-    });
-
-    var url = encodeURIComponent(link.url);
-    assert('/link/' + url == el.children[0].getAttribute('href'));
-    assert(link.url == el.children[0].textContent);
-  })
-
-  it('should update bindings with formatters', function(){
-    var el = domify('<div><p data-text="name | toUpper"></p></div>');
-
-    function User(name) {
-      this.name = name;
-    }
-
-    Emitter(User.prototype);
-
-    var user = new User('Tobi');
-    var view = reactive(el, user, {
-      toUpper: function(text) {
-        return text.toUpperCase();
-      }
-    });
-
-    assert('TOBI' == el.children[0].textContent);
-
-    user.name = 'Loki';
-    user.emit('change name');
-    assert('LOKI' == el.children[0].textContent);
   })
 })

@@ -9,7 +9,6 @@
     "event-component": "0.1.0",
     "query-component": "*",
     "props-component": "1.0.3",
-    "format-parser": "0.0.2",
     "carry": "0.0.1",
     "debug": "*"
   },
