@@ -6,6 +6,7 @@ unreleased
  * remove global `bindings` and `use`. Set on instances instead
  * add `Reactive#destroy` method to facilitate destroying the view and unbinding handlers
  * add `each` binding for iteration support
+ * change event bindings to automatically `preventDefault`
 
 0.14.1 / 2014-01-09
 ===================
