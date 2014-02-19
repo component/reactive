@@ -11,12 +11,12 @@
     "component/event": "0.1.0",
     "component/classes": "1.1.1",
     "component/query": "*",
-    "yields/carry": "0.0.1"
+    "yields/carry": "0.0.1",
+    "component/domify": "1.2.1",
+    "component/emitter": "1.1.1"
   },
   "development": {
     "component/assert": "*",
-    "component/domify": "1.0.0",
-    "component/emitter": "1.0.0",
     "component/clone": "0.1.0"
   },
   "scripts": [
