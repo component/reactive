@@ -51,13 +51,21 @@ describe('reactive(el, obj)', function(){
     assert('Tobi Ferret' == el.children[0].textContent);
   })
 
-  // it('should support the root element', function(){
-  //   var el = domify('<p data-text="name"></p>')[0];
-  //   var user = { name: 'Tobi' };
-  //   reactive(el, user);
-  //   console.log(el);
-  //   assert('Tobi' == el.textContent);
-  // })
+  it('shouldnt update view after being destroyed', function(done) {
+    var el = domify('<div><h1 data-text="name"></h1></div>');
+    var react = reactive(el, { name: 'Matt' });
+    assert('Matt' == el.children[0].textContent);
+
+    react.on('destroyed', function() {
+      done();
+    });
+
+    // should unbind any handlers to the model and any internal handlers
+    react.destroy();
+
+    react.set('name', 'TJ');
+    assert('Matt' == el.children[0].textContent);
+  });
 })
 
 describe('on "change <name>"', function(){

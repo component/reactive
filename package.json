@@ -9,6 +9,7 @@
     "event-component": "0.1.0",
     "query-component": "*",
     "props-component": "1.0.3",
+    "emitter-component": "1.1.1",
     "carry": "0.0.1",
     "debug": "*"
   },
@@ -23,7 +24,6 @@
   "devDependencies": {
     "zuul": "~1.5.1",
     "domify": "~1.1.1",
-    "emitter-component": "~1.1.1",
     "clone-component": "component/clone#acfb79aa",
     "better-assert": "~1.0.0",
     "mocha": "~1.17.0"
