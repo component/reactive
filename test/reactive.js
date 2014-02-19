@@ -13,6 +13,14 @@ describe('reactive(el, obj)', function(){
     assert('Tobi' == el.children[0].textContent);
   })
 
+  it('should implicitly domify on initialization', function(){
+    var tmpl = '<p data-text="name"></p>';
+    var user = { name: 'Tobi' };
+    var view = reactive(tmpl, user);
+    var el = view.el;
+    assert('Tobi' == el.textContent);
+  })
+
   it('should work with multiple bindings', function(){
     var el = domify('<div><span data-text="first"></span><span data-text="last"></span></div>');
     var user = { first: 'Tobi', last: 'Ferret' };
