@@ -7,11 +7,11 @@
   "dependencies": {
     "classes-component": "1.1.3",
     "event-component": "0.1.0",
-    "query-component": "*",
+    "query-component": "0.0.1",
     "props-component": "1.0.3",
     "emitter-component": "1.1.1",
     "carry": "0.0.1",
-    "debug": "*"
+    "debug": "0.7.4"
   },
   "browser": {
     "classes": "classes-component",
