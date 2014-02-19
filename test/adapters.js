@@ -78,6 +78,17 @@ describe('custom adapter', function() {
     assert('TJ' == el.children[0].textContent);
   });
 
+  it('should not double set when updating reactive instance', function(done) {
+    var react = reactive(el, person, null, {
+      adapter: BackboneAdapter
+    });
+    react.sub('name', function(val) {
+      assert.equal(val, 'TJ');
+      done();
+    });
+    react.set('name', 'TJ');
+  });
+
   it('shouldnt update view after being unsubscribed', function() {
     var react = reactive(el, person, null, {
       adapter: BackboneAdapter
