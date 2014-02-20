@@ -7,6 +7,7 @@ unreleased
  * add `Reactive#destroy` method to facilitate destroying the view and unbinding handlers
  * add `each` binding for iteration support
  * change event bindings to automatically `preventDefault`
+ * remove computed properties
 
 0.14.1 / 2014-01-09
 ===================
