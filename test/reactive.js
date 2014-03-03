@@ -58,6 +58,26 @@ describe('reactive(el, obj)', function(){
     assert('Tobi Ferret' == el.children[0].textContent);
   })
 
+  it('should support nested properties', function(){
+    var el = domify('<div>{name.first} {name.last}</div>');
+
+    var user = {
+      name: {
+        first: 'Tobi',
+        last: 'Ferret'
+      }
+    };
+
+    var view = reactive(el, user);
+    assert('Tobi Ferret' == el.textContent);
+  })
+
+  it('should support deeply nested properties', function(){
+    var model = { foo: { bar: { baz: { rofl: 'ok' } } } };
+    var view = reactive(domify('<div>{ foo.bar.baz.rofl }</div>'), model);
+    assert('ok' == view.el.textContent);
+  })
+
   it('shouldnt update view after being destroyed', function(done) {
     var el = domify('<div><h1 data-text="name"></h1></div>');
     var react = reactive(el, { name: 'Matt' });
