@@ -1,4 +1,3 @@
-var Emitter = require('emitter');
 var domify = require('domify');
 var assert = require('assert');
 
@@ -29,13 +28,11 @@ describe('text interpolation', function(){
   it('should react to changes', function(){
     var el = domify('<div><a href="/download/{id}"><strong>Download</strong> {file}</a></div>');
     var user = { id: '1234', file: 'tobi.png' };
-    Emitter(user);
 
     var view = reactive(el, user);
     assert('Download tobi.png' == el.children[0].textContent);
 
-    user.file = 'loki.png';
-    user.emit('change file', 'loki.png');
+    view.set('file', 'loki.png');
     assert('Download loki.png' == el.children[0].textContent);
   })
 
@@ -49,13 +46,11 @@ describe('text interpolation', function(){
   it('should support multiple properties in a single expression', function(){
     var el = domify('<p>{first + " " + last}</p>');
     var pet = { first: 'tobi', last: 'holowaychuk' };
-    Emitter(pet)
 
     var view = reactive(el, pet);
     assert('tobi holowaychuk' == el.textContent);
 
-    pet.last = 'ferret';
-    pet.emit('change last');
+    view.set('last', 'ferret');
     assert('tobi ferret' == el.textContent);
   })
 
@@ -83,14 +78,10 @@ describe('text interpolation', function(){
       ]
     };
 
-    Emitter(pet);
-
-    reactive(el, pet);
+    var view = reactive(el, pet);
     assert('first: Loki, last: Jane' == el.textContent);
 
-    pet.siblings = ['Loki', 'Abby'];
-    pet.emit('change siblings');
-
+    view.set('siblings', ['Loki', 'Abby']);
     assert('first: Loki, last: Abby' == el.textContent);
   })
 

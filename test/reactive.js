@@ -1,4 +1,3 @@
-var Emitter = require('emitter');
 var classes = require('classes');
 var domify = require('domify');
 var assert = require('assert');
@@ -76,7 +75,7 @@ describe('reactive(el, obj)', function(){
   });
 })
 
-describe('on "change <name>"', function(){
+describe('.set(prop, value)', function(){
   it('should update bindings', function(){
     var el = domify('<div><p data-text="name"></p></div>');
 
@@ -84,15 +83,12 @@ describe('on "change <name>"', function(){
       this.name = name;
     }
 
-    Emitter(User.prototype);
-
     var user = new User('Tobi');
     var view = reactive(el, user);
 
     assert('Tobi' == el.children[0].textContent);
 
-    user.name = 'Loki';
-    user.emit('change name');
+    view.set('name', 'Loki');
     assert('Loki' == el.children[0].textContent);
   })
 })

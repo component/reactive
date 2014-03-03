@@ -1,6 +1,7 @@
 unreleased
 ==========
  * contain adapter within an Adapter class to allow per-instance adapters
+ * remove change event binding from Adapter (leave to custom adapters)
  * remove formatting support (bindings are a better alternative)
  * remove explicit model method calls and view method calls in interpolation bindings
  * remove global `bindings` and `use`. Set on instances instead
