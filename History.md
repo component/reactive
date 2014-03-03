@@ -9,6 +9,7 @@ unreleased
  * add `each` binding for iteration support
  * change event bindings to automatically `preventDefault`
  * remove computed properties
+ * view properties are no longer supported, only view functions
 
 0.14.1 / 2014-01-09
 ===================
