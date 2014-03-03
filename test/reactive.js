@@ -78,6 +78,14 @@ describe('reactive(el, obj)', function(){
     assert('ok' == view.el.textContent);
   })
 
+  it('should not fail for undefined properties', function(){
+    var view = reactive(domify('<div>{ foo }</div>'), {});
+    assert.equal('', view.el.textContent);
+
+    var view = reactive(domify('<div>{ foo.bar }</div>'), {});
+    assert.equal('', view.el.textContent);
+  });
+
   it('shouldnt update view after being destroyed', function(done) {
     var el = domify('<div><h1 data-text="name"></h1></div>');
     var react = reactive(el, { name: 'Matt' });
