@@ -31,16 +31,5 @@
   "scripts": {
     "test": "zuul -- test/*.js",
     "test-local": "zuul --local -- test/*.js"
-  },
-  "component": {
-    "scripts": {
-      "reactive/index.js": "lib/index.js",
-      "reactive/utils.js": "lib/utils.js",
-      "reactive/attr-binding.js": "lib/attr-binding.js",
-      "reactive/text-binding.js": "lib/text-binding.js",
-      "reactive/bindings.js": "lib/bindings.js",
-      "reactive/binding.js": "lib/binding.js",
-      "reactive/adapter.js": "lib/adapter.js"
-    }
   }
 }
