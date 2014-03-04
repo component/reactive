@@ -9,7 +9,7 @@ With component:
 $ component install component/reactive
 ```
 
-With npm:
+With npm via [browserify](http://browserify.org/):
 ```
 $ npm install reactive
 ```
