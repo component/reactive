@@ -10,16 +10,13 @@
   }
 </style>
 
-<script src="../build/build.js"></script>
-
 <div id="user">
-  <h2 data-text="first"></h2>
-  <p><span data-text="fullname"></span> was born on <span data-text="birthdate | date:'%Y %d'"></span>. Check out his webpage at <a data-href="url" data-text="url | remove_protocol"></a></p>
+  <h2>{first}</h2>
+  <p><span>{fullname}</span> was born on <span data-date="birthdate" format="%Y %d"></span>. Check out his webpage at <a href="{url}" data-url-text="url"></a></p>
 </div>
 
+<script src="./reactive.js"></script>
 <script>
-  var Emitter = require('component-emitter');
-  var reactive = require('reactive');
   var tmpl = document.querySelector('#user');
 
   var user = {
@@ -29,25 +26,34 @@
     slug: 'loki'
   };
 
-  Emitter(user);
-
   function UserView(user) {
     this.user = user;
-    reactive(tmpl, user, this);
+    var view = reactive(tmpl, user, {
+        delegate: this
+    });
+    view.bind('data-date', function(el, prop) {
+        var binding = this;
+
+        var format = el.getAttribute('format');
+        binding.change(function() {
+          var date = binding.value(prop);
+          el.textContent = format
+            .replace('%Y', date.getFullYear())
+            .replace('%d', date.getDate())
+        });
+    })
+    view.bind('data-url-text', function(el, prop) {
+        var binding = this;
+
+        binding.change(function() {
+          var value = binding.value(prop);
+          el.textContent = value.replace(/^https?:\/\/(www\.)?/, '');
+        });
+    })
   }
 
   UserView.prototype.url = function(){
     return 'http://myapp.com/user/' + this.user.slug;
-  };
-
-  UserView.prototype.date = function(date, fmt){
-    return fmt
-      .replace('%Y', date.getFullYear())
-      .replace('%d', date.getDate())
-  };
-
-  UserView.prototype.remove_protocol = function(url){
-    return url.replace(/^https?:\/\/(www\.)?/, '');
   };
 
   UserView.prototype.fullname = function(){

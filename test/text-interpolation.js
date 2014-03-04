@@ -1,4 +1,3 @@
-var Emitter = require('emitter');
 var domify = require('domify');
 var assert = require('assert');
 
@@ -29,13 +28,11 @@ describe('text interpolation', function(){
   it('should react to changes', function(){
     var el = domify('<div><a href="/download/{id}"><strong>Download</strong> {file}</a></div>');
     var user = { id: '1234', file: 'tobi.png' };
-    Emitter(user);
 
     var view = reactive(el, user);
     assert('Download tobi.png' == el.children[0].textContent);
 
-    user.file = 'loki.png';
-    user.emit('change file', 'loki.png');
+    view.set('file', 'loki.png');
     assert('Download loki.png' == el.children[0].textContent);
   })
 
@@ -49,27 +46,12 @@ describe('text interpolation', function(){
   it('should support multiple properties in a single expression', function(){
     var el = domify('<p>{first + " " + last}</p>');
     var pet = { first: 'tobi', last: 'holowaychuk' };
-    Emitter(pet)
 
     var view = reactive(el, pet);
     assert('tobi holowaychuk' == el.textContent);
 
-    pet.last = 'ferret';
-    pet.emit('change last');
+    view.set('last', 'ferret');
     assert('tobi ferret' == el.textContent);
-  })
-
-  it('should support model method calls', function(){
-    var el = domify('<p>first: {first()}</p>');
-
-    var pet = {
-      first: function(){
-        return 'Loki'
-      }
-    };
-
-    reactive(el, pet);
-    assert('first: Loki' == el.textContent);
   })
 
   it('should support model method calls as properties', function(){
@@ -96,46 +78,11 @@ describe('text interpolation', function(){
       ]
     };
 
-    Emitter(pet);
-
-    reactive(el, pet);
+    var view = reactive(el, pet);
     assert('first: Loki, last: Jane' == el.textContent);
 
-    pet.siblings = ['Loki', 'Abby'];
-    pet.emit('change siblings');
-
+    view.set('siblings', ['Loki', 'Abby']);
     assert('first: Loki, last: Abby' == el.textContent);
-  })
-
-  it('should support complex model method calls', function(){
-    var el = domify('<p>name: {casual() ? first() : first() + " " + last("the")}</p>');
-
-    var pet = {
-      casual: function(){ return false },
-      first: function(){ return 'Loki' },
-      last: function(prefix){ return prefix + ' Pet' }
-    };
-
-    reactive(el, pet);
-    assert('name: Loki the Pet' == el.textContent);
-  })
-
-  it('should support complex view method calls', function(){
-    var el = domify('<p>name: {casual() ? first() : first() + " " + last("the")}</p>');
-
-    var pet = {
-      casual: function(){ return false },
-      first: function(){ return 'Loki' },
-      last: function(prefix){ return prefix + ' Pet' }
-    };
-
-    var view = {
-      first: function(){ return 'Tobi' },
-      last: function(prefix){ return prefix + ' Ferret' }
-    };
-
-    reactive(el, pet, view);
-    assert('name: Tobi the Ferret' == el.textContent);
   })
 
   it('should support complex model method calls as properties', function(){
@@ -151,8 +98,8 @@ describe('text interpolation', function(){
     assert('name: Loki the Pet' == el.textContent);
   })
 
-  it('should support complex model method calls as properties on the view', function(){
-    var el = domify('<p>name: {casual ? first : first + " " + last}</p>');
+  it('should support method calls as properties on the view', function(){
+    var el = domify('<p>name: {casual}</p>');
 
     var pet = {
       casual: function(){ return false },
@@ -161,13 +108,14 @@ describe('text interpolation', function(){
     };
 
     var view = {
-      first: function(){ return 'Tobi' },
-      last: function(){ return 'Ferret' }
+      casual: function(){ return pet.first() + ' ' + pet.last() }
     }
 
-    reactive(el, pet, view);
+    reactive(el, pet, {
+      delegate: view
+    });
 
-    assert('name: Tobi Ferret' == el.textContent);
+    assert.equal('name: Loki the Pet', el.textContent);
   })
 
   it('should support the root element', function(){

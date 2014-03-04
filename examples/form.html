@@ -11,8 +11,6 @@
   }
 </style>
 
-<script src="../build/build.js"></script>
-
 <div id="pet">
   <h2 data-text="name"></h2>
   <p><span data-text="name">name</span> is a <span data-text="age">age</span> year old <span data-text="species"></span>, he has {friends.length} friends.</p>
@@ -31,6 +29,7 @@
   </p>
 </form>
 
+<script src="./reactive.js"></script>
 <script>
   var Emitter = require('emitter');
   var reactive = require('reactive');

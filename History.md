@@ -1,3 +1,17 @@
+unreleased
+==========
+ * contain adapter within an Adapter class to allow per-instance adapters
+ * remove change event binding from Adapter (leave to custom adapters)
+ * remove formatting support (bindings are a better alternative)
+ * remove explicit model method calls and view method calls in interpolation bindings
+ * remove global `bindings` and `use`. Set on instances instead
+ * add `Reactive#destroy` method to facilitate destroying the view and unbinding handlers
+ * add `each` binding for iteration support
+ * change event bindings to automatically `preventDefault`
+ * remove computed properties
+ * view properties are no longer supported, only view functions
+ * model methods and properties take precedence over delegates
+
 0.14.1 / 2014-01-09
 ===================
  * fix binding to replace and update last

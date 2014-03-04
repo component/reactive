@@ -9,29 +9,26 @@
     border: 1px solid #eee;
     padding: 15px 20px;
   }
-  .hide {
+  .hidden {
     display: none;
   }
 </style>
-
-<script src="../build/build.js"></script>
 
 <div class="item">
   <h1 class="title">{title}</h1>
   <p class="description">{description}</p>
 
-  <p data-show='hasDownloads'>
+  <p data-visible='hasDownloads'>
     Click here to <a href="{filename}">Download</a>.
   </p>
 
-  <p data-hide='hasDownloads'>
+  <p data-hidden='hasDownloads'>
     No downloads available for <span>{title}</span> at the moment!.
   </p>
 </div>
 
+<script src="./reactive.js"></script>
 <script>
-  var Emitter = require('component-emitter');
-  var reactive = require('reactive');
   var tmpl = document.querySelector('.item');
   document.body.removeChild(tmpl);
 
@@ -40,12 +37,12 @@
     this.description = desc;
   }
 
-  Emitter(Item.prototype);
-
   function ItemView(item) {
     this.item = item;
     this.el = tmpl.cloneNode(true);
-    reactive(this.el, item, this);
+    var view = reactive(this.el, item, {
+        delegate: this
+    });
   }
 
   ItemView.prototype.hasDownloads = function(){

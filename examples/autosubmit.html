@@ -10,8 +10,6 @@
   }
 </style>
 
-<script src="../build/build.js"></script>
-
 <h1>Autosubmit</h1>
 
 <p>Auto-submit a form with XHR via its action and method:</p>
@@ -24,22 +22,19 @@
   </form>
 </div>
 
+<script src="./reactive.js"></script>
+
 <script>
-  var reactive = require('reactive');
+var view = reactive(document.querySelector('.login'));
 
-  // bind
+// custom binding available to this view only
 
-  var view = reactive(document.querySelector('.login'));
-
-  // custom binding available to this view only
-
-  view.bind('autosubmit', function(el){
+view.bind('autosubmit', function(el){
     el.onsubmit = function(e){
-      e.preventDefault();
-      var path = el.getAttribute('action');
-      var method = el.getAttribute('method').toUpperCase();
-      console.log('submit to %s %s', method, path);
+        e.preventDefault();
+        var path = el.getAttribute('action');
+        var method = el.getAttribute('method').toUpperCase();
+        console.log('submit to %s %s', method, path);
     }
-  });
-
+});
 </script>

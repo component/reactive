@@ -1,4 +1,3 @@
-var Emitter = require('emitter');
 var classes = require('classes');
 var domify = require('domify');
 var assert = require('assert');
@@ -11,6 +10,14 @@ describe('reactive(el, obj)', function(){
     var user = { name: 'Tobi' };
     var view = reactive(el, user);
     assert('Tobi' == el.children[0].textContent);
+  })
+
+  it('should implicitly domify on initialization', function(){
+    var tmpl = '<p data-text="name"></p>';
+    var user = { name: 'Tobi' };
+    var view = reactive(tmpl, user);
+    var el = view.el;
+    assert('Tobi' == el.textContent);
   })
 
   it('should work with multiple bindings', function(){
@@ -42,25 +49,66 @@ describe('reactive(el, obj)', function(){
       last: 'Ferret'
     };
 
-    var view = reactive(el, user, {
+    var delegate = {
       name: function(){
+        assert(delegate == this);
         return user.first + ' ' + user.last
       }
+    };
+
+    var view = reactive(el, user, {
+      delegate: delegate
     });
 
     assert('Tobi Ferret' == el.children[0].textContent);
   })
 
-  // it('should support the root element', function(){
-  //   var el = domify('<p data-text="name"></p>')[0];
-  //   var user = { name: 'Tobi' };
-  //   reactive(el, user);
-  //   console.log(el);
-  //   assert('Tobi' == el.textContent);
-  // })
+  it('should support nested properties', function(){
+    var el = domify('<div>{name.first} {name.last}</div>');
+
+    var user = {
+      name: {
+        first: 'Tobi',
+        last: 'Ferret'
+      }
+    };
+
+    var view = reactive(el, user);
+    assert('Tobi Ferret' == el.textContent);
+  })
+
+  it('should support deeply nested properties', function(){
+    var model = { foo: { bar: { baz: { rofl: 'ok' } } } };
+    var view = reactive(domify('<div>{ foo.bar.baz.rofl }</div>'), model);
+    assert('ok' == view.el.textContent);
+  })
+
+  it('should not fail for undefined properties', function(){
+    var view = reactive(domify('<div>{ foo }</div>'), {});
+    assert.equal('', view.el.textContent);
+
+    var view = reactive(domify('<div>{ foo.bar }</div>'), {});
+    assert.equal('', view.el.textContent);
+  });
+
+  it('shouldnt update view after being destroyed', function(done) {
+    var el = domify('<div><h1 data-text="name"></h1></div>');
+    var react = reactive(el, { name: 'Matt' });
+    assert('Matt' == el.children[0].textContent);
+
+    react.on('destroyed', function() {
+      done();
+    });
+
+    // should unbind any handlers to the model and any internal handlers
+    react.destroy();
+
+    react.set('name', 'TJ');
+    assert('Matt' == el.children[0].textContent);
+  });
 })
 
-describe('on "change <name>"', function(){
+describe('.set(prop, value)', function(){
   it('should update bindings', function(){
     var el = domify('<div><p data-text="name"></p></div>');
 
@@ -68,15 +116,12 @@ describe('on "change <name>"', function(){
       this.name = name;
     }
 
-    Emitter(User.prototype);
-
     var user = new User('Tobi');
     var view = reactive(el, user);
 
     assert('Tobi' == el.children[0].textContent);
 
-    user.name = 'Loki';
-    user.emit('change name');
+    view.set('name', 'Loki');
     assert('Loki' == el.children[0].textContent);
   })
 })
@@ -87,22 +132,6 @@ describe('data-text', function(){
     var user = { name: 'Tobi' };
     var view = reactive(el, user);
     assert('Tobi' == el.children[0].textContent);
-  })
-
-  it('should support formatters', function(){
-    var el = domify('<div><p data-text="created_at | date:\'%Y/%M/%d\'"></p></div>');
-    var now = new Date;
-    var user = { created_at: now };
-
-    var view = reactive(el, user, {
-      date: function(date, fmt){
-        assert(now == date);
-        assert(fmt == '%Y/%M/%d');
-        return 'formatted date';
-      }
-    });
-
-    assert('formatted date' == el.children[0].textContent);
   })
 })
 
@@ -117,12 +146,12 @@ describe('data-html', function(){
   it('should support computed values', function(){
     var el = domify('<div><ul data-html="fruits"></ul></div>');
     var user = { diet : [ 'apples', 'pears', 'oranges' ] };
-    var view = reactive(el, user, {
+    var view = reactive(el, user, { delegate: {
       fruits : function(fruits) {
         var html = user.diet.map(function(food) { return '<li>' + food + '</li>'; });
         return html.join('');
       }
-    });
+    }});
 
     var items = el.querySelectorAll('li');
     assert(3 == items.length);
@@ -146,6 +175,28 @@ describe('data-visible', function(){
     var view = reactive(el, item);
     assert('file visible' == el.children[0].className);
   })
+
+  it('should add .hidden when array is empty', function() {
+    var tmpl = '<ul data-visible="items"><li each="items"></li></ul>';
+    var view = reactive(tmpl, { items: [] });
+    assert('hidden' == view.el.className);
+  })
+
+  it('should add .visible when array is not empty', function() {
+    var tmpl = '<ul data-visible="items"><li each="items"></li></ul>';
+    var view = reactive(tmpl, { items: [ 'one' ] });
+    assert('visible' == view.el.className);
+  })
+
+  it('should update on array changes', function() {
+    var tmpl = '<ul data-visible="items"><li each="items">{this}</li></ul>';
+    var model = { items: [] };
+    var view = reactive(tmpl, model);
+    assert('hidden' == view.el.className);
+    model.items.push('one');
+    assert('visible' == view.el.className);
+    assert.equal('one', view.el.children[0].textContent);
+  })
 })
 
 describe('data-hidden', function(){
@@ -162,6 +213,19 @@ describe('data-hidden', function(){
     var view = reactive(el, item);
     assert('file hidden' == el.children[0].className);
   })
+
+  it('should add .visible when array is empty', function() {
+    var tmpl = '<ul data-hidden="items"><li each="items"></li></ul>';
+    var view = reactive(tmpl, { items: [] });
+    assert('visible' == view.el.className);
+  })
+
+  it('should add .hidden when array is not empty', function() {
+    var tmpl = '<ul data-hidden="items"><li each="items"></li></ul>';
+    var view = reactive(tmpl, { items: [ 'one' ] });
+    assert('hidden' == view.el.className);
+  })
+
 })
 
 describe('data-checked', function(){
@@ -184,7 +248,7 @@ describe('data-append', function(){
   it('should append an element', function(){
     var li = domify('<li>li</li>');
     var el = domify('<div><ul data-append="msg"></ul></div>');
-    var view = reactive(el, {}, { msg: li });
+    var view = reactive(el, {}, { delegate: { msg: li } });
     assert(li == el.children[0].children[0]);
   })
 })
@@ -193,14 +257,14 @@ describe('data-replace', function(){
   it('should replace an element', function(){
     var canvas = document.createElement('canvas');
     var el = domify('<div><div data-replace="canvas"></div></div>');
-    var view = reactive(el, {}, { canvas: canvas });
+    var view = reactive(el, {}, { delegate: { canvas: canvas } });
     assert(canvas == el.children[0]);
   })
 
   it('should carryover attributes', function(){
     var input = document.createElement('input');
     var el = domify('<div><div type="email" data-replace="input"></div>');
-    var view = reactive(el, {}, { input: input });
+    var view = reactive(el, {}, { delegate: { input: input } });
     assert('email' == input.type);
   })
 
@@ -208,7 +272,7 @@ describe('data-replace', function(){
     var input = document.createElement('input');
     input.type = 'url'
     var el = domify('<div><div type="email" data-replace="input"></div>');
-    var view = reactive(el, {}, { input: input });
+    var view = reactive(el, {}, { delegate: { input: input } });
     assert('url' == input.type);
   })
 
@@ -216,7 +280,7 @@ describe('data-replace', function(){
     var toggle = document.createElement('toggle');
     toggle.className = 'toggle';
     var el = domify('<div><div class="integration-toggle" data-replace="toggle"></div></div>');
-    var view = reactive(el, {}, { toggle: toggle });
+    var view = reactive(el, {}, { delegate: { toggle: toggle } });
     assert('toggle integration-toggle' == toggle.className);
   })
 })
@@ -227,44 +291,5 @@ describe('data-[attr]', function(){
     var user = { name: 'Tobi' };
     var view = reactive(el, user);
     assert('Tobi' == el.children[0].value);
-  })
-
-  it('should support formatters', function(){
-    var el = domify('<div><a data-href="url | proxied" data-text="url"></a></div>');
-    var now = new Date;
-    var link = { url: 'http://google.com' };
-
-    var view = reactive(el, link, {
-      proxied: function(url){
-        return '/link/' + encodeURIComponent(url);
-      }
-    });
-
-    var url = encodeURIComponent(link.url);
-    assert('/link/' + url == el.children[0].getAttribute('href'));
-    assert(link.url == el.children[0].textContent);
-  })
-
-  it('should update bindings with formatters', function(){
-    var el = domify('<div><p data-text="name | toUpper"></p></div>');
-
-    function User(name) {
-      this.name = name;
-    }
-
-    Emitter(User.prototype);
-
-    var user = new User('Tobi');
-    var view = reactive(el, user, {
-      toUpper: function(text) {
-        return text.toUpperCase();
-      }
-    });
-
-    assert('TOBI' == el.children[0].textContent);
-
-    user.name = 'Loki';
-    user.emit('change name');
-    assert('LOKI' == el.children[0].textContent);
   })
 })

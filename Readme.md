@@ -1,116 +1,200 @@
-# reactive
+# reactive [![Build Status](https://travis-ci.org/component/reactive.png?branch=next)](https://travis-ci.org/component/reactive)
 
-  Reactive template engine for robust real-time rendering of model data changes.
+ Simple and Flexible template and view binding engine with support for custom bindings and real-time updates on model changes.
 
 ## Installation
 
- With component:
+With component:
+```
+$ component install component/reactive
+```
 
-    $ component install component/reactive
+With npm via [browserify](http://browserify.org/):
+```
+$ npm install reactive
+```
 
- With the stand-alone browser build:
+## Quickstart
 
-    <script src="reactive.js"></script>
+Rendering a basic html template with a predefined data model.
+
+```js
+var view = reactive('<p>Hello {name}!</p>', {
+  model: {
+    name: 'Adam'
+  }
+});
+
+// you can add the view "element" to the html whenever you want
+// view.el contains the html element
+document.body.appendChild(view.el);
+```
+
+```html
+<p>Hello Adam!</p>
+```
+
+### Handling events
+
+Reactive provides an easy way to register handlers for dom events via predefined "bindings".
+
+```js
+var handlers = {
+  clickme: function(ev) {
+    // console.log('button clicked');
+  }
+};
+
+var template = '<button on-click="clickme">clickme</button>';
+var view = reactive(template, {
+  delegate: handlers
+});
+```
+
+A recommended approach is to wrap the `reactive` instance inside of your own *View* classes. See the [Views]() example.
+
+### Iteration
+
+Iteration is achieved by using the `each` binding on the element you wish to iterate.
+
+```js
+var template = '<ul><li each="people">{this}</li></ul>';
+var model = {
+  people: ['Sally', 'Billy']
+};
+
+var view = reactive(template, {
+  model: model
+});
+```
+
+```html
+<ul>
+  <li>Sally</li>
+  <li>Billy</li>
+</ul>
+```
+
+You can push (pop, shift, etc) to the array and the view will be updated accordingly.
+```js
+model.people.push('Eve');
+```
+
+```html
+<ul>
+  <li>Sally</li>
+  <li>Billy</li>
+  <li>Eve</li>
+</ul>
+```
+
+### hiding and showing elements
+
+DOM elements can be shown or hidden via the `data-visible` and `data-hidden` bindings.
+
+Using the following html template.
+
+```js
+var tmpl = '<p data-hidden="items">no items</p>' +
+  '<ul data-visible="items"><li each="items">{name}</li></ul>';
+var model = { items: [] };
+var view = reactive(tmpl, model);
+```
+
+When rendering the above, we will see `no items`, because the array is empty.
+
+```js
+model.items.push('one');
+```
+
+Will change the output to `· one` and hide `no items`. Notice how `data-visible` and `data-hidden` act in opposite directions.
+
 
 ## API
 
-### reactive(element, object, [view])
+### reactive(string | element, model, [options])
 
-  Bind `object` to the given `element` with optional `view` object. When a `view` object is present it will be checked first for overrides, which otherwise delegate to the model `object`.
+Create a new reactive instance using `string` or `element` as the template and `model` as the data object.
 
-For example if you have the following HTML:
+If you do not have a data model and want to specify options, you can pass `null` or `{}`. Remember you **must** have this argument before the options argument.
 
-```html
-<h1 data-text="name"></h1>
-```
+Options
 
-And pass the following `object` as the _second_ argument:
+| option | type | description |
+| --- | --- | --- |
+| delegate | object, instance | an object or instance defining overrides and handlers for properties and events |
+| adapter | function | defines how reactive will interact with the model to listen for changes |
 
-```js
-{
-  name: 'Tobi'
-}
-```
+Bind `object` to the given `element` with optional `view` object. When a `view` object is present it will be checked first for overrides, which otherwise delegate to the model `object`.
 
-The output will become:
+### set(prop, val)
 
-```html
-<h1>Tobi</h1>
-```
+Set the property `prop` to the given value `val` in the view.
 
-However if you wish to manipulate the output or provided computed properties thae `view` object may be passed. For example an `object` of:
+### get(prop)
 
-```js
-{
-  first_name: "Tobi",
-  last_name: "Ferret"
-}
-```
+Get the value for property `prop`.
 
-And a `view` of:
+### bind(name, fn)
 
-```js
-function UserView(user) {
-  this.user = user;
-}
+Create a new binding called `name` defined by `fn`. See the [writing bindings](#writing-bindings) section for details.
 
-UserView.prototype.name = function(){
-  return this.user.first_name + ' ' + this.user.last_name;
-}
-```
+### use(fn)
 
-Would produce:
+Use a reactive plugin. `fn` is invoked immediately and passed the reactive instance.
 
-```html
-<h1>Tobi Ferret</h1>
-```
+### destroy()
 
-Typically a view object wraps a model to provide additional functionality, this may look something like the following:
+Destroy the reactive instance. This will remove all event listeners on the instance as well as remove the element from the dom.
 
-```js
-function UserView(user) {
-  this.user = user;
-  this.el = reactive(tmpl, user, this);
-}
-
-UserView.prototype.name = function(){ ... }
-```
-
-Often a higher-level API is built on top of this pattern to keep things DRY but this is left to your application / other libraries.
+Fires a `destoryed` event upon completion.
 
 ## Adapters
 
-### Subscriptions
+Adapters provide the interface for reactive to interact with your models. By using a custom adapter you can support models from [backbone.js](http://backbonejs.org/#Model), [modella](https://github.com/modella/modella), [bamboo](https://github.com/defunctzombie/bamboo), etc..
 
- Subscriptions allow reactive to know when an object's data has changed updating the DOM appropriately _without_ re-rendering a static template. This means if you make manual DOM adjustments, append canvases etc they will remain intact.
+You can make reactive compatible with your favorite model layer by creating a custom adapter. Changes to your model will cause the reactive view to update dynamically. The following API is required for all adapters.
 
-  By default reactive subscribes using `.on("change <name>", callback)` however it's easy to define your own subscription methods:
+### constructor
 
-```js
-reactive.subscribe(function(obj, prop, fn){
-  obj.bind(prop, fn);
-});
+The `adapter` option is a function which accepts one argument, the `model` and should return an instance with all of the adapter methods implemented.
 
-reactive.unsubscribe(function(obj, prop, fn){
-  obj.unbind(prop, fn);
-});
-```
-
-### Getting and Setting
-
-You can make reactive compatible with your favorite framework by defining how reactive gets and sets the model.
-
-By default reactive supports `obj[prop] = val` and `obj[prop](val)`, but these can be changed with `reactive.get(fn)` and `reactive.set(fn)`. Here's how to make reactive compatible with backbone:
+The builtin adapter constructor for example:
 
 ```js
-reactive.get(function(obj, prop) {
-  return obj.get(prop);
-});
+function Adapter(model) {
+  if (!(this instanceof Adapter)) {
+    return new Adapter(model);
+  }
 
-reactive.set(function(obj, prop, val) {
-  obj.set(prop, val);
-});
+  var self = this;
+  self.model = model;
+};
 ```
+
+### subscribe(prop, fn)
+
+Subscribe to changes for the given property. When the property changes, `fn` should be called.
+
+```js
+Adapter.prototype.subscribe = function(prop, fn) { ... };
+```
+
+### unsubscribe(prop, fn)
+
+Unsubscribe from changes for the given property. The `fn` should no longer be called on property changes for `prop`.
+
+### unsubscribeAll
+
+Unsubscribe all property change events. Used when a reactive instance is being torn down.
+
+### set(prop, val)
+
+Set the property `prop` to the given value `val`.
+
+### get(prop)
+
+Get the value for property `prop`
 
 ## Interpolation
 
@@ -203,6 +287,10 @@ The `on-<event>` bindings allow you to listen on an event:
 <p data-visible="hasDescription" data-text="truncatedDescription"></p>
 ```
 
+`data-visible` will add a `visible` class if the property is `truthy`. Arrays are truthy if their `.length` > 0. If the value is false, `.hidden` will be added.
+
+`data-hidden` is the opposite of visible and will add a `visibile` class if the value is false and `.hidden` class if the value is truthy.
+
 ### data-checked
 
  Toggles checkbox state:
@@ -213,29 +301,43 @@ The `on-<event>` bindings allow you to listen on an event:
 
 ### Writing bindings
 
-To author bindings simply call the `reactive.bind(name, fn)` method, passing the binding name and a callback which is invoked with the element itself and the value. For example here is a binding which removes an element when truthy:
+To author bindings simply call the `.bind(name, fn)` method, passing the binding name and a callback which is invoked with the element itself and the value. For example here is a binding which removes an element when truthy:
 
 ```js
-reactive.bind('remove-if', function(el, name){
-  el = $(el);
-  var parent = el.parent();
-  this.change(function(){
-    if (this.value(name)) {
-      el.remove();
+reactive.bind('remove-if', function(el, property){
+  var binding = this;
+  binding.change(function() {
+    if (binding.value(property)) {
+      el.parentNode.removeChild(el);
     }
   });
 });
 ```
 
-## Computed properties
+Here is another binding which uses [momentjs](http://momentjs.com/) to pretty print a javascript date.
 
-Reactive supports computed properties denoted with the `<` character. Here the `fullname` property does not exist on the model, it is a combination of both `.first` and `.last`, however you must tell Reactive about the real properties in order for it to react appropriately:
+```js
+var template = '<span moment="timestamp" format="MMM Do YY"></span>';
+var view = reactive(template, {
+  model: { timestamp: new Date() }
+});
 
-```html
-<h1 data-text="fullname < first last"></h1>
+view.bind('moment', function(el, property) {
+  var binding = this;
+  var format = el.getAttribute('format');
+  binding.change(function () {
+     var val = binding.value(property);
+     el.innerText = moment(val).format(format);
+  });
+});
 ```
 
-__NOTE__: in the future Reactive may support hinting of computed properties from _outside_ Reactive itself, as your ORM-ish library may already have this information.
+Would output the following html
+```html
+<span>Mar 3rd 14</span>
+```
+
+You can easily re-use such bindings by making them plugins and enabling them on your instance with `.use()`
 
 ## Interpolation
 
@@ -278,6 +380,24 @@ view.bind('autosubmit', function(el){
   }
 });
 ```
+
+## View patterns
+
+Typically a view object wraps a model to provide additional functionality, this may look something like the following:
+
+```js
+function UserView(user) {
+  this.user = user;
+  this.el = reactive(tmpl, {
+    model: user
+    delegate: this
+  });
+}
+
+UserView.prototype.clickme = function(ev){ ... }
+```
+
+Often a higher-level API is built on top of this pattern to keep things DRY but this is left to your application / other libraries.
 
 For more examples view the ./examples directory.
 
