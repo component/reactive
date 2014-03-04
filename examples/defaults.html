@@ -10,13 +10,12 @@
   }
 </style>
 
-<script src="../build/build.js"></script>
-
 <article>
   <h1>{ title || 'Untitled' }</h1>
   <p>{ description.slice(0, 5) }</p>
 </article>
 
+<script src="./reactive.js"></script>
 <script>
   var Emitter = require('emitter');
   var reactive = require('reactive');

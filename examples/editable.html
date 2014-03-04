@@ -10,8 +10,6 @@
   }
 </style>
 
-<script src="../build/build.js"></script>
-
 <h1>Editable</h1>
 
 <p>Click any of the items below to edit inline:</p>
@@ -22,21 +20,14 @@
   <li data-editable='/item/3'>Three</li>
 </ul>
 
+<script src="./reactive.js"></script>
 <script>
-  var reactive = require('reactive');
-
-  // custom binding, available to all reactive views
-
-  reactive.bind('data-editable', function(el, url){
+  var view = reactive(document.querySelector('ul'));
+  view.bind('data-editable', function(el, url){
     el.setAttribute('contenteditable', 'true');
     el.onblur = function(){
       var str = el.textContent;
       console.log('save "%s" to %s', str, url);
     };
   });
-
-  // bind
-
-  reactive(document.querySelector('ul'));
-
 </script>

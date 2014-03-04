@@ -10,8 +10,6 @@
   }
 </style>
 
-<script src="../build/build.js"></script>
-
 <form>
   <label>
     title:
@@ -23,24 +21,20 @@
   </label>
 </form>
 
+<script src="./reactive.js"></script>
 <script>
-  var Emitter = require('emitter');
-  var reactive = require('reactive');
+var reactive = require('reactive');
 
-  function Item(title) {
-    this.title = title;
-    this.complete = true;
-  }
+function Item(title) {
+  this.title = title;
+  this.complete = true;
+}
 
-  Emitter(Item.prototype);
+var item = new Item('Get groceries');
+var el = document.querySelector('form');
+var view = reactive(el, item);
 
-
-  var item = new Item('Get groceries');
-  var el = document.querySelector('form');
-  reactive(el, item);
-
-  setTimeout(function(){
-    item.complete = false;
-    item.emit('change complete', false);
-  }, 1000);
+setTimeout(function(){
+  view.set('complete', false);
+}, 1000);
 </script>

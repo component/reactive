@@ -15,8 +15,6 @@
   }
 </style>
 
-<script src="../build/build.js"></script>
-
 <input type="text" value="Reactive">
 <input type="range" min="0" max="100" value="0">
 
@@ -27,38 +25,43 @@
   <p>{ description } <strong>{views} views</strong></p>
 </article>
 
+<script src="./reactive.js"></script>
 <script>
-  var Emitter = require('emitter');
-  var reactive = require('reactive');
+  //var Emitter = require('emitter');
+  //var reactive = require('reactive');
+  //var Emitter = reactive.Emitter;
 
   var title = document.querySelector('[type=text]');
 
+  var views = [];
+
   title.oninput = function(){
-    article.title = title.value;
-    article.emit('change title');
+    views.forEach(function(view) {
+        view.set('title', title.value);
+    });
   };
 
   var input = document.querySelector('[type=range]');
 
   input.onchange = function(){
-    article.views = ~~input.value;
-    article.emit('change views');
+    views.forEach(function(view) {
+        view.set('views', ~~input.value);
+    });
   };
 
-  var article = {
+  var init = {
     title: 'Reactive',
     description: 'Some description here.',
     views: 0
   };
-
-  Emitter(article);
 
   var el = document.querySelector('article');
   var n = 400;
 
   while (n--) {
     var clone = el.cloneNode(true);
-    reactive(clone, article);
+    var view = reactive(clone, init)
+    views.push(view);
     document.body.appendChild(clone);
   }
 
