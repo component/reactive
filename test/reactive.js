@@ -49,12 +49,15 @@ describe('reactive(el, obj)', function(){
       last: 'Ferret'
     };
 
-    var view = reactive(el, user, {
-      delegate: {
-        name: function(){
-          return user.first + ' ' + user.last
-        }
+    var delegate = {
+      name: function(){
+        assert(delegate == this);
+        return user.first + ' ' + user.last
       }
+    };
+
+    var view = reactive(el, user, {
+      delegate: delegate
     });
 
     assert('Tobi Ferret' == el.children[0].textContent);
