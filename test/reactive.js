@@ -50,8 +50,10 @@ describe('reactive(el, obj)', function(){
     };
 
     var view = reactive(el, user, {
-      name: function(){
-        return user.first + ' ' + user.last
+      delegate: {
+        name: function(){
+          return user.first + ' ' + user.last
+        }
       }
     });
 
@@ -141,12 +143,12 @@ describe('data-html', function(){
   it('should support computed values', function(){
     var el = domify('<div><ul data-html="fruits"></ul></div>');
     var user = { diet : [ 'apples', 'pears', 'oranges' ] };
-    var view = reactive(el, user, {
+    var view = reactive(el, user, { delegate: {
       fruits : function(fruits) {
         var html = user.diet.map(function(food) { return '<li>' + food + '</li>'; });
         return html.join('');
       }
-    });
+    }});
 
     var items = el.querySelectorAll('li');
     assert(3 == items.length);
@@ -208,7 +210,7 @@ describe('data-append', function(){
   it('should append an element', function(){
     var li = domify('<li>li</li>');
     var el = domify('<div><ul data-append="msg"></ul></div>');
-    var view = reactive(el, {}, { msg: li });
+    var view = reactive(el, {}, { delegate: { msg: li } });
     assert(li == el.children[0].children[0]);
   })
 })
@@ -217,14 +219,14 @@ describe('data-replace', function(){
   it('should replace an element', function(){
     var canvas = document.createElement('canvas');
     var el = domify('<div><div data-replace="canvas"></div></div>');
-    var view = reactive(el, {}, { canvas: canvas });
+    var view = reactive(el, {}, { delegate: { canvas: canvas } });
     assert(canvas == el.children[0]);
   })
 
   it('should carryover attributes', function(){
     var input = document.createElement('input');
     var el = domify('<div><div type="email" data-replace="input"></div>');
-    var view = reactive(el, {}, { input: input });
+    var view = reactive(el, {}, { delegate: { input: input } });
     assert('email' == input.type);
   })
 
@@ -232,7 +234,7 @@ describe('data-replace', function(){
     var input = document.createElement('input');
     input.type = 'url'
     var el = domify('<div><div type="email" data-replace="input"></div>');
-    var view = reactive(el, {}, { input: input });
+    var view = reactive(el, {}, { delegate: { input: input } });
     assert('url' == input.type);
   })
 
@@ -240,7 +242,7 @@ describe('data-replace', function(){
     var toggle = document.createElement('toggle');
     toggle.className = 'toggle';
     var el = domify('<div><div class="integration-toggle" data-replace="toggle"></div></div>');
-    var view = reactive(el, {}, { toggle: toggle });
+    var view = reactive(el, {}, { delegate: { toggle: toggle } });
     assert('toggle integration-toggle' == toggle.className);
   })
 })

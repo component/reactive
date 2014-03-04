@@ -71,7 +71,7 @@ describe('custom adapter', function() {
   });
 
   it('setting obj[prop] should update view', function() {
-    reactive(el, person, null, {
+    reactive(el, person, {
       adapter: BackboneAdapter
     });
     person.set('name', 'TJ');
@@ -79,7 +79,7 @@ describe('custom adapter', function() {
   });
 
   it('should not double set when updating reactive instance', function(done) {
-    var react = reactive(el, person, null, {
+    var react = reactive(el, person, {
       adapter: BackboneAdapter
     });
     react.sub('name', function(val) {
@@ -90,7 +90,7 @@ describe('custom adapter', function() {
   });
 
   it('shouldnt update view after being unsubscribed', function() {
-    var react = reactive(el, person, null, {
+    var react = reactive(el, person, {
       adapter: BackboneAdapter
     });
     react.unsub('name');
@@ -99,7 +99,7 @@ describe('custom adapter', function() {
   });
 
   it('setting view should update object', function() {
-    var react = reactive(el, person, null, {
+    var react = reactive(el, person, {
       adapter: BackboneAdapter
     });
     react.set('name', 'TJ');

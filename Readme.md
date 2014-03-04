@@ -91,15 +91,16 @@ model.people.push('Eve');
 
 ## API
 
-### reactive(string | element, [options])
+### reactive(string | element, model, [options])
 
-Create a new reactive instance using `string` or `element` as the template.
+Create a new reactive instance using `string` or `element` as the template and `model` as the data object.
+
+If you do not have a data model and want to specify options, you can pass `null` or `{}`. Remember you **must** have this argument before the options argument.
 
 Options
 
 | option | type | description |
 | --- | --- | --- |
-| model | object, instance | data model for property lookup and triggering changes to update the view |
 | delegate | object, instance | an object or instance defining overrides and handlers for properties and events |
 | adapter | function | defines how reactive will interact with the model to listen for changes |
 

@@ -10,6 +10,7 @@ unreleased
  * change event bindings to automatically `preventDefault`
  * remove computed properties
  * view properties are no longer supported, only view functions
+ * model methods and properties take precedence over delegates
 
 0.14.1 / 2014-01-09
 ===================

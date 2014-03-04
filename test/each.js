@@ -81,7 +81,7 @@ describe('each', function(){
     assert.equal(el.children[2].textContent, 'apples');
   })
 
-  it('calls event handlers in the context of child model', function (done) {
+  it('calls event handlers in the context of child reactive', function (done) {
     var el = domify('<ul><li each="todos"><a href="#" on-click="clicked">{name}</a></li></ul>');
 
     var model = {
@@ -93,13 +93,16 @@ describe('each', function(){
     };
 
     var view = {
+      check: 'carrot',
       clicked: function (e, ctx) {
+        assert(this.check == 'carrot');
+        assert(ctx != r);
         assert.equal(ctx.model.name, 'milk');
         done();
       }
     };
 
-    var r = reactive(el, model, view);
+    var r = reactive(el, model, { delegate: view });
 
     el.firstChild.firstChild.click();
   });
