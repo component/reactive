@@ -177,19 +177,19 @@ describe('data-visible', function(){
   })
 
   it('should add .hidden when array is empty', function() {
-    var tmpl = '<ul data-visible="items"><li each="items"></li></ul>';
+    var tmpl = '<ul data-visible="items.length"><li each="items"></li></ul>';
     var view = reactive(tmpl, { items: [] });
     assert('hidden' == view.el.className);
   })
 
   it('should add .visible when array is not empty', function() {
-    var tmpl = '<ul data-visible="items"><li each="items"></li></ul>';
+    var tmpl = '<ul data-visible="items.length"><li each="items"></li></ul>';
     var view = reactive(tmpl, { items: [ 'one' ] });
     assert('visible' == view.el.className);
   })
 
   it('should update on array changes', function() {
-    var tmpl = '<ul data-visible="items"><li each="items">{this}</li></ul>';
+    var tmpl = '<ul data-visible="items.length"><li each="items">{this}</li></ul>';
     var model = { items: [] };
     var view = reactive(tmpl, model);
     assert('hidden' == view.el.className);
@@ -215,13 +215,13 @@ describe('data-hidden', function(){
   })
 
   it('should add .visible when array is empty', function() {
-    var tmpl = '<ul data-hidden="items"><li each="items"></li></ul>';
+    var tmpl = '<ul data-hidden="items.length"><li each="items"></li></ul>';
     var view = reactive(tmpl, { items: [] });
     assert('visible' == view.el.className);
   })
 
   it('should add .hidden when array is not empty', function() {
-    var tmpl = '<ul data-hidden="items"><li each="items"></li></ul>';
+    var tmpl = '<ul data-hidden="items.length"><li each="items"></li></ul>';
     var view = reactive(tmpl, { items: [ 'one' ] });
     assert('hidden' == view.el.className);
   })

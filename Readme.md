@@ -95,8 +95,8 @@ DOM elements can be shown or hidden via the `data-visible` and `data-hidden` bin
 Using the following html template.
 
 ```js
-var tmpl = '<p data-hidden="items">no items</p>' +
-  '<ul data-visible="items"><li each="items">{name}</li></ul>';
+var tmpl = '<p data-hidden="items.length">no items</p>' +
+  '<ul data-visible="items.length"><li each="items">{name}</li></ul>';
 var model = { items: [] };
 var view = reactive(tmpl, model);
 ```
@@ -287,7 +287,7 @@ The `on-<event>` bindings allow you to listen on an event:
 <p data-visible="hasDescription" data-text="truncatedDescription"></p>
 ```
 
-`data-visible` will add a `visible` class if the property is `truthy`. Arrays are truthy if their `.length` > 0. If the value is false, `.hidden` will be added.
+`data-visible` will add a `visible` class if the property is `truthy`. For arrays, use the `.length` property to trigger on empty or non-empty arrays.
 
 `data-hidden` is the opposite of visible and will add a `visibile` class if the value is false and `.hidden` class if the value is truthy.
 
