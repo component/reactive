@@ -88,6 +88,27 @@ model.people.push('Eve');
 </ul>
 ```
 
+### hiding and showing elements
+
+DOM elements can be shown or hidden via the `data-visible` and `data-hidden` bindings.
+
+Using the following html template.
+
+```js
+var tmpl = '<p data-hidden="items">no items</p>' +
+  '<ul data-visible="items"><li each="items">{name}</li></ul>';
+var model = { items: [] };
+var view = reactive(tmpl, model);
+```
+
+When rendering the above, we will see `no items`, because the array is empty.
+
+```js
+model.items.push('one');
+```
+
+Will change the output to `· one` and hide `no items`. Notice how `data-visible` and `data-hidden` act in opposite directions.
+
 
 ## API
 
@@ -265,6 +286,10 @@ The `on-<event>` bindings allow you to listen on an event:
 ```html
 <p data-visible="hasDescription" data-text="truncatedDescription"></p>
 ```
+
+`data-visible` will add a `visible` class if the property is `truthy`. Arrays are truthy if their `.length` > 0. If the value is false, `.hidden` will be added.
+
+`data-hidden` is the opposite of visible and will add a `visibile` class if the value is false and `.hidden` class if the value is truthy.
 
 ### data-checked
 
