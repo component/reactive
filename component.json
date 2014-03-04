@@ -5,15 +5,13 @@
   "version": "0.14.1",
   "keywords": ["reactive", "template", "engine", "binding", "bindings"],
   "dependencies": {
-    "component/format-parser": "0.0.2",
-    "component/props": "1.0.2",
-    "visionmedia/debug": "*",
-    "component/event": "0.1.0",
     "component/classes": "1.1.1",
+    "component/event": "0.1.0",
     "component/query": "*",
-    "yields/carry": "0.0.1",
+    "component/emitter": "1.1.1",
     "component/domify": "1.2.1",
-    "component/emitter": "1.1.1"
+    "yields/carry": "0.0.1",
+    "visionmedia/debug": "0.7.4"
   },
   "development": {
     "component/assert": "*",
