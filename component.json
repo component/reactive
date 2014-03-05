@@ -24,7 +24,9 @@
     "lib/attr-binding.js",
     "lib/binding.js",
     "lib/bindings.js",
-    "lib/adapter.js"
+    "lib/adapter.js",
+    "lib/each.js",
+    "lib/walk.js"
   ],
   "main": "lib/index.js"
 }
