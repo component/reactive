@@ -1,4 +1,4 @@
-unreleased
+1.0.1 / 2014-03-06
 ==========
 
  * add mouseenter, mouseleave, scroll bindings
