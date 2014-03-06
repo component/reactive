@@ -1,3 +1,8 @@
+unreleased
+==========
+
+ * add mouseenter, mouseleave, scroll bindings
+
 1.0.0 / 2014-03-05
 ==========
  * contain adapter within an Adapter class to allow per-instance adapters
