@@ -124,4 +124,14 @@ describe('text interpolation', function(){
     reactive(el, user);
     assert('Hello Tobi' == el.textContent);
   })
+
+  it('should support calling a property as a function', function(){
+    var model = { name: { first: 'Some Really Long Name' } };
+    var view = reactive('<p>Hello {name.first.slice(0,6)}</p>', model);
+    assert('Hello Some R' == view.el.textContent);
+
+    var model = { name: 'Some Really Long Name' };
+    var view = reactive('<p>Hello {name.slice(0,4)}</p>', model);
+    assert('Hello Some' == view.el.textContent);
+  })
 })
