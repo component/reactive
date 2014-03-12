@@ -20,9 +20,7 @@ Rendering a basic html template with a predefined data model.
 
 ```js
 var view = reactive('<p>Hello {name}!</p>', {
-  model: {
-    name: 'Adam'
-  }
+  name: 'Adam'
 });
 
 // you can add the view "element" to the html whenever you want
@@ -46,7 +44,7 @@ var handlers = {
 };
 
 var template = '<button on-click="clickme">clickme</button>';
-var view = reactive(template, {
+var view = reactive(template, {}, {
   delegate: handlers
 });
 ```
@@ -63,9 +61,7 @@ var model = {
   people: ['Sally', 'Billy']
 };
 
-var view = reactive(template, {
-  model: model
-});
+var view = reactive(template, model);
 ```
 
 ```html
@@ -96,7 +92,7 @@ Using the following html template.
 
 ```js
 var tmpl = '<p data-hidden="items.length">no items</p>' +
-  '<ul data-visible="items.length"><li each="items">{name}</li></ul>';
+  '<ul data-visible="items.length"><li each="items">{this}</li></ul>';
 var model = { items: [] };
 var view = reactive(tmpl, model);
 ```
