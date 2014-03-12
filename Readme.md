@@ -114,7 +114,7 @@ Will change the output to `· one` and hide `no items`. Notice how `data-visible
 
 ### reactive(string | element, model, [options])
 
-Create a new reactive instance using `string` or `element` as the template and `model` as the data object.
+Create a new reactive instance using `string` or `element` as the template and `model` as the data object. This binds a DOM element to a model.
 
 If you do not have a data model and want to specify options, you can pass `null` or `{}`. Remember you **must** have this argument before the options argument.
 
@@ -149,17 +149,17 @@ Destroy the reactive instance. This will remove all event listeners on the insta
 
 Fires a `destoryed` event upon completion.
 
-## Adapters
+## Model Adapters
 
-Adapters provide the interface for reactive to interact with your models. By using a custom adapter you can support models from [backbone.js](http://backbonejs.org/#Model), [modella](https://github.com/modella/modella), [bamboo](https://github.com/defunctzombie/bamboo), etc..
+Model Adapters provide the interface for reactive to interact with your model implementation. By using a custom adapter you can support models from [backbone.js](http://backbonejs.org/#Model), [modella](https://github.com/modella/modella), [bamboo](https://github.com/defunctzombie/bamboo), etc..
 
 You can make reactive compatible with your favorite model layer by creating a custom adapter. Changes to your model will cause the reactive view to update dynamically. The following API is required for all adapters.
 
 ### constructor
 
-The `adapter` option is a function which accepts one argument, the `model` and should return an instance with all of the adapter methods implemented.
+The `adapter` option is a function which accepts one argument, the `model` and should return an instance with all of the adapter methods implemented. *The constructor will be called as a function - without the `new` keyword.*
 
-The builtin adapter constructor for example:
+As an example, the builtin adapter's constructor is:
 
 ```js
 function Adapter(model) {
@@ -171,6 +171,14 @@ function Adapter(model) {
   self.model = model;
 };
 ```
+
+In addition to the constructor, the adapter must implement these methods:
+
+* subscribe
+* unsubscribe
+* unsubscribeAll
+* set
+* get
 
 ### subscribe(prop, fn)
 
@@ -195,6 +203,11 @@ Set the property `prop` to the given value `val`.
 ### get(prop)
 
 Get the value for property `prop`
+
+### Stock Adapters
+
+* [reactive-bamboo](https://github.com/defunctzombie/reactive-bamboo) - an adapter for [bamboo](https://github.com/defunctzombie/bamboo).
+* [reactive-backbone](https://github.com/airportyh/reactive-backbone) - an adapter for Backbone models.
 
 ## Interpolation
 
@@ -253,6 +266,17 @@ The `data-<attr>` bindings allows you to set an attribute:
 <a data-href="download_url">Download</a>
 ```
 
+### each
+
+The `each` binding allows you to iterate a collection of objects within the model:
+
+```html
+<ul>
+  <li each="children">{name}</li>
+</ul>
+
+The model is expected to have a `children` property whose value is an array.
+
 ### on-&lt;event&gt;
 
 The `on-<event>` bindings allow you to listen on an event:
@@ -261,15 +285,30 @@ The `on-<event>` bindings allow you to listen on an event:
 <li data-text="title"><a on-click="remove">x</a></li>
 ```
 
+`remove` is expected to be a method on the specified `delegate` object:
+
+```js
+var delegate = {
+  remove: function(ev) {
+    console.log('Removing thing!');
+    ...
+  }
+}
+
+reactive(template, model, {
+  delegate: delegate
+});
+```
+
 ### data-append
 
   The `data-append` binding allows you to append an existing element:
 
 ```html
-<div class="photo" data-append="histogram">
-
-</div>
+<div class="photo" data-append="histogram"></div>
 ```
+
+The `histogram` property on the model is expected to contain a DOM element.
 
 ### data-replace
 
@@ -278,6 +317,8 @@ The `on-<event>` bindings allow you to listen on an event:
 ```html
 <div class="photo" data-replace="histogram"></div>
 ```
+
+The `histogram` property on the model is expected to contain a DOM element.
 
 ### data-{visible,hidden}
 
@@ -388,7 +429,7 @@ Typically a view object wraps a model to provide additional functionality, this 
 ```js
 function UserView(user) {
   this.user = user;
-  this.el = reactive(tmpl, {
+  this.view = reactive(tmpl, {
     model: user
     delegate: this
   });
