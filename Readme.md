@@ -88,7 +88,7 @@ model.people.push('Eve');
 </ul>
 ```
 
-### hiding and showing elements
+### Hiding and showing elements
 
 DOM elements can be shown or hidden via the `data-visible` and `data-hidden` bindings.
 
