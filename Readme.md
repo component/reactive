@@ -147,7 +147,7 @@ Use a reactive plugin. `fn` is invoked immediately and passed the reactive insta
 
 Destroy the reactive instance. This will remove all event listeners on the instance as well as remove the element from the dom.
 
-Fires a `destoryed` event upon completion.
+Fires a `destroyed` event upon completion.
 
 ## Adapters
 
