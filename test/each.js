@@ -62,6 +62,24 @@ describe('each', function(){
     assert.equal(el.children.length, 1);
   })
 
+  it('should not react to changes of an old array any more', function () {
+    var el = domify('<ul><li each="todos">{this}</li></ul>');
+
+    var array = ['candy'];
+    var model = { todos: array };
+    var view = reactive(el, model);
+
+    assert.equal(el.children.length, 1);
+    assert.equal(el.children[0].textContent, 'candy');
+
+    view.set('todos', ['milk']);
+    assert.equal(el.children.length, 1);
+    assert.equal(el.children[0].textContent, 'milk');
+
+    array.push('cereal');
+    assert.equal(el.children.length, 1);
+  })
+
   it('accessing properties', function(){
     var el = domify('<ul><li each="todos">{name}</li></ul>');
 
