@@ -134,4 +134,13 @@ describe('text interpolation', function(){
     var view = reactive('<p>Hello {name.slice(0,4)}</p>', model);
     assert('Hello Some' == view.el.textContent);
   })
+
+  it('should support setting base property', function(){
+    var model = { name: { first: 'foobar' } };
+    var view = reactive('<p>{name.first}</p>', model);
+    assert('foobar' == view.el.textContent);
+
+    view.set('name', { first: 'baz' });
+    assert('baz' == view.el.textContent);
+  })
 })
