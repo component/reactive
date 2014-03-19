@@ -2,6 +2,7 @@ unreleased
 ==========
 
  * unpatch old array when changing arrays
+ * remove Reactive#bind in favor of passing `bindings` option
 
 1.0.1 / 2014-03-06
 ==========
