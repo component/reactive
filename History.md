@@ -1,7 +1,9 @@
 unreleased
 ==========
 
+ * subscribe to parent prop changes for Reactive#sub('parent.child');
  * unpatch old array when changing arrays
+ * add `bindings`` option to constructor
 
 1.0.1 / 2014-03-06
 ==========

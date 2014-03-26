@@ -120,6 +120,7 @@ Options
 | --- | --- | --- |
 | delegate | object, instance | an object or instance defining overrides and handlers for properties and events |
 | adapter | function | defines how reactive will interact with the model to listen for changes |
+| bindings | object | define custom bindings (see bindings docs below) |
 
 Bind `object` to the given `element` with optional `view` object. When a `view` object is present it will be checked first for overrides, which otherwise delegate to the model `object`.
 
@@ -136,6 +137,8 @@ Set multiple properties `prop` and given values `val` in the view.
 Get the value for property `prop`.
 
 ### bind(name, fn)
+
+> Recommend using `bindings` option during construction instead. Will be removed in the future.
 
 Create a new binding called `name` defined by `fn`. See the [writing bindings](#writing-bindings) section for details.
 
@@ -342,35 +345,46 @@ The `histogram` property on the model is expected to contain a DOM element.
 
 ### Writing bindings
 
-To author bindings simply call the `.bind(name, fn)` method, passing the binding name and a callback which is invoked with the element itself and the value. For example here is a binding which removes an element when truthy:
+To author bindings, simply create a function that will accept two arguments, the element and binding value. For example, here is a binding which removes an element when truthy:
 
 ```js
-reactive.bind('remove-if', function(el, property){
+function removeIf(el, property){
   var binding = this;
   binding.change(function() {
     if (binding.value(property)) {
       el.parentNode.removeChild(el);
     }
   });
+};
+
+var template = '<span remove-if="name">no name</span>';
+var view = reactive(template, { name: 'foobar' }, {
+ bindings: {
+  'remove-if': removeIf
+ }
 });
 ```
+
+Notice that you can call the binding whatever you want when you create your view allowing you to select appropriate names. Binding authors should recommend names that make sense.
 
 Here is another binding which uses [momentjs](http://momentjs.com/) to pretty print a javascript date.
 
 ```js
 var template = '<span moment="timestamp" format="MMM Do YY"></span>';
-var view = reactive(template, {
-  model: { timestamp: new Date() }
+var view = reactive(template, { timestamp: new Date() }, {
+ bindings: {
+  'moment': momentFormat
+ }
 });
 
-view.bind('moment', function(el, property) {
+function momentFormat(el, property) {
   var binding = this;
   var format = el.getAttribute('format');
   binding.change(function () {
      var val = binding.value(property);
      el.innerText = moment(val).format(format);
   });
-});
+};
 ```
 
 Would output the following html
@@ -406,20 +420,20 @@ You can easily re-use such bindings by making them plugins and enabling them on 
 ```js
 var reactive = require('reactive');
 
-// bind
+var view = reactive(document.querySelector('.login'), {}, {
+ bindings: {
+  autosubmit: autosubmit
+ }
+});
 
-var view = reactive(document.querySelector('.login'));
-
-// custom binding available to this view only
-
-view.bind('autosubmit', function(el){
+function autosubmit(el){
   el.onsubmit = function(e){
     e.preventDefault();
     var path = el.getAttribute('action');
     var method = el.getAttribute('method').toUpperCase();
     console.log('submit to %s %s', method, path);
   }
-});
+};
 ```
 
 ## View patterns
