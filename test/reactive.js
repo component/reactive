@@ -123,7 +123,34 @@ describe('.set(prop, value)', function(){
 
     view.set('name', 'Loki');
     assert('Loki' == el.children[0].textContent);
-  })
+  });
+
+  it('should update bindings from an object', function(){
+    var el = domify('<div><p>{name}</p><p>{age}</p></div>');
+
+    function User(name, age) {
+      this.name = name;
+      this.age = age;
+    }
+
+    var user = new User('Tobi', 24);
+    var view = reactive(el, user);
+
+    assert('Tobi' == el.children[0].textContent);
+    assert('24' == el.children[1].textContent);
+
+    view.set('name', 'Loki');
+    view.set('age', '21');
+    assert('Loki' == el.children[0].textContent);
+    assert('21' == el.children[1].textContent);
+
+    view.set({
+      'name': 'Barry',
+      'age': 33
+    });
+    assert('Barry' == el.children[0].textContent);
+    assert('33' == el.children[1].textContent);
+  });
 })
 
 describe('data-text', function(){

@@ -127,6 +127,10 @@ Bind `object` to the given `element` with optional `view` object. When a `view` 
 
 Set the property `prop` to the given value `val` in the view.
 
+### set({prop: val})
+
+Set multiple properties `prop` and given values `val` in the view.
+
 ### get(prop)
 
 Get the value for property `prop`.
