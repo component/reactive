@@ -277,6 +277,7 @@ The `each` binding allows you to iterate a collection of objects within the mode
 <ul>
   <li each="children">{name}</li>
 </ul>
+```
 
 The model is expected to have a `children` property whose value is an array.
 
