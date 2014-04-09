@@ -444,8 +444,7 @@ Typically a view object wraps a model to provide additional functionality, this 
 ```js
 function UserView(user) {
   this.user = user;
-  this.view = reactive(tmpl, {
-    model: user
+  this.view = reactive(tmpl, user, {
     delegate: this
   });
 }
