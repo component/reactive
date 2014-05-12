@@ -77,3 +77,26 @@ describe('Reactive#bind(name, fn)', function(){
     });
   })
 })
+
+describe('Reactive#bind(name, fn)', function(){
+  it('should not use setAttribute to update input\'s value', function(){
+    var el = domify('<input data-value="value" />');
+    var view = reactive(el, { value: 'old value' });
+    view.set('value', 'value');
+    assert(el.value == 'value');
+  })
+
+  it('should not use setAttribute to update input\'s value', function(){
+    var el = domify('<textarea data-value="value"></textarea>');
+    var view = reactive(el, { value: 'old value' });
+    view.set('value', 'value');
+    assert(el.value == 'value');
+  })
+
+  it('should change value of `.value` to update textarea\'s text content', function(){
+    var el = domify('<textarea data-text="value"></textarea>');
+    var view = reactive(el, { value: 'old value' });
+    view.set('value', 'value');
+    assert(el.value == 'value');
+  })
+})
