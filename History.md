@@ -1,5 +1,7 @@
-unreleased
+1.1.1 / 2014-05-13
 ==========
+
+  * fix `data-value` binding for INPUT and TEXTAREA
 
 1.1.0 / 2014-03-27
 ==========
