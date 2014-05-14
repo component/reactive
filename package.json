@@ -21,7 +21,7 @@
     "clone": "clone-component"
   },
   "devDependencies": {
-    "zuul": "~1.5.4",
+    "zuul": "~1.6.4",
     "clone-component": "component/clone#acfb79aa",
     "better-assert": "~1.0.0",
     "mocha": "~1.17.0"
