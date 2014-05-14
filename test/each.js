@@ -5,13 +5,13 @@ var reactive = require('../');
 
 describe('each', function(){
   it('empty should not fail', function(){
-    var el = domify('<ul><li each="todos">{this}</li></ul>');
+    var el = domify('<ul><li each="todos">{{this}}</li></ul>');
     var view = reactive(el);
     assert.equal(el.children.length, 0);
   })
 
   it('predefined array should work', function(){
-    var el = domify('<ul><li each="todos">{this}</li></ul>');
+    var el = domify('<ul><li each="todos">{{this}}</li></ul>');
 
     var model = {
       todos: ['milk', 'cereal', 'apples']
@@ -26,7 +26,7 @@ describe('each', function(){
   })
 
   it('setting property should work', function(){
-    var el = domify('<ul><li each="todos">{this}</li></ul>');
+    var el = domify('<ul><li each="todos">{{this}}</li></ul>');
 
     var model = {
       todos: ['candy']
@@ -46,7 +46,7 @@ describe('each', function(){
   })
 
   it('should not set after destroy', function(){
-    var el = domify('<ul><li each="todos">{this}</li></ul>');
+    var el = domify('<ul><li each="todos">{{this}}</li></ul>');
 
     var model = { todos: ['candy'] };
     var view = reactive(el, model);
@@ -63,7 +63,7 @@ describe('each', function(){
   })
 
   it('should not react to changes of an old array any more', function () {
-    var el = domify('<ul><li each="todos">{this}</li></ul>');
+    var el = domify('<ul><li each="todos">{{this}}</li></ul>');
 
     var array = ['candy'];
     var model = { todos: array };
@@ -81,7 +81,7 @@ describe('each', function(){
   })
 
   it('accessing properties', function(){
-    var el = domify('<ul><li each="todos">{name}</li></ul>');
+    var el = domify('<ul><li each="todos">{{name}}</li></ul>');
 
     var model = {
       todos: [
@@ -100,7 +100,7 @@ describe('each', function(){
   })
 
   it('calls event handlers in the context of child reactive', function (done) {
-    var el = domify('<ul><li each="todos"><a href="#" on-click="clicked">{name}</a></li></ul>');
+    var el = domify('<ul><li each="todos"><a href="#" on-click="clicked">{{name}}</a></li></ul>');
 
     var model = {
       todos: [
@@ -126,7 +126,7 @@ describe('each', function(){
   });
 
   it('Array#push', function(){
-    var el = domify('<ul><li each="todos">{this}</li></ul>');
+    var el = domify('<ul><li each="todos">{{this}}</li></ul>');
 
     var model = {
       todos: []
@@ -144,7 +144,7 @@ describe('each', function(){
   })
 
   it('Array#unshift', function(){
-    var el = domify('<ul><li each="todos">{this}</li></ul>');
+    var el = domify('<ul><li each="todos">{{this}}</li></ul>');
 
     var model = {
       todos: []
@@ -165,7 +165,7 @@ describe('each', function(){
   })
 
   it('Array#splice', function(){
-    var el = domify('<ul><li each="todos">{this}</li></ul>');
+    var el = domify('<ul><li each="todos">{{this}}</li></ul>');
 
     var model = {
       todos: []
@@ -200,7 +200,7 @@ describe('each', function(){
 
   // test that items are put into the proper place in the dom
   it('multiple arrays', function(){
-    var el = domify('<ul><li each="todos">{this}</li><li each="tonots">{this}</li></ul>');
+    var el = domify('<ul><li each="todos">{{this}}</li><li each="tonots">{{this}}</li></ul>');
 
     var model = {
       todos: [],
@@ -226,7 +226,7 @@ describe('each', function(){
   // nothing on the each binding line should be evaluated before the each has
   // taken over the line
   it('other bindings', function(){
-    var el = domify('<div><div class="{cls}" each="todos">{name}</div></div>');
+    var el = domify('<div><div class="{{cls}}" each="todos">{{name}}</div></div>');
 
     var model = {
       todos: [{
@@ -243,7 +243,7 @@ describe('each', function(){
   })
 
   it('other bindings - flipped', function(){
-    var el = domify('<div><div each="todos" class="{cls}">{name}</div></div>');
+    var el = domify('<div><div each="todos" class="{{cls}}">{{name}}</div></div>');
 
     var model = {
       todos: [{

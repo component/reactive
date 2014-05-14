@@ -1,3 +1,8 @@
+unreleased
+==========
+
+  * switch to {{ }} for templates. This is more versatile.
+
 1.1.1 / 2014-05-13
 ==========
 

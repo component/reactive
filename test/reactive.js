@@ -64,7 +64,7 @@ describe('reactive(el, obj)', function(){
   })
 
   it('should support nested properties', function(){
-    var el = domify('<div>{name.first} {name.last}</div>');
+    var el = domify('<div>{{name.first}} {{name.last}}</div>');
 
     var user = {
       name: {
@@ -79,15 +79,15 @@ describe('reactive(el, obj)', function(){
 
   it('should support deeply nested properties', function(){
     var model = { foo: { bar: { baz: { rofl: 'ok' } } } };
-    var view = reactive(domify('<div>{ foo.bar.baz.rofl }</div>'), model);
+    var view = reactive(domify('<div>{{ foo.bar.baz.rofl }}</div>'), model);
     assert('ok' == view.el.textContent);
   })
 
   it('should not fail for undefined properties', function(){
-    var view = reactive(domify('<div>{ foo }</div>'), {});
+    var view = reactive(domify('<div>{{ foo }}</div>'), {});
     assert.equal('', view.el.textContent);
 
-    var view = reactive(domify('<div>{ foo.bar }</div>'), {});
+    var view = reactive(domify('<div>{{ foo.bar }}</div>'), {});
     assert.equal('', view.el.textContent);
   });
 
@@ -126,7 +126,7 @@ describe('.set(prop, value)', function(){
   });
 
   it('should update bindings from an object', function(){
-    var el = domify('<div><p>{name}</p><p>{age}</p></div>');
+    var el = domify('<div><p>{{name}}</p><p>{{age}}</p></div>');
 
     function User(name, age) {
       this.name = name;
@@ -216,7 +216,7 @@ describe('data-visible', function(){
   })
 
   it('should update on array changes', function() {
-    var tmpl = '<ul data-visible="items.length"><li each="items">{this}</li></ul>';
+    var tmpl = '<ul data-visible="items.length"><li each="items">{{this}}</li></ul>';
     var model = { items: [] };
     var view = reactive(tmpl, model);
     assert('hidden' == view.el.className);
