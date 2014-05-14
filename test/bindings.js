@@ -82,11 +82,14 @@ describe('Reactive#bind(name, fn)', function(){
   it('should not use setAttribute to update input\'s value', function(){
     var el = domify('<input data-value="value" />');
     var view = reactive(el, { value: 'old value' });
+    view.el.value = 'old value';
+
+    assert(el.value == 'old value');
     view.set('value', 'value');
     assert(el.value == 'value');
   })
 
-  it('should not use setAttribute to update input\'s value', function(){
+  it('should not use setAttribute to update textarea\'s value', function(){
     var el = domify('<textarea data-value="value"></textarea>');
     var view = reactive(el, { value: 'old value' });
     view.set('value', 'value');
