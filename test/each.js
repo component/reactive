@@ -163,6 +163,153 @@ describe('each', function(){
     model.todos.push('apples');
     assert.equal(el.children[2].textContent, 'apples');
   })
+  it('Array#pop', function(){
+    var el = domify('<ul><li each="todos">{this}</li></ul>');
+
+    var model = {
+      todos: ['milk','cereal','apples']
+    };
+
+    var view = reactive(el, model);
+
+    assert.equal(el.children.length, 3);
+
+    for (var i=0; i<model.todos.length;i++ ) {
+
+      assert.equal(el.children[i].textContent, model.todos[i]);
+
+    }
+
+    var element;
+    while(model.todos.length) {
+
+      element = model.todos.pop();
+      assert.equal(el.children.length,model.todos.length);
+
+      for (i=0; i<el.children.length;i++) {
+
+        assert.notEqual(el.children[i].textContent,element);
+        assert.equal(el.children[i].textContent,model.todos[i]);
+
+      }
+
+    }
+    
+    assert.equal(model.todos.length,0);
+    assert.strictEqual(model.todos.pop(),[].pop());
+    
+  });
+
+  it('Array#shift', function(){
+    var el = domify('<ul><li each="todos">{this}</li></ul>');
+
+    var model = {
+      todos: ['milk','cereal','apples']
+    };
+
+    var view = reactive(el, model);
+
+    assert.equal(el.children.length, 3);
+
+    for (var i=0; i<model.todos.length;i++ ) {
+
+      assert.equal(el.children[i].textContent, model.todos[i]); 
+
+    }
+
+    var element;
+    while(model.todos.length) {
+
+      element = model.todos.shift();
+      assert.equal(el.children.length,model.todos.length);
+
+      for (i=0; i<el.children.length;i++) {
+
+        assert.notEqual(el.children[i].textContent,element);
+        assert.equal(el.children[i].textContent,model.todos[i]);
+
+      }
+
+    }
+    
+    assert.equal(model.todos.length,0);
+    assert.strictEqual(model.todos.shift(),[].shift());
+    
+  });
+
+  it('Array#sort', function(){
+    var el = domify('<ul><li each="todos">{this}</li></ul>');
+
+    var model = {
+      todos: [0,9,8,7,6,1,2,3,4,5]
+    };
+
+    var testArray = model.todos.splice(0,model.todos.length);
+    var view = reactive(el, model);
+
+    assert.equal(el.children.length, model.todos.length);
+
+    for (var i=0; i<model.todos.length;i++ ) {
+
+      assert.equal(el.children[i].textContent, model.todos[i]);  
+      assert.equal(testArray[i], model.todos[i]);
+
+    }
+
+    var sortFunction = function(a,b) {
+      return a-b;
+    };
+
+    var returnOriginal = model.todos.sort(sortFunction);
+    var returnTestArr  = testArray.sort(sortFunction);
+
+    assert.equal(el.children.length, model.todos.length);
+
+
+    for (i=0; i<model.todos.length;i++ ) {
+
+      assert.equal(el.children[i].textContent, model.todos[i]);  
+      assert.equal(testArray[i], model.todos[i]);  
+      assert.equal(returnOriginal[i], returnTestArr[i]);
+
+    }
+    
+  });
+
+  it('Array#reverse', function(){
+    var el = domify('<ul><li each="todos">{this}</li></ul>');
+
+    var model = {
+      todos: [0,9,8,7,6,1,2,3,4,5]
+    };
+
+    var testArray = model.todos.splice(0,model.todos.length);
+    var view = reactive(el, model);
+
+    assert.equal(el.children.length, model.todos.length);
+
+    for (var i=0; i<model.todos.length;i++ ) {
+
+      assert.equal(el.children[i].textContent, model.todos[i]);  
+      assert.equal(testArray[i], model.todos[i]);
+
+    }
+
+
+    var returnOriginal = model.todos.reverse();;
+    var returnTestArr  = testArray.reverse();
+
+    assert.equal(el.children.length, model.todos.length);
+
+    for (var i=0; i<model.todos.length;i++ ) {
+
+      assert.equal(el.children[i].textContent, model.todos[i]);  
+      assert.equal(testArray[i], model.todos[i]);  
+      assert.equal(returnOriginal[i], returnTestArr[i]);
+
+    }
+    
+  });
 
   it('Array#splice', function(){
     var el = domify('<ul><li each="todos">{this}</li></ul>');

@@ -60,7 +60,7 @@
 
   while (n--) {
     var clone = el.cloneNode(true);
-    var view = reactive(clone, init)
+    var view = reactive(clone, init);
     views.push(view);
     document.body.appendChild(clone);
   }
