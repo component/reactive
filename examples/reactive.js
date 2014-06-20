@@ -575,6 +575,38 @@ module.exports = function(el, val) {
             return arr.length;
         };
 
+        var pop = function() {
+            if (!arr.length) {
+                return void 0;
+            }
+            var element = arr[arr.length-1];
+            splice.apply(arr,[arr.length-1,1]);
+            return element;
+        };
+
+        var shift = function() {
+            if (!arr.length) {
+                return void 0;
+            }
+            var element = arr[0];
+            splice.apply(arr,[0,1]);
+            return element;
+        };
+
+        var sort = function () {
+            var ret = Array.prototype.sort.apply(arr,arguments);
+            var arr2 = [0,arr.length].concat(arr);
+            splice.apply(arr,arr2);
+            return ret;
+        };
+
+        var reverse = function() {
+            var ret = Array.prototype.reverse.apply(arr);
+            var arr2 = [0,arr.length].concat(arr);
+            splice.apply(arr,arr2);
+            return ret;
+        };
+
         // use defineProperty to avoid making ownProperty fields
         function set_prop(prop, fn) {
             Object.defineProperty(arr, prop, {
@@ -587,6 +619,10 @@ module.exports = function(el, val) {
         set_prop('splice', splice);
         set_prop('push', push);
         set_prop('unshift', unshift);
+        set_prop('pop', pop);
+        set_prop('shift', shift);
+        set_prop('sort', sort);
+        set_prop('reverse', reverse);
 
         // handle initial array
         var fragment = document.createDocumentFragment();
