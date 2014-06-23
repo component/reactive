@@ -1,3 +1,8 @@
+Unreleased
+==========
+
+  * Added [].shift,[].pop,[].sort,[].reverse
+
 1.1.1 / 2014-05-13
 ==========
 
