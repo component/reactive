@@ -344,6 +344,14 @@ The `histogram` property on the model is expected to contain a DOM element.
 <input type="checkbox" data-checked="agreed_to_terms">
 ```
 
+### data-selected
+
+ Toggles option state:
+
+```html
+<option data-selected="selected"></option>
+```
+
 ### Writing bindings
 
 To author bindings, simply create a function that will accept two arguments, the element and binding value. For example, here is a binding which removes an element when truthy:
