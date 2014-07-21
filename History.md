@@ -2,6 +2,7 @@
 
   * Added [].shift,[].pop,[].sort,[].reverse
   * Add data-selected to toggle selected state in <options>
+  * fix for nested property parent subscriptions
 
 # 1.1.1 / 2014-05-13
 
