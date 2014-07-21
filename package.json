@@ -1,8 +1,15 @@
 {
   "name": "reactive",
   "description": "Reactive template engine with data bindings",
-  "version": "1.1.1",
-  "keywords": ["reactive", "template", "engine", "data", "bind", "bindings"],
+  "version": "1.2.0",
+  "keywords": [
+    "reactive",
+    "template",
+    "engine",
+    "data",
+    "bind",
+    "bindings"
+  ],
   "main": "lib/index.js",
   "dependencies": {
     "classes-component": "1.1.3",

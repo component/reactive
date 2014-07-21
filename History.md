@@ -1,4 +1,4 @@
-# UNRELEASED
+# 1.2.0 (2014-07-20)
 
   * Added [].shift,[].pop,[].sort,[].reverse
   * Add data-selected to toggle selected state in <options>
