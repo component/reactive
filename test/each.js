@@ -385,4 +385,22 @@ describe('each', function(){
     assert.equal(el.children[0].getAttribute('class'), 'dairy');
   })
 
+  it('should update when array is a nested property', function(){
+    var el = domify('<ul><li each="nested.arr">{this}</li></ul>');
+
+    var model = { nested: { arr: ['a', 'b'] } };
+
+    var view = reactive(el, model);
+
+    assert.equal(el.children.length, 2);
+    assert.equal(el.children[0].textContent, 'a');
+    assert.equal(el.children[1].textContent, 'b');
+
+    view.set('nested', { arr: ['a', 'b', 'c'] });
+
+    assert.equal(el.children.length, 3);
+    assert.equal(el.children[0].textContent, 'a');
+    assert.equal(el.children[1].textContent, 'b');
+    assert.equal(el.children[2].textContent, 'c');
+  })
 })
