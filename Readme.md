@@ -212,6 +212,11 @@ Get the value for property `prop`
 * [reactive-bamboo](https://github.com/defunctzombie/reactive-bamboo) - an adapter for [bamboo](https://github.com/defunctzombie/bamboo).
 * [reactive-backbone](https://github.com/airportyh/reactive-backbone) - an adapter for Backbone models.
 
+## Plugins
+
+Custom bindings to extend reactive are listed on the [plugins wiki page](https://github.com/component/reactive/wiki#plugins)
+
+
 ## Interpolation
 
   Bindings may be applied via interoplation on attributes or text. For example here
