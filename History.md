@@ -1,6 +1,7 @@
 # UNRELEASED
 
   * Added [].shift,[].pop,[].sort,[].reverse
+  * Add data-selected to toggle selected state in <options>
 
 # 1.1.1 / 2014-05-13
 
