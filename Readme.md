@@ -1,4 +1,4 @@
-# reactive [![Build Status](https://travis-ci.org/component/reactive.png?branch=master)](https://travis-ci.org/component/reactive)
+# reactive [![Build Status](https://travis-ci.org/component/reactive.svg?branch=master)](https://travis-ci.org/component/reactive)
 
  Simple and Flexible template and view binding engine with support for custom bindings and real-time updates on model changes.
 
