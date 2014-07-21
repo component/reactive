@@ -151,6 +151,16 @@ describe('.set(prop, value)', function(){
     assert('Barry' == el.children[0].textContent);
     assert('33' == el.children[1].textContent);
   });
+
+  it('should support setting parent property of a nested property', function() {
+    var el = domify('<div>{user.name} {user.age}</div>');
+
+    var view = reactive(el, { user: { name: 'Keith', age: 45 } });
+    assert.equal(el.textContent, 'Keith 45');
+
+    view.set('user', { name: 'Seth', age: 50 });
+    assert.equal(el.textContent, 'Seth 50');
+  });
 })
 
 describe('data-text', function(){
