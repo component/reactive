@@ -1,3 +1,7 @@
+# UNRELEASED
+
+  * preserve "falsey" values for `.get`
+
 # 1.2.0 (2014-07-20)
 
   * Added [].shift,[].pop,[].sort,[].reverse
