@@ -102,7 +102,7 @@ describe('text interpolation', function(){
     var el = domify('<p>name: {casual}</p>');
 
     var pet = {
-      casual: function(){ return false },
+      casual: function(){ return undefined },
       first: function(){ return 'Loki' },
       last: function(){ return 'the Pet' }
     };

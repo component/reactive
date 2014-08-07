@@ -83,6 +83,17 @@ describe('reactive(el, obj)', function(){
     assert('ok' == view.el.textContent);
   })
 
+  it('should support falsy properties', function(){
+    var model = { zero: 0, nil: null, empty: '' };
+    var view = reactive(domify('<div class="{ empty }">{ zero }</div>'), model);
+    assert('0' === view.el.textContent);
+    assert('' === view.el.getAttribute('class'));
+    assert(null === view.get('nil'));
+    assert(0 === view.get('zero'));
+    assert('' === view.get('empty'));
+    assert(undefined === view.get('not_there'));
+  })
+
   it('should not fail for undefined properties', function(){
     var view = reactive(domify('<div>{ foo }</div>'), {});
     assert.equal('', view.el.textContent);
