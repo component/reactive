@@ -1,6 +1,6 @@
 {
   "name": "reactive",
-  "repo": "component/reactive",
+  "repo": "ianstormtaylor/reactive",
   "description": "Reactive template engine",
   "version": "0.13.2",
   "keywords": ["reactive", "template", "engine", "binding", "bindings"],
