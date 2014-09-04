@@ -1,3 +1,5 @@
+require('reactive-ie8-shims');
+
 var domify = require('domify');
 var assert = require('assert');
 
@@ -101,13 +103,5 @@ describe('Reactive#bind(name, fn)', function(){
     var view = reactive(el, { value: 'old value' });
     view.set('value', 'value');
     assert(el.value == 'value');
-  })
-})
-
-describe('data-html', function () {
-  it('should replace html content', function(){
-    var el = domify('<div data-html="value">text to be replaced</div>');
-    var view = reactive(el, { value: '<div data-html="value"></div>' });
-    assert(el.innerHTML === '<div data-html="value"></div>');
   })
 })

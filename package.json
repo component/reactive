@@ -28,10 +28,11 @@
     "clone": "clone-component"
   },
   "devDependencies": {
-    "zuul": "~1.5.4",
-    "clone-component": "component/clone#acfb79aa",
     "better-assert": "~1.0.0",
-    "mocha": "~1.17.0"
+    "clone-component": "component/clone#acfb79aa",
+    "mocha": "~1.17.0",
+    "reactive-ie8-shims": "^0.1.1",
+    "zuul": "~1.5.4"
   },
   "scripts": {
     "test": "zuul -- test/*.js",

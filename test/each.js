@@ -1,3 +1,5 @@
+require('reactive-ie8-shims');
+
 var domify = require('domify');
 var assert = require('assert');
 
@@ -55,7 +57,9 @@ describe('each', function(){
     assert.equal(el.children[0].textContent, 'candy');
 
     view.destroy();
-    assert.equal(el.parentNode, undefined);
+    assert.equal(el.parentElement, undefined);
+    // IE8 puts a document fragment above the element
+    assert(!el.parentNode || el.parentNode.nodeType === 11);
 
     // this should have no effect on the children anymore
     view.set('todos', ['milk', 'cereal']);

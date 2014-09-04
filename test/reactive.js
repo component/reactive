@@ -1,3 +1,5 @@
+require('reactive-ie8-shims');
+
 var classes = require('classes');
 var domify = require('domify');
 var assert = require('assert');
@@ -188,7 +190,7 @@ describe('data-html', function(){
     var el = domify('<div><p data-html="name"></p></div>');
     var user = { name: '<strong>Tobi</strong>' };
     var view = reactive(el, user);
-    assert('<strong>Tobi</strong>' == el.children[0].innerHTML);
+    assert('<strong>tobi</strong>' == el.children[0].innerHTML.toLowerCase());
   })
 
   it('should support computed values', function(){
@@ -288,7 +290,7 @@ describe('data-checked', function(){
     var el = domify('<div><input data-checked="agree" /></div>');
     var user = { agree: false };
     var view = reactive(el, user);
-    assert(null == el.children[0].getAttribute('checked'));
+    assert(!el.children[0].getAttribute('checked')); // IE8 returns "", modern returns null
   })
 })
 
@@ -311,17 +313,17 @@ describe('data-replace', function(){
 
   it('should carryover attributes', function(){
     var input = document.createElement('input');
-    var el = domify('<div><div type="email" data-replace="input"></div>');
+    var el = domify('<div><div data-value="foobar" data-replace="input"></div>');
     var view = reactive(el, {}, { delegate: { input: input } });
-    assert('email' == input.getAttribute('type'));
+    assert('foobar' == input.getAttribute('data-value'));
   })
 
   it('shouldnt wipe out existing attributes', function(){
     var input = document.createElement('input');
-    input.setAttribute('type', 'url')
-    var el = domify('<div><div type="email" data-replace="input"></div>');
+    input.setAttribute('data-value','barbaz')
+    var el = domify('<div><div data-value="foobar" data-replace="input"></div>');
     var view = reactive(el, {}, { delegate: { input: input } });
-    assert('url' == input.getAttribute('type'));
+    assert('barbaz' == input.getAttribute('data-value'));
   })
 
   it('should carryover classes', function(){
@@ -339,5 +341,13 @@ describe('data-[attr]', function(){
     var user = { name: 'Tobi' };
     var view = reactive(el, user);
     assert('Tobi' == el.children[0].value);
+  })
+})
+
+describe('data-html', function () {
+  it('should replace html content', function(){
+    var el = domify('<div data-html="value">text to be replaced</div>');
+    var view = reactive(el, { value: '<div data-html="value"></div>' });
+    assert(el.innerHTML.toLowerCase() === '<div data-html="value"></div>');
   })
 })
