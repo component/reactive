@@ -313,15 +313,15 @@ describe('data-replace', function(){
     var input = document.createElement('input');
     var el = domify('<div><div type="email" data-replace="input"></div>');
     var view = reactive(el, {}, { delegate: { input: input } });
-    assert('email' == input.type);
+    assert('email' == input.getAttribute('type'));
   })
 
   it('shouldnt wipe out existing attributes', function(){
     var input = document.createElement('input');
-    input.type = 'url'
+    input.setAttribute('type', 'url')
     var el = domify('<div><div type="email" data-replace="input"></div>');
     var view = reactive(el, {}, { delegate: { input: input } });
-    assert('url' == input.type);
+    assert('url' == input.getAttribute('type'));
   })
 
   it('should carryover classes', function(){
