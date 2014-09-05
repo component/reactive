@@ -12,13 +12,14 @@
   ],
   "main": "lib/index.js",
   "dependencies": {
+    "carry": "0.0.1",
     "classes-component": "1.1.3",
+    "debug": "0.7.4",
+    "domify": "1.2.1",
+    "emitter-component": "1.1.1",
     "event-component": "0.1.0",
     "query-component": "0.0.1",
-    "emitter-component": "1.1.1",
-    "domify": "1.2.1",
-    "carry": "0.0.1",
-    "debug": "0.7.4"
+    "reactive-ie8-shims": "^0.1.2"
   },
   "browser": {
     "classes": "classes-component",
