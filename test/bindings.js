@@ -1,3 +1,5 @@
+require('reactive-ie8-shims');
+
 var domify = require('domify');
 var assert = require('assert');
 
