@@ -14,6 +14,7 @@ clean:
 	rm -fr build components template.js
 
 test: build
+	@component-build --dev --out test/build
 	open test/index.html
 
 .PHONY: clean reactive.js test

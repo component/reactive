@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="build/build.css" />
+<div id="mocha"></div>
+<div id="showcase"></div>
+
+<script src="build/build.js"></script>
+<script>
+    require('mocha'); // DO NOT assign the return value!
+    mocha.setup('bdd');
+
+    // require all the test and register them to mocha
+    var tests = [
+        'adapters',
+        'attr-interpolation',
+        'bindings',
+        'each',
+        'reactive',
+        'text-interpolation'
+    ];
+    tests.forEach(function(file) {
+        require('reactive/test/' + file + '.js');
+    });
+
+    mocha.run();
+</script>
