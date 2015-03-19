@@ -3,7 +3,7 @@ var assert = require('assert');
 var Emitter = require('emitter');
 var clone = require('clone');
 
-var reactive = require('../');
+var reactive = require('reactive');
 var adapter = clone(reactive.adapter);
 
 // simplified backbone adapter

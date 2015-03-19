@@ -2,7 +2,7 @@ var classes = require('classes');
 var domify = require('domify');
 var assert = require('assert');
 
-var reactive = require('../');
+var reactive = require('reactive');
 
 describe('reactive(el, obj)', function(){
   it('should set values on initialization', function(){

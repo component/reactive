@@ -1,7 +1,7 @@
 var domify = require('domify');
 var assert = require('assert');
 
-var reactive = require('../');
+var reactive = require('reactive');
 
 describe('attr interpolation', function(){
   it('should support initialization', function(){
