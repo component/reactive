@@ -84,14 +84,44 @@ describe('reactive(el, obj)', function(){
   })
 
   it('should support falsy properties', function(){
-    var model = { zero: 0, nil: null, empty: '' };
-    var view = reactive(domify('<div class="{ empty }">{ zero }</div>'), model);
-    assert('0' === view.el.textContent);
-    assert('' === view.el.getAttribute('class'));
-    assert(null === view.get('nil'));
-    assert(0 === view.get('zero'));
+    var model = { 
+      empty: '', 
+      zero: 0, 
+      nil: null, 
+      notdef: undefined,
+      mixed: {
+        falsy: false,
+        truthy: 'hello'
+      }
+    };
+    var template = '<ul>'+
+    '<li>empty: "<span class="empty">{empty}</span>"</li>' + 
+    '<li>zero: "<span class="zero">{zero}</span>"</li>' + 
+    '<li>null: "<span class="nil">{nil}</span>"</li>' + 
+    '<li>undefined: "<span class="notdef">{notdef}</span>"</li>'+
+    '<li>nested and mixed-falsy: "<span class="mixed-falsy">{mixed.falsy}</span>"</li>' + 
+    '<li>nested and mixed-truthy: "<span class="mixed-truthy">{mixed.truthy}</span>"</li>' + 
+    '</ul>';
+
+    var view = reactive(domify(template), model);
+    document.querySelector('#showcase').appendChild(view.el);
+    // assert model
     assert('' === view.get('empty'));
-    assert(undefined === view.get('not_there'));
+    assert(0 === view.get('zero'));
+    assert(null === view.get('nil'));
+    assert(undefined === view.get('notdef'));
+    assert(undefined === view.get('notexisting'));
+    assert(false === view.get('mixed.falsy'));
+    assert('hello' === view.get('mixed.truthy'));
+
+    // assert view
+    assert('' === view.el.querySelector('.empty').textContent);
+    assert('0' === view.el.querySelector('.zero').textContent);
+    assert('' === view.el.querySelector('.nil').textContent);
+    assert('' === view.el.querySelector('.notdef').textContent);
+    assert('false' === view.el.querySelector('.mixed-falsy').textContent);
+    assert('hello' === view.el.querySelector('.mixed-truthy').textContent);
+    
   })
 
   it('should not fail for undefined properties', function(){
