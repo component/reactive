@@ -3,19 +3,31 @@
   "repo": "component/reactive",
   "description": "Reactive template engine",
   "version": "1.1.1",
-  "keywords": ["reactive", "template", "engine", "binding", "bindings"],
+  "keywords": [
+    "reactive",
+    "template",
+    "engine",
+    "binding",
+    "bindings"
+  ],
   "dependencies": {
     "component/classes": "1.1.1",
     "component/event": "0.1.0",
     "component/query": "0.0.1",
     "component/emitter": "1.1.1",
     "component/domify": "1.2.1",
-    "yields/carry": "0.0.1",
-    "visionmedia/debug": "0.7.4"
+    "visionmedia/debug": "0.7.4",
+    "yields/carry": "0.0.1"
   },
   "development": {
-    "component/assert": "*",
-    "component/clone": "0.1.0"
+    "dependencies": {
+      "component/assert": "*",
+      "component/clone": "0.1.0",
+      "mochajs/mocha": "^2.2.1"
+    },
+    "scripts": [
+      "test/*.js"
+    ]
   },
   "scripts": [
     "lib/index.js",
