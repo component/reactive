@@ -22,6 +22,7 @@
 
 <script src="./reactive.js"></script>
 <script>
+  var reactive = require('reactive');
   var view = reactive(document.querySelector('ul'));
   view.bind('data-editable', function(el, url){
     el.setAttribute('contenteditable', 'true');

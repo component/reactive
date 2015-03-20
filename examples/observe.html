@@ -15,10 +15,10 @@
   <p>{first} is a {occupation}, {sex} is {age} years old.</p>
 </div>
 
-<script src="./reactive"></script>
+<script src="./reactive.js"></script>
 <script>
   var reactive = require('reactive');
-  var Emitter = require('emitter');
+  var Emitter = require.latest('component~emitter');
   var tmpl = document.querySelector('.user');
   tmpl.parentNode.removeChild(tmpl);
 
