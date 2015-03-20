@@ -1,4 +1,4 @@
 components
-build
 test/build
+examples/reactive.js
 node_modules
