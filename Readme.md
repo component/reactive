@@ -469,6 +469,16 @@ Often a higher-level API is built on top of this pattern to keep things DRY but 
 
 For more examples view the ./examples directory.
 
+### Run examples and tests
+    
+    $ git clone https://github.com/component/reactive.git
+    $ cd reactive
+    $ npm i
+    $ make
+    $ open examples
+
+    $ make test
+
 ## License
 
   MIT
