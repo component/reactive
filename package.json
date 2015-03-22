@@ -41,8 +41,7 @@
   "scripts": {
     "component-build": "component-build",
     "component-install": "component-install",
-    "test": "karma start --single-run",
-    "test-local": "karma start",
+    "test": "make test-karma",
     "test-zuul": "zuul -- test/*.js",
     "test-zuul-local": "zuul --local -- test/*.js"
   }
