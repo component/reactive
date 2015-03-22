@@ -104,7 +104,7 @@ describe('reactive(el, obj)', function(){
     '</ul>';
 
     var view = reactive(domify(template), model);
-    document.querySelector('#showcase').appendChild(view.el);
+
     // assert model
     assert('' === view.get('empty'));
     assert(0 === view.get('zero'));
