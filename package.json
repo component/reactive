@@ -29,15 +29,21 @@
     "clone": "clone-component"
   },
   "devDependencies": {
-    "zuul": "~1.5.4",
-    "clone-component": "component/clone#acfb79aa",
     "better-assert": "~1.0.0",
-    "mocha": "~1.17.0"
+    "clone-component": "component/clone#acfb79aa",
+    "karma-cli": "0.0.4",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-mocha": "^0.1.10",
+    "karma-wrap-preprocessor": "^0.1.0",
+    "mocha": "~1.17.0",
+    "zuul": "~1.5.4"
   },
   "scripts": {
     "component-build": "component-build",
     "component-install": "component-install",
-    "test": "zuul -- test/*.js",
-    "test-local": "zuul --local -- test/*.js"
+    "test": "karma start --single-run",
+    "test-local": "karma start",
+    "test-zuul": "zuul -- test/*.js",
+    "test-zuul-local": "zuul --local -- test/*.js"
   }
 }
