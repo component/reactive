@@ -39,8 +39,8 @@
     "zuul": "~1.5.4"
   },
   "scripts": {
-    "component-build": "component-build",
-    "component-install": "component-install",
+    "component-build": "component build",
+    "component-install": "component install",
     "test": "make test-karma",
     "test-zuul": "zuul -- test/*.js",
     "test-zuul-local": "zuul --local -- test/*.js"
