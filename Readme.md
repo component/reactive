@@ -71,19 +71,6 @@ var view = reactive(template, model);
 </ul>
 ```
 
-You can push (pop, shift, etc) to the array and the view will be updated accordingly.
-```js
-model.people.push('Eve');
-```
-
-```html
-<ul>
-  <li>Sally</li>
-  <li>Billy</li>
-  <li>Eve</li>
-</ul>
-```
-
 ### Hiding and showing elements
 
 DOM elements can be shown or hidden via the `data-visible` and `data-hidden` bindings.
