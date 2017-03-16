@@ -1,5 +1,6 @@
 var domify = require('domify');
 var assert = require('assert');
+var emitter = require('emitter');
 
 var reactive = require('reactive');
 
@@ -322,6 +323,98 @@ describe('each', function(){
     assert.equal(el.children[1].textContent, 'apples');
     assert.equal(el.children[2].textContent, 'eggs');
     assert.deepEqual(model.todos, ['milk', 'apples', 'eggs']);
+  })
+
+  it('should react to array emitters', function () {
+    var el = domify('<ul><li each="todos">{this}</li></ul>');
+
+    var model = {
+      todos: emitter([])
+    };
+
+    var view = reactive(el, model);
+
+    assert.equal(el.children.length, 0);
+
+    // add new elements
+    model.todos.push('milk');
+    model.todos.emit('add', 'milk', 0);
+    assert.equal(el.children.length, 1);
+    assert.equal(el.children[0].textContent, 'milk');
+    // remove elements
+    model.todos.pop('milk');
+    model.todos.emit('remove', 'milk', 0);
+    assert.equal(el.children.length, 0);
+
+    // insert more, and in the middle
+    model.todos.push('milk', 'apples');
+    model.todos.emit('add', 'milk', 0);
+    model.todos.emit('add', 'apples', 1);
+    assert.equal(el.children.length, 2);
+    assert.equal(el.children[0].textContent, 'milk');
+    assert.equal(el.children[1].textContent, 'apples');
+    model.todos.splice(1, 0, 'eggs');
+    model.todos.emit('add', 'eggs', 1);
+    assert.equal(el.children.length, 3);
+    assert.equal(el.children[0].textContent, 'milk');
+    assert.equal(el.children[1].textContent, 'eggs');
+    assert.equal(el.children[2].textContent, 'apples');
+
+    // and remove from the middle
+    model.todos.splice(1, 1);
+    model.todos.emit('remove', 'eggs', 1);
+    assert.equal(el.children.length, 2);
+    assert.equal(el.children[0].textContent, 'milk');
+    assert.equal(el.children[1].textContent, 'apples');
+
+    // sort the array
+    model.todos.sort();
+    model.todos.emit('sort');
+    assert.equal(el.children.length, 2);
+    assert.equal(el.children[0].textContent, 'apples');
+    assert.equal(el.children[1].textContent, 'milk');
+
+    // and reverse it
+    model.todos.reverse();
+    model.todos.emit('reverse');
+    assert.equal(el.children.length, 2);
+    assert.equal(el.children[0].textContent, 'milk');
+    assert.equal(el.children[1].textContent, 'apples');
+
+    // also test double primitives
+    model.todos.push('apples', 'apples');
+    model.todos.emit('add', 'apples', 2);
+    model.todos.emit('add', 'apples', 3);
+    model.todos.sort();
+    model.todos.emit('sort');
+    assert.equal(el.children.length, 4);
+    assert.equal(el.children[0].textContent, 'apples');
+    assert.equal(el.children[1].textContent, 'apples');
+    assert.equal(el.children[2].textContent, 'apples');
+    assert.equal(el.children[3].textContent, 'milk');
+  })
+
+  it('should correctly unbind array emitters', function () {
+    var el = domify('<ul><li each="todos">{this}</li></ul>');
+
+    var todos = emitter([]);
+    var model = {
+      todos: todos
+    };
+
+    var view = reactive(el, model);
+
+    assert.equal(el.children.length, 0);
+    view.set('todos', ['milk']);
+    assert.equal(el.children.length, 1);
+    assert.equal(el.children[0].textContent, 'milk');
+
+    todos.push('apples');
+    todos.emit('add', 'apples', 0);
+    todos.emit('sort');
+    todos.emit('reverse');
+    assert.equal(el.children.length, 1);
+    assert.equal(el.children[0].textContent, 'milk');
   })
 
   // test that items are put into the proper place in the dom
